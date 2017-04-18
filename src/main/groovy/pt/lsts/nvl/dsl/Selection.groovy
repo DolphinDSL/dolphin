@@ -2,8 +2,6 @@ package pt.lsts.nvl.dsl;
 
 import java.util.List;
 
-import groovy.lang.Closure;
-
 @DSLClass
 final class Selection extends Instruction {
   double time = 0;

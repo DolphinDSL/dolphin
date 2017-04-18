@@ -44,7 +44,7 @@ public class VehicleRequirements implements Filter<NVLVehicle> {
     return this;
   }
 
-  VehicleRequirements available() {
+  public VehicleRequirements available() {
     return availability(Availability.AVAILABLE);
   }
 

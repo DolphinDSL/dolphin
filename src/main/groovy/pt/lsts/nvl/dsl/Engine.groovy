@@ -4,12 +4,11 @@ package pt.lsts.nvl.dsl
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import org.codehaus.groovy.control.CompilerConfiguration
-
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
 
 /**
- * The NVL shell.
+ * The NVL engine.
  */
 @CompileStatic
 @TypeChecked

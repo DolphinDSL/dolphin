@@ -1,8 +1,14 @@
-package pt.lsts.nvl.runtime;
+package pt.lsts.nvl.runtime.trash;
 
-import static pt.lsts.nvl.runtime.API.*;
+import static pt.lsts.nvl.runtime.trash.API.*;
 
 import java.util.List;
+
+import pt.lsts.nvl.runtime.Availability;
+import pt.lsts.nvl.runtime.NVLRuntime;
+import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.NVLVehicleType;
+import pt.lsts.nvl.runtime.PayloadComponent;
 
 public class TemporaryExamples {
 
