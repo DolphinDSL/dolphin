@@ -1,7 +1,5 @@
 package pt.lsts.nvl.dsl
 
-import groovy.lang.Closure
-
 @DSLClass
 abstract class Instruction {
   abstract void execute()

@@ -1,7 +1,3 @@
-package pt.lsts.nvl.dsl;
-
-
-
 select {
   time 20
   vehicle {
@@ -9,7 +5,7 @@ select {
     payload 'SideScan', 'GPS'
   }
   vehicle {
-    type Type.UAV
+    type UAV
     payload 'Camera', 'GPS'
   }
 }

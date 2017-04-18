@@ -1,11 +1,13 @@
 package pt.lsts.nvl.dsl;
 
+import pt.lsts.nvl.runtime.NVLVehicleType
+
 @DSLClass
 final class Requirements extends Instruction {
-  Type type;
+  NVLVehicleType type;
   String[] payload;
 
-  void type(Type t) {
+  void type(NVLVehicleType t) {
     type = t;
   }
   
