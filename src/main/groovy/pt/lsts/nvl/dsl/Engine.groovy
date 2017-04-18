@@ -16,6 +16,7 @@ import pt.lsts.nvl.runtime.NVLRuntime
 class Engine {
   
   private GroovyShell shell
+  
   NVLRuntime runtime;
   
   static final Engine instance = new Engine()

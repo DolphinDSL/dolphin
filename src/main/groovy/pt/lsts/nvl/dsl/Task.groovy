@@ -14,7 +14,6 @@ final class Task extends Instruction<Void> {
     spec = Engine.getInstance().getRuntime().getTask(id)
   }
   
- 
   @Override
   public Void execute() {
     println "e " + toString()
