@@ -26,12 +26,15 @@ final class VehicleRequirementsBuilder
     List<PayloadComponent> list = []
     payloads.each  {  
       list.add new PayloadComponent() {
+        @Override
         String getName() {
           return it;
         }
+        @Override
         int getRange() {
           return 0;
         }
+        @Override
         int getFrequency() {
           return 0;
         }
