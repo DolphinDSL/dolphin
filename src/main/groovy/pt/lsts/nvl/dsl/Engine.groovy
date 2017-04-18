@@ -5,6 +5,7 @@ import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
+import pt.lsts.nvl.runtime.NVLRuntime
 
 
 /**
@@ -12,28 +13,34 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
  */
 @CompileStatic
 @TypeChecked
-@Singleton(strict=false)
 class Engine {
   
-  GroovyShell shell
+  private GroovyShell shell
+  NVLRuntime runtime;
+  
+  static final Engine instance = new Engine()
   
   private Engine() {
-    // Imports
-    def ic = new ImportCustomizer()
-    ic.addStaticStars 'java.lang.Math'
-    ic.addStarImports 'pt.lsts.nvl.dsl'
-    ic.addStaticStars 'pt.lsts.nvl.runtime.NVLVehicleType'
-  
-    // Compiler configuration
-    def cfg = new CompilerConfiguration()
-    cfg.addCompilationCustomizers(ic)
-    cfg.scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
     
-    // Define the shell
-    shell = new GroovyShell(cfg)
   }
-
+ 
   void run(File script) {
+    if (shell == null) {
+      // Imports
+      def ic = new ImportCustomizer()
+      ic.addStaticStars 'java.lang.Math'
+      ic.addStarImports 'pt.lsts.nvl.dsl'
+      ic.addStaticStars 'pt.lsts.nvl.runtime.NVLVehicleType'
+    
+      // Compiler configuration
+      def cfg = new CompilerConfiguration()
+      cfg.addCompilationCustomizers(ic)
+      cfg.scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
+      
+      // Define the shell
+      shell = new GroovyShell(cfg)
+    }
+    
     shell.evaluate(script)
   }
   

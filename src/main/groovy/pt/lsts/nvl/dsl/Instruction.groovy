@@ -1,8 +1,8 @@
 package pt.lsts.nvl.dsl
 
 @DSLClass
-abstract class Instruction {
-  abstract void execute()
+abstract class Instruction<T> {
+  abstract T execute()
 
   final void build(Closure cl) {
     def code = cl.rehydrate(this, this, this)
@@ -10,7 +10,7 @@ abstract class Instruction {
     code()
   }
 
-  final void buildAndExecute(Closure cl) {
+  final T buildAndExecute(Closure cl) {
     build cl
     execute()
   }
