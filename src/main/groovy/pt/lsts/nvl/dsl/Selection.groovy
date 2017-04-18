@@ -1,4 +1,4 @@
-package pt.lsts.nvl;
+package pt.lsts.nvl.dsl;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package pt.lsts.nvl;
+package pt.lsts.nvl.dsl;
 
 @DSLClass
 final class Requirements extends Instruction {
