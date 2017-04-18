@@ -12,7 +12,6 @@ import pt.lsts.nvl.runtime.VehicleRequirements
 final class VehicleRequirementsBuilder 
   extends Instruction<VehicleRequirements> {
     
-  
   VehicleRequirements req = new VehicleRequirements()
   
   VehicleRequirementsBuilder() {
