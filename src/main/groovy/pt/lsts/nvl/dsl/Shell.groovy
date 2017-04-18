@@ -12,11 +12,11 @@ CompilerConfiguration configuration () {
   
   def ic = new ImportCustomizer()
   ic.addStaticStars 'java.lang.Math'
-  ic.addStarImports 'dslSketch'
-  ic.addStaticStars 'dslSketch.Type'
+  ic.addStarImports 'pt.lsts.nvl.dsl'
+  ic.addStaticStars 'pt.lsts.nvl.dsl.Type'
   
   cfg.addCompilationCustomizers(ic)
-  cfg.scriptBaseClass = 'dslSketch.TopLevel'
+  cfg.scriptBaseClass = 'pt.lsts.nvl.dsl.TopLevel'
   cfg
 }
 
@@ -27,4 +27,4 @@ def evalScript(File script) {
   shell.evaluate(script)
 }
 
-evalScript new File('src/dslSketch/example.groovy')
+evalScript new File('src/main/groovy/pt/lsts/nvl/dsl/example.groovy')
