@@ -15,3 +15,9 @@ Number.metaClass.getNorth = { -> delegate  }
 Number.metaClass.getSouth = { -> - delegate  }
 Number.metaClass.getEast = { -> delegate }
 Number.metaClass.getWest = { -> -delegate }
+
+// Time
+Number.metaClass.getSeconds = { -> delegate }
+Number.metaClass.getMinutes = { -> delegate * 60 }
+Number.metaClass.getHours = { -> delegate * 3600 }
+Number.metaClass.getDays = { -> delegate * 86400 }

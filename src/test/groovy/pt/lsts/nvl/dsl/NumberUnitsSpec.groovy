@@ -1,5 +1,7 @@
 package pt.lsts.nvl.dsl
 
+import java.security.cert.X509Certificate
+
 import spock.lang.Specification
 
 class NumberUnitsSpec extends Specification {
@@ -8,7 +10,7 @@ class NumberUnitsSpec extends Specification {
     NumberUnits.main()
   }
 
-  def "Distance Units" () {
+  def 'Distance Units' () {
     expect:
     1.meters == 1
     5.meters == 5
@@ -17,7 +19,7 @@ class NumberUnitsSpec extends Specification {
     3000.meters - 3.kilometers == 0
   }
 
-  def "Angle Units" () {
+  def 'Angle Units' () {
     expect:
     1.degrees == 1
     5.degrees == 5
@@ -26,7 +28,7 @@ class NumberUnitsSpec extends Specification {
     180.degrees - Math.PI.radians == 0
   }
   
-  def "Orientation Units" () {
+  def 'Orientation Units' () {
     expect:
     1.north == 1
     1.south == -1
@@ -34,5 +36,17 @@ class NumberUnitsSpec extends Specification {
     1.west == -1
     5.north + 5.south == 0
     5.east + 5.west == 0
+  }
+  
+  def 'Time Units' () {
+    expect:
+    1.seconds == 1
+    1.minutes == 60
+    1.hours == 3600
+    1.days == 24 * 3600
+    5.seconds + 5.minutes == 305
+    5.hours + 15.minutes == 5.25.hours
+    2.days - 48.hours == 0
+    2.5.minutes - 150.seconds == 0
   }
 }
