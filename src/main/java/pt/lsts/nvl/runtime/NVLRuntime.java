@@ -2,7 +2,6 @@ package pt.lsts.nvl.runtime;
 
 import java.util.List;
 
-
 public interface NVLRuntime {
 
   List<NVLVehicle> getVehicles(Filter<NVLVehicle> filter);//substitute to VehicleRequirements?
@@ -11,6 +10,6 @@ public interface NVLRuntime {
   List<TaskSpecification> getTasks(Filter<TaskSpecification> filter);  
   TaskSpecification getTask(String id);
 
-  TaskExecution launchTask(TaskSpecification task, List<NVLVehicle> vehicles);
+  List<TaskExecution> launchTask(TaskSpecification task, List<NVLVehicle> vehicles);
 
 }
