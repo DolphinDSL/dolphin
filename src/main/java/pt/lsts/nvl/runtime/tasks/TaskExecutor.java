@@ -11,7 +11,7 @@ import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 import pt.lsts.nvl.util.Clock;
 
-public abstract class TaskExecutor<T extends Task> {
+public abstract class TaskExecutor {
   /**
    * Task executor state.
    */
@@ -26,20 +26,22 @@ public abstract class TaskExecutor<T extends Task> {
     COMPLETED;
   }
 
-  private final T task;
+  private final Task task;
   private State state;
   private double startTime;
   private double timeElapsed;
   private List<NVLVehicle> boundVehicles;
+  private CompletionState completionState;
 
-  TaskExecutor(T theTask) {
+  TaskExecutor(Task theTask) {
     task = theTask;
     state = State.INITIALIZING;
     startTime = -1;
     boundVehicles = Collections.emptyList();
+    completionState = new CompletionState(CompletionState.Type.UNDEFINED);
   }
 
-  public final T getTask() { 
+  public final Task getTask() { 
     return task;
   }
 
@@ -51,6 +53,10 @@ public abstract class TaskExecutor<T extends Task> {
     return startTime;
   }
 
+  public final CompletionState getCompletionState() {
+    return completionState;
+  }
+  
   public final List<NVLVehicle> getVehicles() {
     return boundVehicles; 
   }
@@ -82,7 +88,11 @@ public abstract class TaskExecutor<T extends Task> {
   public final void step() {
     requireState(State.EXECUTING);
     timeElapsed = Clock.now() - startTime;
-    onStep();
+    completionState = onStep();
+    if (completionState.completed()) {
+      state = State.COMPLETED;
+      onCompletion();
+    }
   }
 
   public final double clock() {
@@ -91,7 +101,7 @@ public abstract class TaskExecutor<T extends Task> {
 
   protected abstract void onInitialize();
   protected abstract void onStart();
-  protected abstract void onStep();
+  protected abstract CompletionState onStep();
   protected abstract void onCompletion();
 
   private void requireState(State s) {

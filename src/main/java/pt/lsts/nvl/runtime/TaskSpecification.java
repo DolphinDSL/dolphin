@@ -8,6 +8,4 @@ public interface TaskSpecification {
 
   // TODO remove
   void setRequirements(VehicleRequirements reqs);
-
-
 }
