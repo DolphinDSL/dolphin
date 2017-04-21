@@ -30,14 +30,16 @@ final class VehicleRequirementsBuilder
         String getName() {
           return it;
         }
-        @Override
-        int getRange() {
-          return 0;
-        }
-        @Override
-        int getFrequency() {
-          return 0;
-        }
+		@Override
+		Map<String,String> getParameters(){
+			//TODO
+		}
+		@Override
+		void setParameter(String key,String value){
+			//TODO
+		}
+        
+
       }
     }
     req.setRequiredPayload list
