@@ -24,6 +24,5 @@ static def execute(TaskBuilder tb) {
   TaskExecutor.run tb.getTask()
 }
 
-execute task ('xpto') during(10.seconds)
 
 

@@ -30,13 +30,12 @@ public class PlatformTask implements Task {
 
       @Override
       protected void onInitialize() {
-        d("Init" + getId());     
+        d("Initialized " + getId());     
       }
 
       @Override
       protected void onStart() {
-        d("Start" + getId());     
-        
+        d("Started " + getId());
       }
 
       @Override
@@ -46,7 +45,7 @@ public class PlatformTask implements Task {
 
       @Override
       protected void onCompletion() {
-        d("Completed" + getId());     
+        d("Completed " + getId());     
       }
       
     };
