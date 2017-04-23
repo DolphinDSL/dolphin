@@ -29,20 +29,23 @@ class Engine {
     if (shell == null) {
       // Imports
       def ic = new ImportCustomizer()
-      ic.addStaticStars 'java.lang.Math'
-      ic.addStarImports 'pt.lsts.nvl.dsl'
-      ic.addStaticStars 'pt.lsts.nvl.runtime.NVLVehicleType'
-    
+      ic.with {
+        addStaticStars 'java.lang.Math'
+        addStarImports 'pt.lsts.nvl.dsl'
+        addStaticStars 'pt.lsts.nvl.dsl.BaseScript'
+        addStaticStars 'pt.lsts.nvl.runtime.NVLVehicleType'
+      }
       // Compiler configuration
       def cfg = new CompilerConfiguration()
-      cfg.addCompilationCustomizers(ic)
-      cfg.scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
-      
+      cfg.with {
+        addCompilationCustomizers ic
+        scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
+      }
       // Define the shell
       shell = new GroovyShell(cfg)      
-      shell.evaluate('BaseScript.main()')
+      shell.evaluate 'BaseScript.main()'
     }
-    shell.evaluate(script)
+    shell.evaluate script
   }
   
   public static void main(String... args) {

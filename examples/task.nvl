@@ -1,2 +1,7 @@
-t = task 'xpto' during 10.seconds
-execute t
+t = task 'xpto'
+execute task ('xpto').during(10.seconds)
+
+//(task "xpto" during 10.seconds)
+//execute t
+
+//execute (task 'xpto' during 10.seconds)

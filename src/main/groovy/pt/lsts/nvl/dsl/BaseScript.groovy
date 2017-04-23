@@ -10,16 +10,20 @@ NumberUnits.main()
 
 // DSL instructions
 @TypeChecked
-def select(@DelegatesTo(strategy=Closure.DELEGATE_ONLY, value=Selection) Closure cl) {
+static def select(@DelegatesTo(strategy=Closure.DELEGATE_ONLY, value=Selection) Closure cl) {
   new Selection().buildAndExecute(cl)
 }
 
 @TypeChecked
-TaskBuilder task(String id) {  
+static TaskBuilder task(String id) {  
   new TaskBuilder(id)
 }
 
 @TypeChecked
-def execute(TaskBuilder tb) {
+static def execute(TaskBuilder tb) {
   TaskExecutor.run tb.getTask()
 }
+
+execute task ('xpto') during(10.seconds)
+
+
