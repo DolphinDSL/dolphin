@@ -5,6 +5,7 @@ import groovy.transform.TypeCheckingMode
 import java.util.List;
 import pt.lsts.nvl.runtime.VehicleRequirements
 import pt.lsts.nvl.runtime.tasks.PlatformTask
+import pt.lsts.nvl.runtime.tasks.SequentialTaskComposition
 import pt.lsts.nvl.runtime.tasks.Task
 import pt.lsts.nvl.runtime.tasks.TimeConstrainedTask
 
@@ -21,16 +22,16 @@ final class TaskBuilder extends Instruction<Void> {
     this
   }
 
+  TaskBuilder rightShift(TaskBuilder tb) {
+    task = new SequentialTaskComposition(task, tb.getTask())
+    this
+  }
+  
   @Override
   public Void execute() {
 
   }
 
-  def asType(Class target) {
-    if (target != Task) {
-      throw new ClassCastException("User cannot be coerced into $target")
-    }
-    task
-  }
+
 }
 

@@ -1,3 +1,5 @@
-t = task 'xpto' during 10.seconds
-execute t
+t1 = task 't1' during 3.seconds
+t2 = task 't2' during 2.seconds
+   
+execute t1 >> t2
 

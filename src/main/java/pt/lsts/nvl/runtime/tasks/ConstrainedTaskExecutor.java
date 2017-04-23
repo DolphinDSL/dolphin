@@ -15,23 +15,21 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
   protected CompletionState onStep() {
     return terminationCondition() ?
         new CompletionState(CompletionState.Type.DONE)
-       : delegate.onStep();
+       : delegate.step();
   }
 
   @Override
   protected void onInitialize() {
-    delegate.onInitialize();
-    
+    delegate.initialize(null);
   }
 
   @Override
   protected void onStart() {
-    delegate.onStart();
-    
+    delegate.start();
   }
 
   @Override
   protected void onCompletion() {
-    delegate.onCompletion();
+    
   }
 }

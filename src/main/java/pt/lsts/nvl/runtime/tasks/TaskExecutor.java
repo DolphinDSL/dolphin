@@ -85,7 +85,7 @@ public abstract class TaskExecutor {
     state = State.EXECUTING;
   }
 
-  public final void step() {
+  public final CompletionState step() {
     requireState(State.EXECUTING);
     timeElapsed = Clock.now() - startTime;
     completionState = onStep();
@@ -93,6 +93,7 @@ public abstract class TaskExecutor {
       state = State.COMPLETED;
       onCompletion();
     }
+    return completionState;
   }
 
   public final double clock() {
