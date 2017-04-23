@@ -5,15 +5,14 @@ import java.util.List;
 
 import pt.lsts.nvl.runtime.VehicleRequirements;
 
-public abstract class AbstractTask implements Task {
+public class PlatformTask implements Task {
 
   private final String id;
-  private final List<VehicleRequirements> reqs;
   
-  protected AbstractTask(String id, List<VehicleRequirements> reqs) {
+  public PlatformTask(String id) {
     this.id = id;
-    this.reqs = Collections.unmodifiableList(reqs);
   }
+  
   @Override
   public String getId() {
     return id;
@@ -21,7 +20,13 @@ public abstract class AbstractTask implements Task {
 
   @Override
   public List<VehicleRequirements> getRequirements() {
-    return reqs;
+    return Collections.emptyList();
+  }
+  
+  @Override
+  public TaskExecutor getExecutor() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 

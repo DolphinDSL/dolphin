@@ -39,13 +39,14 @@ class Engine {
       cfg.scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
       
       // Define the shell
-      shell = new GroovyShell(cfg)
+      shell = new GroovyShell(cfg)      
+      shell.evaluate('BaseScript.main()')
     }
-    
     shell.evaluate(script)
   }
   
   public static void main(String... args) {
+    
     for (String f : args) {
       Engine.instance.run new File(f)
     }
