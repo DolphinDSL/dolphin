@@ -16,15 +16,17 @@ final class TaskBuilder extends Instruction<Void> {
   TaskBuilder(String id) {
     task = new PlatformTask(id)
   }
+  
+  TaskBuilder(Task t) {
+    task = t
+  }
 
   TaskBuilder during(double duration) {
-    task = new TimeConstrainedTask(task, duration)
-    this
+    new TaskBuilder ( new TimeConstrainedTask(task, duration) )
   }
 
   TaskBuilder rightShift(TaskBuilder tb) {
-    task = new SequentialTaskComposition(task, tb.getTask())
-    this
+    new TaskBuilder ( new SequentialTaskComposition(task, tb.getTask()) )
   }
   
   @Override
