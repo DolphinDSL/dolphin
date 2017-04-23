@@ -32,7 +32,7 @@ final class VehicleRequirementsBuilder
         }
 		@Override
 		Map<String,String> getParameters(){
-			//TODO
+			return Collections.emptyMap();
 		}
 		@Override
 		void setParameter(String key,String value){
