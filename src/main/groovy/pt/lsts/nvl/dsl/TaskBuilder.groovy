@@ -15,15 +15,22 @@ final class TaskBuilder extends Instruction<Void> {
   TaskBuilder(String id) {
     task = new PlatformTask(id)
   }
-  
+
   TaskBuilder during(double duration) {
     task = new TimeConstrainedTask(task, duration)
     this
   }
-  
+
   @Override
   public Void execute() {
-    println "e " + toString()
+
+  }
+
+  def asType(Class target) {
+    if (target != Task) {
+      throw new ClassCastException("User cannot be coerced into $target")
+    }
+    task
   }
 }
 

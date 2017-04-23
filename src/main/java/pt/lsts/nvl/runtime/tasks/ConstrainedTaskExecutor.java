@@ -34,6 +34,4 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
   protected void onCompletion() {
     delegate.onCompletion();
   }
-
-
 }

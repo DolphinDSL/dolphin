@@ -1,1 +1,2 @@
-task 'xpto' during 24.hours
+t = task 'xpto' during 10.seconds
+execute t

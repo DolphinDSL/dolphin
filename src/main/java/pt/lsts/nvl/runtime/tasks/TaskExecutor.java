@@ -64,16 +64,16 @@ public abstract class TaskExecutor {
   public boolean initialize(NVLRuntime runtime) {
     requireState(State.INITIALIZING);
     onInitialize();
-    List<NVLVehicle> reservedVehicles = new ArrayList<>();
-    List<NVLVehicle> allVehicles = runtime.getVehicles(x -> true);
-    for (VehicleRequirements r : task.getRequirements()) {
-      Optional<NVLVehicle> v = allVehicles.stream().filter(veh -> r.apply(veh)).findFirst();
-      if (!v.isPresent()) {
-        return false;
-      }
-      reservedVehicles.add(v.get());
-    }
-    boundVehicles = Collections.unmodifiableList(reservedVehicles);
+//    List<NVLVehicle> reservedVehicles = new ArrayList<>();
+//    List<NVLVehicle> allVehicles = runtime.getVehicles(x -> true);
+//    for (VehicleRequirements r : task.getRequirements()) {
+//      Optional<NVLVehicle> v = allVehicles.stream().filter(veh -> r.apply(veh)).findFirst();
+//      if (!v.isPresent()) {
+//        return false;
+//      }
+//      reservedVehicles.add(v.get());
+//    }
+//    boundVehicles = Collections.unmodifiableList(reservedVehicles);
     state = State.READY;
     return true;    
   }
@@ -107,6 +107,22 @@ public abstract class TaskExecutor {
   private void requireState(State s) {
     if (getState() != s) {
       throw new NVLRuntimeException("Expected " + s + " state");
+    }
+  }
+  
+  
+  public static void run(Task t) {
+    TaskExecutor executor = t.getExecutor();
+    executor.initialize(null);
+    executor.start();
+    while (executor.getState() != TaskExecutor.State.COMPLETED) {
+      executor.step();
+      try {
+        Thread.sleep(1000);
+      } catch (InterruptedException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
     }
   }
 }
