@@ -32,7 +32,7 @@ class Engine {
       ic.with {
         addStaticStars 'java.lang.Math'
         addStarImports 'pt.lsts.nvl.dsl'
-        addStaticStars 'pt.lsts.nvl.dsl.BaseScript'
+        addStaticStars 'pt.lsts.nvl.dsl.DSLInstructions'
         addStaticStars 'pt.lsts.nvl.runtime.NVLVehicleType'
       }
       // Compiler configuration
@@ -49,7 +49,6 @@ class Engine {
   }
   
   public static void main(String... args) {
-    
     for (String f : args) {
       Engine.instance.run new File(f)
     }

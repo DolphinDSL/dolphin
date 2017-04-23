@@ -1,14 +1,11 @@
 package pt.lsts.nvl.runtime.tasks;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import pt.lsts.nvl.runtime.NVLRuntime;
 import pt.lsts.nvl.runtime.NVLRuntimeException;
 import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.VehicleRequirements;
 import pt.lsts.nvl.util.Clock;
 
 public abstract class TaskExecutor {
@@ -119,10 +116,9 @@ public abstract class TaskExecutor {
     while (executor.getState() != TaskExecutor.State.COMPLETED) {
       executor.step();
       try {
-        Thread.sleep(1000);
+        Thread.sleep(100);
       } catch (InterruptedException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
+        throw new RuntimeException(e);
       }
     }
   }
