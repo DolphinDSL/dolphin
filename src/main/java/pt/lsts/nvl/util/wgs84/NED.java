@@ -1,7 +1,7 @@
 package pt.lsts.nvl.util.wgs84;
 
 /**
- * North-East-Down displacement.
+ * North-East-Down displacement coordinates.
  */
 public final class NED {
   /** North displacement */
@@ -13,6 +13,12 @@ public final class NED {
   /** Down displacement */
   public final double down;
 
+  /**
+   * Constructor.
+   * @param n North displacement.
+   * @param e East displacement.
+   * @param d Down displacement.
+   */
   public NED(double n, double e, double d) {
     north = n;
     east = e;

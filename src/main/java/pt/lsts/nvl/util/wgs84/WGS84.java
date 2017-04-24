@@ -1,7 +1,11 @@
 package pt.lsts.nvl.util.wgs84;
 
+import static java.lang.Math.*;
+
 /**
  * WGS-84 coordinate.
+ * @author Eduardo Marques, Ricardo Martins (original DUNE code)
+ * @author Eduardo Marques (port)
  */
 public final class WGS84 {
 
@@ -22,8 +26,8 @@ public final class WGS84 {
 
   /**
    * Constructor
-   * @param lat Latitude (in radians).
-   * @param lon Longitude (in radians).
+   * @param lat Latitude (radians).
+   * @param lon Longitude (radians).
    * @param hae Height (meters)
    */
   public WGS84(double lat, double lon, double hae) {
@@ -51,17 +55,17 @@ public final class WGS84 {
     ECEF c1 = toECEF(); 
     ECEF c2 = other.toECEF(); 
 
-    double ox = c2.x - c1.x;
-    double oy = c2.y - c2.y;
-    double oz = c2.z - c2.z;
-    double slat = Math.sin(lat);
-    double clat = Math.cos(lat);
-    double slon = Math.sin(lon);
-    double clon = Math.cos(lon);
-
-    double n = - slat * clon * ox - slat * slon * oy + clat  * oz; // North 
-    double e = - slon * ox + clon * oy; // East
-    return new NED(n, e, other.hae - hae);
+    double dx = c2.x - c1.x;
+    double dy = c2.y - c2.y;
+    double dz = c2.z - c2.z;
+    double slat = sin(lat);
+    double clat = cos(lat);
+    double slon = sin(lon);
+    double clon = cos(lon);
+    double n = -slat * clon * dx - slat * slon * dy + clat * dz; 
+    double e = -slon * dx + clon * dy; 
+    double d = -clat * clon * dx - clat * slon * dy - slat * dz;
+    return new NED(n, e, d);
   }
 
   /**
@@ -74,13 +78,13 @@ public final class WGS84 {
     ECEF ecef = toECEF();
 
     // Compute Geocentric latitude
-    double phi = Math.atan2(ecef.z, Math.sqrt(ecef.x*ecef.x + ecef.y*ecef.y));
+    double phi = atan2(ecef.z, sqrt(ecef.x*ecef.x + ecef.y*ecef.y));
 
     // Compute all needed sine and cosine terms for conversion.
-    double slon = Math.sin(lon);
-    double clon = Math.cos(lon);
-    double sphi = Math.sin(phi); 
-    double cphi = Math.cos(phi);
+    double slon = sin(lon);
+    double clon = cos(lon);
+    double sphi = sin(phi); 
+    double cphi = cos(phi);
 
     // Obtain ECEF coordinates of displaced point
     // Note: some signs from standard ENU formula 
@@ -91,7 +95,7 @@ public final class WGS84 {
     double dz = ecef.z                   + cphi * ned.north        - sphi * ned.down;
 
     // Convert back to WGS-84 coordinates 
-    return new ECEF(dx,dy,dz).toWGS84();
+    return new ECEF(dx, dy, dz).toWGS84();
   }
 
 
@@ -101,22 +105,27 @@ public final class WGS84 {
    * @return Corresponding ECEF coordinate.
    */ 
   public ECEF toECEF() {
-    double cos_lat = Math.cos(lat);
-    double sin_lat = Math.sin(lat);
-    double cos_lon = Math.cos(lon);
-    double sin_lon = Math.sin(lon);
-    double rn = SMA / Math.sqrt(1.0 - ECC_SQ * sin_lat * sin_lat);
+    double cos_lat = cos(lat);
+    double sin_lat = sin(lat);
+    double cos_lon = cos(lon);
+    double sin_lon = sin(lon);
+    double rn = SMA / sqrt(1.0 - ECC_SQ * sin_lat * sin_lat);
     double x = (rn + hae) * cos_lat * cos_lon;
     double y = (rn + hae) * cos_lat * sin_lon;
     double z = (((1.0 - ECC_SQ) * rn) + hae) * sin_lat;
     return new ECEF(x, y, z);
   }
   
+  /** Compute the radius of curvature in the prime vertical (Rn).
+   * 
+   * @param lat Latitude.
+   * @return radius of curvature in the prime vertical (radians).
+   */
   static double
-  n_rad(double lat)
+  computeRn(double lat)
   {
-    double lat_sin = Math.sin(lat);
-    return SMA / Math.sqrt(1 - ECC_SQ * (lat_sin * lat_sin));
+    double lat_sin = sin(lat);
+    return SMA / sqrt(1 - ECC_SQ * (lat_sin * lat_sin));
   }
 }
 
