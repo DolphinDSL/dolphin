@@ -25,7 +25,7 @@ class Engine {
     
   }
  
-  void run(File script) {
+  private void ensureShellIsCreated() {
     if (shell == null) {
       // Imports
       def ic = new ImportCustomizer()
@@ -42,10 +42,18 @@ class Engine {
         scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
       }
       // Define the shell
-      shell = new GroovyShell(cfg)      
+      shell = new GroovyShell(cfg)
       shell.evaluate 'BaseScript.main()'
     }
+  }
+  void run(File script) {
+    ensureShellIsCreated()
     shell.evaluate script
+  }
+  
+  void bind(String var, Object value) {
+    ensureShellIsCreated()
+    shell.setVariable var, value
   }
   
   public static void main(String... args) {
