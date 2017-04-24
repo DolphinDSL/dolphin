@@ -13,7 +13,7 @@ public final class NED {
   /** Down displacement */
   public final double down;
 
-  NED(double n, double e, double d) {
+  public NED(double n, double e, double d) {
     north = n;
     east = e;
     down = d;

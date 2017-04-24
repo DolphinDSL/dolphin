@@ -69,8 +69,7 @@ public final class WGS84 {
    * @param ned NED offset.
    * @return Displaced coordinate.
    */
-  public WGS84 displace(NED ned)
-  {
+  public WGS84 displace(NED ned) {
     // Convert reference to ECEF coordinates
     ECEF ecef = toECEF();
 
