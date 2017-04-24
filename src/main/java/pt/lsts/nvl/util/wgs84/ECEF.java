@@ -1,4 +1,4 @@
-package pt.lsts.nvl.util.coordinates;
+package pt.lsts.nvl.util.wgs84;
 
 /**
  * Earth-Center Earth-Fixed (ECEF) coordinate.
