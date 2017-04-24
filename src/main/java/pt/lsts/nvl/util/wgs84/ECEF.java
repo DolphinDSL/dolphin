@@ -2,9 +2,8 @@ package pt.lsts.nvl.util.wgs84;
 
 /**
  * Earth-Center Earth-Fixed (ECEF) coordinate.
- *
  */
-public class ECEF {
+public final class ECEF {
   public final double x, y, z;
 
   public ECEF(double x, double y, double z) {
@@ -40,6 +39,5 @@ public class ECEF {
     double dz = z - other.z;
     return Math.sqrt(dx * dx + dy * dy + dz * dz);
   }
-
 }
 
