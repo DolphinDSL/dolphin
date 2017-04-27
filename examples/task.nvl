@@ -1,8 +1,9 @@
 t1 = task 't1' during 2.seconds
 t2 = task 't2' during 1.seconds
 t3 = task 't3' during 5.seconds 
+t4 = task 't4' during 5.seconds 
 
-execute ((t1 >> t2) | t3)
+execute ((((t1 >> t2) | t3) >> t4).during(8.seconds))
 
 
 

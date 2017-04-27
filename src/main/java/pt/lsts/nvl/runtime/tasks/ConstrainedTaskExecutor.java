@@ -2,11 +2,11 @@ package pt.lsts.nvl.runtime.tasks;
 
 public abstract class ConstrainedTaskExecutor extends TaskExecutor {
 
-  private final TaskExecutor delegate;
+  private final TaskExecutor task;
   
   public ConstrainedTaskExecutor(Task theTask) {
     super(theTask);
-    delegate = theTask.getExecutor();
+    task = theTask.getExecutor();
   }
 
   protected abstract boolean terminationCondition(); 
@@ -15,17 +15,17 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
   protected CompletionState onStep() {
     return terminationCondition() ?
         new CompletionState(CompletionState.Type.DONE)
-       : delegate.step();
+       : task.step();
   }
 
   @Override
   protected void onInitialize() {
-    delegate.initialize(null);
+    task.initialize(null);
   }
 
   @Override
   protected void onStart() {
-    delegate.start();
+    task.start();
   }
 
   @Override
