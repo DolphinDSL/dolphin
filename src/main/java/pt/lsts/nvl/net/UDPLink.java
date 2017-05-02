@@ -48,6 +48,11 @@ public final class UDPLink implements NetworkLink {
     socket = null;
   }
   
+
+  public int getPort() {
+    return port;
+  }
+  
   @Override
   public synchronized void enable() throws NetworkLinkException {
     if(socket != null)
@@ -120,6 +125,7 @@ public final class UDPLink implements NetworkLink {
     if(socket == null)
       throw new NetworkLinkException("Not in connected state");
   }
+
 
 
 }

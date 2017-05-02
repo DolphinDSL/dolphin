@@ -7,7 +7,7 @@ import java.net.InetAddress;
  * 
  * @author Eduardo Marques
  */
-interface NetworkLink {
+public interface NetworkLink {
 
   /**
    * Enable the link. 

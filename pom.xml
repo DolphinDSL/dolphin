@@ -27,6 +27,13 @@
 			<version>1.0-groovy-2.4</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>pt.lsts</groupId>
+			<artifactId>imc</artifactId>
+			<version>LATEST</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/libs/libimc.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>

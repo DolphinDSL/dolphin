@@ -47,19 +47,20 @@ public final class MulticastUDPLink implements NetworkLink {
 	 * @throws NetworkLinkException
 	 *           on error
 	 */
-	public MulticastUDPLink(String maddr, int port)
-			throws NetworkLinkException {
-		this.port = port;
-		try {
-			this.address = InetAddress.getByName(maddr);
-		} catch (UnknownHostException e) {
-			throw new NetworkLinkException(e);
-		}
-		if (!address.isMulticastAddress()) {
-			throw new NetworkLinkException(maddr + ": not a multicast IP address");
-		}
-		socket = null;
+	public MulticastUDPLink(String host, int port)
+			throws NetworkLinkException,UnknownHostException {
+    this(InetAddress.getByName(host), port);
 	}
+
+  public MulticastUDPLink(InetAddress address, int port) throws NetworkLinkException {
+    this.address = address;
+    this.port = port;
+   
+    if (!address.isMulticastAddress()) {
+      throw new NetworkLinkException(address + ": not a multicast IP address");
+    }
+    socket = null;
+  }
 
   @Override
 	public synchronized void enable() throws NetworkLinkException {
@@ -137,4 +138,5 @@ public final class MulticastUDPLink implements NetworkLink {
 
 	}
 
+  
 }
