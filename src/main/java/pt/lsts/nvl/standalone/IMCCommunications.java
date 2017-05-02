@@ -22,7 +22,7 @@ import pt.lsts.nvl.net.UDPLink;
 import pt.lsts.nvl.runtime.NVLRuntimeException;
 import pt.lsts.nvl.util.Clock;
 
-public class AnnounceThread extends Thread {
+public class IMCCommunications extends Thread {
   
   static {
     try {
@@ -58,7 +58,7 @@ public class AnnounceThread extends Thread {
   private UDPLink messageLink;
   private boolean active;
 
-  public AnnounceThread() {
+  public IMCCommunications() {
     setupLinks();
     setupIdentification();
     active = true;
@@ -231,7 +231,7 @@ public class AnnounceThread extends Thread {
  
   
   public static void main(String[] args) {
-     new AnnounceThread().start();  
+     new IMCCommunications().start();  
   }
   
 }
