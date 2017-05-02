@@ -51,6 +51,15 @@ public class IMCCommunications extends Thread {
   private boolean active;
   private double timeOfStep;
   
+  private static IMCCommunications INSTANCE = null;
+  
+  public static IMCCommunications getInstance() { 
+    if (INSTANCE == null) {
+      INSTANCE = new IMCCommunications();
+    }
+    return INSTANCE;
+  }
+  
   private IMCCommunications() {
     super("IMC communications");
     setDaemon(true);
@@ -79,7 +88,7 @@ public class IMCCommunications extends Thread {
     Iterator<IMCVehicle> itr = vehicles.values().iterator();
     while (itr.hasNext()) {
       IMCVehicle vehicle = itr.next();
-      if (vehicle.timeOfLastMessage() - timeOfStep >= CONNECTION_TIMEOUT) {
+      if (vehicle.getRunningTask() != null && vehicle.timeOfLastMessage() - timeOfStep >= CONNECTION_TIMEOUT) {
         itr.remove();
       }
     }
@@ -241,11 +250,9 @@ public class IMCCommunications extends Thread {
     heartbeatMsg.setTimestampMillis(0);
   }
   
-  
- 
-  
   public static void main(String[] args) {
-     new IMCCommunications().start();  
+    IMCCommunications comm = getInstance();
+    comm.start();
   }
   
 }

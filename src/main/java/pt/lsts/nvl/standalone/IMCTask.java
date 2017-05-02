@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import pt.lsts.nvl.runtime.VehicleRequirements;
-import pt.lsts.nvl.runtime.tasks.Task;
+import pt.lsts.nvl.runtime.tasks.PlatformTask;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
-public final class IMCTask implements Task {
+public final class IMCTask implements PlatformTask {
 
   private final String id;
   

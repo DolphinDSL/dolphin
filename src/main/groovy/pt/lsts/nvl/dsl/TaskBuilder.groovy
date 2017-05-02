@@ -9,13 +9,14 @@ import pt.lsts.nvl.runtime.tasks.PlatformTask
 import pt.lsts.nvl.runtime.tasks.SequentialTaskComposition
 import pt.lsts.nvl.runtime.tasks.Task
 import pt.lsts.nvl.runtime.tasks.TimeConstrainedTask
+import pt.lsts.nvl.runtime.tasks.IdleTask
 
 @DSLClass
 final class TaskBuilder extends Instruction<Void> {
   Task task
 
   TaskBuilder(String id) {
-    task = new PlatformTask(id)
+    task = new IdleTask(id)
   }
   
   TaskBuilder(Task t) {

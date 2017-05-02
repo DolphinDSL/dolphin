@@ -12,6 +12,7 @@ import pt.lsts.imc.IMCMessage;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
+import pt.lsts.nvl.runtime.tasks.Task;
 
 public final class IMCVehicle implements NVLVehicle {
 
@@ -27,6 +28,7 @@ public final class IMCVehicle implements NVLVehicle {
 
   private final IdentityHashMap<Class<? extends IMCMessage>, List<Subscriber<IMCMessage>>> 
   subscriptions = new IdentityHashMap<>();
+  private Task runningTask;
 
   IMCVehicle(InetAddress address, int port, Announce a) {
     this.address = address;
@@ -86,6 +88,14 @@ public final class IMCVehicle implements NVLVehicle {
     lastMsgTime = message.getTimestamp();
   }
 
+  public void setRunningTask(Task t) {
+    runningTask = t;
+  }
+  @Override
+  public Task getRunningTask() {
+    return runningTask;
+  }
+  
   @Override
   public String getId() {
     return lastAnnounce.getSysName();

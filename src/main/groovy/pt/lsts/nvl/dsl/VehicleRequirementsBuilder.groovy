@@ -1,9 +1,6 @@
 package pt.lsts.nvl.dsl;
 
-import java.net.Authenticator.RequestorType
 
-import pt.lsts.nvl.runtime.Availability
-import pt.lsts.nvl.runtime.NVLVehicleType
 import pt.lsts.nvl.runtime.PayloadComponent
 import pt.lsts.nvl.runtime.Position
 import pt.lsts.nvl.runtime.VehicleRequirements
@@ -15,7 +12,6 @@ final class VehicleRequirementsBuilder
   VehicleRequirements req = new VehicleRequirements()
   
   VehicleRequirementsBuilder() {
-    req.setRequiredAvailability Availability.AVAILABLE
   }
   
   void type(String t) {
