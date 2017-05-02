@@ -3,7 +3,7 @@ package pt.lsts.nvl.util.wgs84;
 /**
  * North-East-Down displacement coordinates.
  */
-public final class NED {
+public strictfp final class NED {
   /** North displacement */
   public final double north;
   

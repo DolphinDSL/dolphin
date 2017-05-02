@@ -2,39 +2,26 @@ package pt.lsts.nvl.util.wgs84;
 
 import static java.lang.Math.*;
 
+import pt.lsts.nvl.runtime.Position;
+
 /**
  * WGS-84 coordinate.
  * @author Eduardo Marques, Ricardo Martins (original DUNE code)
  * @author Eduardo Marques (port)
  */
-public final class WGS84 {
-
+public strictfp final class WGS84 {
+  /**
+   * Private constructor to avoid instantiation (this is a utility class).
+   */
+  private WGS84() { }
+  
   /** Semi-major axis. **/
   public static final double SMA = 6378137.0;
 
   /** First eccentricity squared. **/
   public static final double ECC_SQ = 0.00669437999013;
 
-  /** WGS84 latitude. */
-  public final double lat; 
-
-  /** WGS84 longitude. */
-  public final double lon;
-
-  /** WGS84 height. */
-  public final double hae;
-
-  /**
-   * Constructor
-   * @param lat Latitude (radians).
-   * @param lon Longitude (radians).
-   * @param hae Height (meters)
-   */
-  public WGS84(double lat, double lon, double hae) {
-    this.lat = lat;
-    this.lon = lon;
-    this.hae = hae;
-  }
+  
 
   /**
    * Calculate distance between two WGS-84 coordinates.
@@ -42,8 +29,8 @@ public final class WGS84 {
    * @param b Second coordinate.
    * @return Distance between coordinates.
    */
-  public double distanceTo(WGS84 other) {
-    return toECEF().distanceTo(other.toECEF());
+  public static double distanceTo(Position a, Position b) {
+    return toECEF(a).distanceTo(toECEF(b));
   }
 
   /**
@@ -51,17 +38,17 @@ public final class WGS84 {
    * @param other 
    * @return
    */
-  public NED displacementTo(WGS84 other) {
-    ECEF c1 = toECEF(); 
-    ECEF c2 = other.toECEF(); 
+  public static NED displacementTo(Position a, Position b) {
+    ECEF c1 = toECEF(a); 
+    ECEF c2 = toECEF(b); 
 
     double dx = c2.x - c1.x;
     double dy = c2.y - c2.y;
     double dz = c2.z - c2.z;
-    double slat = sin(lat);
-    double clat = cos(lat);
-    double slon = sin(lon);
-    double clon = cos(lon);
+    double slat = sin(a.lat);
+    double clat = cos(a.lat);
+    double slon = sin(a.lon);
+    double clon = cos(a.lon);
     double n = -slat * clon * dx - slat * slon * dy + clat * dz; 
     double e = -slon * dx + clon * dy; 
     double d = -clat * clon * dx - clat * slon * dy - slat * dz;
@@ -73,16 +60,16 @@ public final class WGS84 {
    * @param ned NED offset.
    * @return Displaced coordinate.
    */
-  public WGS84 displace(NED ned) {
+  public static Position displace(Position p, NED ned) {
     // Convert reference to ECEF coordinates
-    ECEF ecef = toECEF();
+    ECEF ecef = toECEF(p);
 
     // Compute Geocentric latitude
     double phi = atan2(ecef.z, sqrt(ecef.x*ecef.x + ecef.y*ecef.y));
 
     // Compute all needed sine and cosine terms for conversion.
-    double slon = sin(lon);
-    double clon = cos(lon);
+    double slon = sin(p.lon);
+    double clon = cos(p.lon);
     double sphi = sin(phi); 
     double cphi = cos(phi);
 
@@ -104,15 +91,15 @@ public final class WGS84 {
    * @param c WGS-84 coordinate.
    * @return Corresponding ECEF coordinate.
    */ 
-  public ECEF toECEF() {
-    double cos_lat = cos(lat);
-    double sin_lat = sin(lat);
-    double cos_lon = cos(lon);
-    double sin_lon = sin(lon);
+  public static ECEF toECEF(Position p) {
+    double cos_lat = cos(p.lat);
+    double sin_lat = sin(p.lat);
+    double cos_lon = cos(p.lon);
+    double sin_lon = sin(p.lon);
     double rn = SMA / sqrt(1.0 - ECC_SQ * sin_lat * sin_lat);
-    double x = (rn + hae) * cos_lat * cos_lon;
-    double y = (rn + hae) * cos_lat * sin_lon;
-    double z = (((1.0 - ECC_SQ) * rn) + hae) * sin_lat;
+    double x = (rn + p.hae) * cos_lat * cos_lon;
+    double y = (rn + p.hae) * cos_lat * sin_lon;
+    double z = (((1.0 - ECC_SQ) * rn) + p.hae) * sin_lat;
     return new ECEF(x, y, z);
   }
   

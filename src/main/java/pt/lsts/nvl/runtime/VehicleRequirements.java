@@ -4,18 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
-public class VehicleRequirements implements Filter<NVLVehicle> {
+public final class VehicleRequirements {
 
-  private NVLVehicleType requiredType;
+  private String requiredType;
   private String requiredName = null;
-  private Availability requiredAvailability;
   private List<PayloadComponent> requiredPayload;
   private Position areaCenter;
   private double areaRadius;
   
   public VehicleRequirements() {
       requiredName = null;
-      requiredAvailability = null;
       requiredPayload = null;
       areaCenter = null;
       areaRadius = 0;
@@ -23,7 +21,7 @@ public class VehicleRequirements implements Filter<NVLVehicle> {
   }
 
 
-  public VehicleRequirements type(NVLVehicleType type) {
+  public VehicleRequirements type(String type) {
     requiredType = type;
     return this; // for chained: http://blog.crisp.se/2013/10/09/perlundholm/another-builder-pattern-for-java
   }
@@ -36,15 +34,6 @@ public class VehicleRequirements implements Filter<NVLVehicle> {
   public VehicleRequirements payload(List<PayloadComponent> components) {
     requiredPayload = components;
     return this;
-  }
-
-  public VehicleRequirements availability(Availability av) {
-    requiredAvailability = av;
-    return this;
-  }
-
-  VehicleRequirements available() {
-    return availability(Availability.AVAILABLE);
   }
 
 
@@ -60,11 +49,9 @@ public class VehicleRequirements implements Filter<NVLVehicle> {
     return this;
   }
 
-  @Override
-  public boolean apply(NVLVehicle v) {
+  public boolean matchedBy(NVLVehicle v) {
    return     (requiredName!= null && requiredName.equals(v.getId()))
-           && (requiredType == NVLVehicleType.ANY || (requiredType != null && (v.getType() == requiredType)))
-           && ((requiredAvailability != null && requiredAvailability == v.getAvailability())) 
+           && (requiredType != null && (v.getType() == requiredType))
            && ((requiredPayload != null && v.getPayload().containsAll(requiredPayload)))
            && ((areaCenter != null && v.getPosition().near(areaCenter, areaRadius) ));
   }
@@ -72,36 +59,22 @@ public class VehicleRequirements implements Filter<NVLVehicle> {
   public static List<NVLVehicle> filter(List<VehicleRequirements> reqs, List<NVLVehicle> allVehicles) {
     List<NVLVehicle> result = new ArrayList<>();
     for (VehicleRequirements req: reqs)  
-        allVehicles.stream().filter(v -> req.apply(v)).forEach(ok -> result.add(ok));
+        allVehicles.stream().filter(v -> req.matchedBy(v)).forEach(ok -> result.add(ok));
     return result; 
   }
   
   /**
    * @return the requiredType
    */
-  public NVLVehicleType getRequiredType() {
+  public String getRequiredType() {
   	return requiredType;
   }
 
   /**
    * @param requiredType the requiredType to set
    */
-  public void setRequiredType(NVLVehicleType requiredType) {
+  public void setRequiredType(String requiredType) {
   	this.requiredType = requiredType;
-  }
-
-  /**
-   * @return the requiredAvailability
-   */
-  public Availability getRequiredAvailability() {
-  	return requiredAvailability;
-  }
-
-  /**
-   * @param requiredAvailability the requiredAvailability to set
-   */
-  public void setRequiredAvailability(Availability requiredAvailability) {
-  	this.requiredAvailability = requiredAvailability;
   }
 
   /**
@@ -151,47 +124,9 @@ public class VehicleRequirements implements Filter<NVLVehicle> {
       String result="";
       if(requiredName != null)
           result+="Vehicle Name: "+requiredName+"\n";
-      if(requiredAvailability != null ){
-          result+="AVAILABILITY: ";
-          switch(requiredAvailability){
-            case AVAILABLE:
-                result+="AVAILABLE";
-                break;
-            case BUSY:
-                result+="BUSY";
-                break;
-            case NOT_OPERATIONAL:
-                result+="NOT_OPERATIONAL";
-                break;
-            default:
-                break;
-              
-          }
-          result+="\n";
-      }
+      
       if(requiredType != null ){
-          result+="Type: ";
-          switch(requiredType){
-            case UAV:
-                result+="Unmanned Aerial Vehicle";
-                break;
-            case ASV:
-                result+="Autonomous Surface Vehicle";
-                break;
-            case ROV:
-                result+="Remotely Operated Underwater Vehicle";
-                break;
-            case AUV:
-                result+="Autonomous Underwater Vehicle";
-                break;
-            case ANY:
-                result+="Any Vehicle";
-                break;
-            default:
-                break;
-              
-          }
-          result+="\n";
+          result+="Type: " + requiredType;
       }
       if(requiredPayload != null){
           result+="Payloads: \n";

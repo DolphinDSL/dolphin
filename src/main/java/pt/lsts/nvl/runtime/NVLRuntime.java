@@ -6,12 +6,10 @@ import pt.lsts.nvl.runtime.tasks.Task;
 
 public interface NVLRuntime {
 
-  List<NVLVehicle> getVehicles(Filter<NVLVehicle> filter);//substitute to VehicleRequirements?
+  List<NVLVehicle> getVehicles(List<VehicleRequirements> requirements);
   NVLVehicle getVehicle(String id);
 
-  List<TaskSpecification> getTasks(Filter<TaskSpecification> filter);  
   Task getTask(String id);
 
-  List<TaskExecution> launchTask(TaskSpecification task, List<NVLVehicle> vehicles);
 
 }

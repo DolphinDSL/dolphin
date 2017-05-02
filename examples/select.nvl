@@ -1,11 +1,11 @@
 select {
   time 20
   vehicle {
-    type AUV
+    type 'AUV'
     payload 'SideScan', 'GPS'
   }
   vehicle {
-    type UAV
+    type 'UAV'
     payload 'Camera', 'GPS'
   }
 }

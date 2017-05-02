@@ -24,9 +24,9 @@ public class Debug {
     if (debugOn) {
       StackTraceElement info = Thread.currentThread().getStackTrace()[2];
       String fullFmt = 
-          String.format("%s()@%s:%d|%s", 
-                        info.getMethodName(),
+          String.format("%16s:%d %16s() %s", 
                         info.getFileName(), info.getLineNumber(),
+                        info.getMethodName(),
                         format
                        );
       debugLog.message(fullFmt, args);

@@ -2,13 +2,15 @@ package pt.lsts.nvl.util.wgs84;
 
 import static java.lang.Math.*;
 
+import pt.lsts.nvl.runtime.Position;
+
 /**
  * Earth-Center Earth-Fixed (ECEF) coordinates.
  * 
  * @author Eduardo Marques, Ricardo Martins (original DUNE code)
  * @author Eduardo Marques (port)
  */
-public final class ECEF {
+public strictfp final class ECEF {
   public final double x, y, z;
 
   /**
@@ -27,7 +29,7 @@ public final class ECEF {
    * Convert to WGS84 coordinate.
    * @return Corresponding WGS84 coordinate.
    */
-  public WGS84 toWGS84() {
+  public Position toWGS84() {
     double p = sqrt(x * x + y * y);
     double lon = atan2(y, x);
     double lat = atan2(z / p, 0.01);
@@ -44,7 +46,7 @@ public final class ECEF {
       n = WGS84.computeRn(lat);
       hae = p / cos(lat) - n;
     }
-    return new WGS84(lat, lon, hae);
+    return new Position(lat, lon, hae);
   }
   
   public double distanceTo(ECEF other) {

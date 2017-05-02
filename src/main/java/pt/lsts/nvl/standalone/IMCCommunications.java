@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,6 +22,7 @@ import pt.lsts.nvl.net.NetworkLinkException;
 import pt.lsts.nvl.net.UDPLink;
 import pt.lsts.nvl.runtime.NVLRuntimeException;
 import pt.lsts.nvl.util.Clock;
+import static pt.lsts.nvl.util.Debug.d;
 
 public class IMCCommunications extends Thread {
   
@@ -37,28 +39,21 @@ public class IMCCommunications extends Thread {
   private static final int LAST_ANNOUNCE_PORT = 30110;
   private static final double ANNOUNCE_PERIOD = 10;
   private static final double HEARTBEAT_PERIOD = 1;
-
-  private static class Peer {
-    InetAddress address;
-    int port;
-    double lastUpdate;
-    
-    Peer(InetAddress address, int port, double time) {
-      this.address = address;
-      this.port = port;
-      this.lastUpdate = time;
-    }
-  }
+  private static final double CONNECTION_TIMEOUT = 3 * ANNOUNCE_PERIOD;
   
   private final Announce announceMsg = new Announce();
   private final Heartbeat heartbeatMsg = new Heartbeat();
   private final byte[] rcvBuffer = new byte[16384];
-  private final Map<Integer,Peer> peers = new HashMap<>();
+  private final Map<Integer,IMCVehicle> vehicles = new HashMap<>();
+
   private MulticastUDPLink announceLink;
   private UDPLink messageLink;
   private boolean active;
-
-  public IMCCommunications() {
+  private double timeOfStep;
+  
+  private IMCCommunications() {
+    super("IMC communications");
+    setDaemon(true);
     setupLinks();
     setupIdentification();
     active = true;
@@ -66,55 +61,70 @@ public class IMCCommunications extends Thread {
   
   public void terminate() {
     active = false;
-    
+    teardownLinks();
   }
   
   public void run() {
     while (active) {
-      double now = Clock.now();
-      sendAnnounce(now);
-      sendHeartbeats(now);
-      checkForMessages(announceLink);
-      checkForMessages(messageLink);
+      timeOfStep = Clock.now();
+      sendAnnounce();
+      sendHeartbeats();
+      handleIncomingMessages(announceLink);
+      handleIncomingMessages(messageLink);
+      checkForLostConnections();
     }
   }
   
-  private void sendAnnounce(double now) {
-    if (now - announceMsg.getTimestamp() < ANNOUNCE_PERIOD) {
+  private void checkForLostConnections() {
+    Iterator<IMCVehicle> itr = vehicles.values().iterator();
+    while (itr.hasNext()) {
+      IMCVehicle vehicle = itr.next();
+      if (vehicle.timeOfLastMessage() - timeOfStep >= CONNECTION_TIMEOUT) {
+        itr.remove();
+      }
+    }
+  }
+  
+  private void sendAnnounce() {
+    if (timeOfStep - announceMsg.getTimestamp() < ANNOUNCE_PERIOD) {
       return;
     }
-    announceMsg.setTimestamp(now);
+    announceMsg.setTimestamp(timeOfStep);
     for (int p = FIRST_ANNOUNCE_PORT; p <= LAST_ANNOUNCE_PORT; p++) {
-      sendMessage(announceLink, announceMsg, ANNOUNCE_MCAST_ADDR, p);
+      send(announceLink, announceMsg, ANNOUNCE_MCAST_ADDR, p);
      // sendMessage(announceMsg, "255.255.255.255", p);
     }
-    for (Peer p : peers.values()) {
-      sendMessage(messageLink, announceMsg, p.address, p.port);
+    for (IMCVehicle p : vehicles.values()) {
+      send(messageLink, announceMsg, p.address(), p.port());
     }
   }
   
-  private void sendHeartbeats(double now) {
-    if (now - heartbeatMsg.getTimestamp() < HEARTBEAT_PERIOD) {
+  private void sendHeartbeats() {
+    if (timeOfStep - heartbeatMsg.getTimestamp() < HEARTBEAT_PERIOD) {
       return;
     }
-    heartbeatMsg.setTimestamp(now);
-    for (Peer p : peers.values()) {
-      sendMessage(messageLink, heartbeatMsg, p.address, p.port);
+    heartbeatMsg.setTimestamp(timeOfStep);
+    for (IMCVehicle p : vehicles.values()) {
+      send(messageLink, heartbeatMsg, p.address(), p.port());
     }
   }
   
-  private void checkForMessages(NetworkLink link) {
+  private void handleIncomingMessages(NetworkLink link) {
     int len;
     try {
       len = link.recv(rcvBuffer, 0, rcvBuffer.length, 1);
       if (len == 0) {
         return;
       }
-      IMCMessage msg = IMCDefinition.getInstance().parseMessage(rcvBuffer);
-      System.out.println("IN " + msg.getAbbrev());
+      IMCMessage message = IMCDefinition.getInstance().parseMessage(rcvBuffer);
+      message.setTimestamp(timeOfStep);
       
-      if (msg instanceof Announce) {
-        handleIncomingAnnounce((Announce) msg);
+      d("Incoming message: %s", message.getAbbrev());
+      IMCVehicle node = vehicles.get(message.getSrc());
+      if (node != null) {
+        node.handleIncomingMessage(message);
+      } else if(message instanceof Announce) {
+        handleNewNode((Announce) message);
       }
     } 
     catch (IOException e) {
@@ -122,10 +132,11 @@ public class IMCCommunications extends Thread {
       return;
     }
   }
-  private void handleIncomingAnnounce(Announce msg) {
-    System.out.println(msg.toString());
+  
+  private void handleNewNode(Announce message) {
+    d("New node: " + message.getSysName());
 
-    switch (msg.getSysType()) {
+    switch (message.getSysType()) {
       case CCU:
       case HUMANSENSOR:
       case MOBILESENSOR:
@@ -135,13 +146,8 @@ public class IMCCommunications extends Thread {
       default:
         break;
     }
-
-    Peer p = peers.get(msg.getSrc());
-    if (p != null) {
-      p.lastUpdate = Clock.now();
-      return;
-    }
-    for (String serv : msg.getServices().split(";")) {
+    IMCVehicle vehicle = null;
+    for (String serv : message.getServices().split(";")) {
       if (serv.startsWith("imc+udp://")) {
         String s = serv.substring(10);
         s = s.replaceAll("/", " ");
@@ -149,36 +155,35 @@ public class IMCCommunications extends Thread {
         try {
           InetAddress inetAddress = InetAddress.getByName(parts[0]);
           int port = Integer.parseInt(parts[1].split(" ")[0]);  
-          System.out.println("ALIVE " + inetAddress + ":" + port);
-          p = new Peer(inetAddress, port, Clock.now());
+          d("ALIVE " + inetAddress + ":" + port);
+          vehicle = new IMCVehicle(inetAddress, port, message);
           break;
         } catch (UnknownHostException e) {
           
         }
       }
     }
-    if (p != null) {
-      peers.put(msg.getSrc(), p);
+    if (vehicle != null) {
+      vehicles.put(message.getSrc(), vehicle);
     }
-    
   }
   
-  public void sendMessage(NetworkLink link, IMCMessage msg, String peer, int port) {
-    try {
-      sendMessage(link, msg,  InetAddress.getByName(peer), port);
-    } catch (UnknownHostException e) {
-      throw new NVLRuntimeException(e);
+  public boolean send(String id, IMCMessage message) {
+    IMCVehicle vehicle = vehicles.get(id);
+    if (vehicle == null) {
+      return false;
     }
+    send(messageLink, message, vehicle.address(), vehicle.port());
+    return true;
   }
-
-  public void sendMessage(NetworkLink link, IMCMessage msg, InetAddress address, int port) {
+  
+  private void send(NetworkLink link, IMCMessage message, InetAddress address, int port) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try {
-      msg.serialize(new IMCOutputStream(baos));
+      message.serialize(new IMCOutputStream(baos));
       byte[] data = baos.toByteArray();
       link.sendTo(data, 0, data.length, address, port);
-      System.out.println("OUT " + address.toString() + ":" + port + " " + msg.getAbbrev() );
-
+      d("OUT " + address.toString() + ":" + port + " " + message.getAbbrev() );
     } catch (IOException e) {
       throw new NVLRuntimeException(e);
     }
@@ -205,6 +210,15 @@ public class IMCCommunications extends Thread {
     }
     if (announceLink == null) {
       throw new NVLRuntimeException("Could not setup announce link");
+    }
+  }
+  
+  private void teardownLinks() {
+    try {
+      messageLink.disable();
+      announceLink.disable();
+    } catch (NetworkLinkException e) {
+      e.printStackTrace();
     }
   }
 

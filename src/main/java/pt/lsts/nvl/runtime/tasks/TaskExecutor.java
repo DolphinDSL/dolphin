@@ -30,7 +30,7 @@ public abstract class TaskExecutor {
   private List<NVLVehicle> boundVehicles;
   private CompletionState completionState;
 
-  TaskExecutor(Task theTask) {
+  protected TaskExecutor(Task theTask) {
     task = theTask;
     state = State.INITIALIZING;
     startTime = -1;

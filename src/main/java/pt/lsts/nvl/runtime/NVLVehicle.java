@@ -4,8 +4,7 @@ import java.util.List;
 
 public interface NVLVehicle {
    String getId();
-   NVLVehicleType getType();
-   Availability getAvailability();
+   String getType();
    Position getPosition();
    List<PayloadComponent> getPayload();
 }

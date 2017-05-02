@@ -18,7 +18,7 @@ final class VehicleRequirementsBuilder
     req.setRequiredAvailability Availability.AVAILABLE
   }
   
-  void type(NVLVehicleType t) {
+  void type(String t) {
     req.setRequiredType t
   }
   
