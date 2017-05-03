@@ -2,7 +2,9 @@ package pt.lsts.nvl.runtime.tasks;
 
 
 import java.util.List;
+import java.util.Map;
 
+import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 import static pt.lsts.nvl.util.Debug.d;
 
@@ -19,9 +21,10 @@ public class IdleTask implements Task {
     return id;
   }
 
+  
   @Override
-  public void getRequirements(List<VehicleRequirements> requirements) {
-    // NO REQUIREMENTS
+  public boolean allocate(List<NVLVehicle> available, Map<Task, List<NVLVehicle>> allocation) {
+    return true;
   }
   
   @Override
@@ -29,7 +32,7 @@ public class IdleTask implements Task {
     return new TaskExecutor(this) {
 
       @Override
-      protected void onInitialize() {
+      protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
         d("Initialized " + getId());     
       }
 
@@ -50,6 +53,8 @@ public class IdleTask implements Task {
       
     };
   }
+
+
 
 
 }

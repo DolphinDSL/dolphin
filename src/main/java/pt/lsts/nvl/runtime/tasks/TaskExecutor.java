@@ -2,6 +2,7 @@ package pt.lsts.nvl.runtime.tasks;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import pt.lsts.nvl.runtime.NVLPlatform;
 import pt.lsts.nvl.runtime.NVLExecutionException;
@@ -54,23 +55,10 @@ public abstract class TaskExecutor {
     return completionState;
   }
   
-  public final List<NVLVehicle> getVehicles() {
-    return boundVehicles; 
-  }
-
-  public boolean initialize(NVLPlatform runtime) {
+ 
+  public boolean initialize(Map<Task,List<NVLVehicle>> allocation) {
     requireState(State.INITIALIZING);
-    onInitialize();
-//    List<NVLVehicle> reservedVehicles = new ArrayList<>();
-//    List<NVLVehicle> allVehicles = runtime.getVehicles(x -> true);
-//    for (VehicleRequirements r : task.getRequirements()) {
-//      Optional<NVLVehicle> v = allVehicles.stream().filter(veh -> r.apply(veh)).findFirst();
-//      if (!v.isPresent()) {
-//        return false;
-//      }
-//      reservedVehicles.add(v.get());
-//    }
-//    boundVehicles = Collections.unmodifiableList(reservedVehicles);
+    onInitialize(allocation);
     state = State.READY;
     return true;    
   }
@@ -97,7 +85,7 @@ public abstract class TaskExecutor {
     return timeElapsed;
   }
 
-  protected abstract void onInitialize();
+  protected abstract void onInitialize(Map<Task,List<NVLVehicle>> allocation);
   protected abstract void onStart();
   protected abstract CompletionState onStep();
   protected abstract void onCompletion();

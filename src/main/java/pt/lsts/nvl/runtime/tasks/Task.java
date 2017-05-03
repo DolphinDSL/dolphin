@@ -1,11 +1,12 @@
 package pt.lsts.nvl.runtime.tasks;
 
 import java.util.List;
+import java.util.Map;
 
-import pt.lsts.nvl.runtime.VehicleRequirements;
+import pt.lsts.nvl.runtime.NVLVehicle;
 
 public interface Task {
   String getId();
-  void getRequirements(List<VehicleRequirements> requirements);
   TaskExecutor getExecutor();
+  boolean allocate(List<NVLVehicle> available, Map<Task,List<NVLVehicle>> allocation);
 }

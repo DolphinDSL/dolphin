@@ -1,16 +1,25 @@
 package pt.lsts.nvl.runtime;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
 
 import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
 public final class NVLRuntime {
 
-  public NVLRuntime(NVLPlatform platform) {
-    this.platform = platform;
+  private static  NVLRuntime INSTANCE;
+  
+  public static NVLRuntime getInstance() {
+     if (INSTANCE == null) {
+       INSTANCE = new NVLRuntime();
+     }
+     return INSTANCE;
+  }
+  
+  private NVLRuntime() {
+    this.platform = NVLPlatform.create();
   }
 
   private final NVLPlatform platform;
@@ -19,38 +28,19 @@ public final class NVLRuntime {
     return platform;
   }
 
-  public final boolean selectVehiclesForTask(Task task, List<NVLVehicle> available, List<NVLVehicle> selection) {
-    selection.clear();
-    List<VehicleRequirements> requirements = new LinkedList<>();
-    task.getRequirements(requirements);
-    for (VehicleRequirements r : requirements) {
-      Optional<NVLVehicle> ov = available.stream().filter(v -> r.matchedBy(v)).findFirst();
-      if (ov.isPresent()) {
-        NVLVehicle v = ov.get();
-        available.remove(v);
-        selection.add(v);
-      } else {
-        break;
-      }
-    }
-    boolean success = selection.size() == requirements.size();
-    if (success) {
-      selection.forEach(v -> v.setRunningTask(task)); 
-    } else {
-      // Undo
-      available.addAll(selection);
-    }
-    return success;   
-  }
-  
+
   public void run(Task task) {
     List<NVLVehicle> available = platform.getConnectedVehicles();
-    List<NVLVehicle> selected = new LinkedList<>();
-    if (!selectVehiclesForTask(task, available, selected)) {
-      throw new NVLExecutionException("Not enough vehicles");
+    
+    Map<Task,List<NVLVehicle>> allocation = new HashMap<>();
+    
+    if (task.allocate(available, allocation) == false) {
+      throw new NVLExecutionException("No vehicles to run task!");
     }
+
+    
     TaskExecutor executor = task.getExecutor();
-    executor.initialize(null);
+    executor.initialize(allocation);
     executor.start();
     while (executor.getState() != TaskExecutor.State.COMPLETED) {
       executor.step();

@@ -1,5 +1,10 @@
 package pt.lsts.nvl.runtime.tasks;
 
+import java.util.List;
+import java.util.Map;
+
+import pt.lsts.nvl.runtime.NVLVehicle;
+
 public abstract class ConstrainedTaskExecutor extends TaskExecutor {
 
   private final TaskExecutor task;
@@ -19,8 +24,8 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
   }
 
   @Override
-  protected void onInitialize() {
-    task.initialize(null);
+  protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
+    task.initialize(allocation);
   }
 
   @Override

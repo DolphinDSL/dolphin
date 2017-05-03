@@ -1,7 +1,9 @@
 package pt.lsts.nvl.runtime.tasks;
 
 import java.util.List;
+import java.util.Map;
 
+import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 
 public class SequentialTaskComposition implements Task {
@@ -17,11 +19,10 @@ public class SequentialTaskComposition implements Task {
   public String getId() {
     return first.getId() + " >> " + second.getId();
   }
-
+  
   @Override
-  public void getRequirements(List<VehicleRequirements> requirements) {
-     first.getRequirements(requirements);
-     second.getRequirements(requirements);
+  public boolean allocate(List<NVLVehicle> available, Map<Task, List<NVLVehicle>> allocation) {
+    return first.allocate(available, allocation) && second.allocate(available, allocation);
   }
 
   @Override
@@ -31,9 +32,9 @@ public class SequentialTaskComposition implements Task {
     return new TaskExecutor(this) {
       boolean firstTaskDone = false;
       @Override
-      protected void onInitialize() {
-        firstTaskExec.initialize(null);    
-        secondTaskExec.initialize(null);
+      protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
+        firstTaskExec.initialize(allocation);    
+        secondTaskExec.initialize(allocation);
       }
 
       @Override
@@ -63,5 +64,7 @@ public class SequentialTaskComposition implements Task {
       }
     };
   }
+
+
 
 }

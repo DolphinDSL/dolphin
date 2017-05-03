@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -259,7 +260,9 @@ public class IMCCommunications extends Thread {
   }
 
   public List<NVLVehicle> getConnectedVehicles() {
-    return Arrays.asList(vehicles.values().toArray(new IMCVehicle[vehicles.size()]));
+    List<NVLVehicle> list = new LinkedList<>();
+    list.addAll(vehicles.values());
+    return list;
   }
   
 }

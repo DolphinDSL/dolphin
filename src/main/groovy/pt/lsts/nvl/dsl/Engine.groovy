@@ -8,6 +8,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
 import pt.lsts.nvl.runtime.NVLPlatform
 import pt.lsts.nvl.runtime.NVLRuntime
 import pt.lsts.nvl.runtime.tasks.Task
+import pt.lsts.imc.CreateSession
 import pt.lsts.nvl.runtime.NVLExecutionException
 
 
@@ -27,7 +28,7 @@ class Engine {
   static final Engine instance = new Engine()
   
   private Engine() {
-    runtime = new NVLRuntime(NVLPlatform.create());
+    runtime = NVLRuntime.getInstance()
   }
  
   private void ensureInitialized() {

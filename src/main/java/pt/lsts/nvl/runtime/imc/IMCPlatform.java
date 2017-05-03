@@ -8,12 +8,12 @@ import pt.lsts.nvl.runtime.tasks.PlatformTask;
 
 public class IMCPlatform implements NVLPlatform {
 
-  final IMCCommunications comm = null; //IMCCommunications.getInstance();
+  final IMCCommunications comm = IMCCommunications.getInstance();
   
   public IMCPlatform() {
-    //if (!comm.isAlive()) {
-      //comm.start();
-    //}
+    if (!comm.isAlive()) {
+      comm.start();
+    }
   }
   
   @Override
@@ -23,7 +23,7 @@ public class IMCPlatform implements NVLPlatform {
 
   @Override
   public List<NVLVehicle> getConnectedVehicles() {
-    return null;// comm.getConnectedVehicles();
+    return comm.getConnectedVehicles();
   }
 
 

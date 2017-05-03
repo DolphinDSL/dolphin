@@ -1,23 +1,15 @@
 package pt.lsts.nvl.runtime.imc;
 
-import java.util.Arrays;
 import java.util.List;
 
 import pt.lsts.nvl.runtime.VehicleRequirements;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
-public final class IMCTask implements PlatformTask {
+public final class IMCTask extends PlatformTask {
 
-  private final String id;
-  
   public IMCTask(String id) {
-    this.id = id;
-  }
-
-  @Override
-  public String getId() {
-    return id;
+    super(id);
   }
 
   @Override
