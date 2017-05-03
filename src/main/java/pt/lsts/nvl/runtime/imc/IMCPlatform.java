@@ -8,7 +8,7 @@ import pt.lsts.nvl.runtime.tasks.PlatformTask;
 
 public class IMCPlatform implements NVLPlatform {
 
-  final IMCCommunications comm = IMCCommunications.getInstance();
+  private final IMCCommunications comm = IMCCommunications.getInstance();
   
   public IMCPlatform() {
     if (!comm.isAlive()) {
