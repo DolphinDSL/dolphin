@@ -8,11 +8,7 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
 import pt.lsts.nvl.runtime.NVLPlatform
 import pt.lsts.nvl.runtime.NVLRuntime
 import pt.lsts.nvl.runtime.tasks.Task
-import pt.lsts.imc.CreateSession
 import pt.lsts.nvl.runtime.NVLExecutionException
-
-
-
 
 /**
  * The NVL engine.
@@ -71,7 +67,7 @@ class Engine {
   }
   
   void run(Task task) {
-    runtime.run(task);
+    runtime.run task
   }
   
   public static void main(String... args) {
