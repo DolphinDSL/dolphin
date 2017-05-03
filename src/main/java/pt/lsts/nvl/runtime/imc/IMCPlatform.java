@@ -1,4 +1,4 @@
-package pt.lsts.nvl.standalone;
+package pt.lsts.nvl.runtime.imc;
 
 import java.util.List;
 
@@ -8,12 +8,12 @@ import pt.lsts.nvl.runtime.tasks.PlatformTask;
 
 public class IMCPlatform implements NVLPlatform {
 
-  final IMCCommunications comm = IMCCommunications.getInstance();
+  final IMCCommunications comm = null; //IMCCommunications.getInstance();
   
   public IMCPlatform() {
-    if (!comm.isAlive()) {
-      comm.start();
-    }
+    //if (!comm.isAlive()) {
+      //comm.start();
+    //}
   }
   
   @Override
@@ -23,7 +23,7 @@ public class IMCPlatform implements NVLPlatform {
 
   @Override
   public List<NVLVehicle> getConnectedVehicles() {
-    return comm.getConnectedVehicles();
+    return null;// comm.getConnectedVehicles();
   }
 
 

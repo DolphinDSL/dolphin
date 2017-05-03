@@ -6,7 +6,7 @@ import pt.lsts.nvl.runtime.tasks.PlatformTask;
 
 public interface NVLPlatform {
   
-  String NVL_PLATFORM_PROPERTY = "nvl.platform.factory.class";
+  String NVL_PLATFORM_PROPERTY = "nvl.platform.class";
   
   static NVLPlatform create() {
     try {

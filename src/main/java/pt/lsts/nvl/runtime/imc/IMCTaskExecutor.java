@@ -1,4 +1,4 @@
-package pt.lsts.nvl.standalone;
+package pt.lsts.nvl.runtime.imc;
 
 import pt.lsts.imc.PlanControl;
 import pt.lsts.nvl.runtime.tasks.CompletionState;

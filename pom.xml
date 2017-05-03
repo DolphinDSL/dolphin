@@ -32,7 +32,7 @@
 			<artifactId>imc</artifactId>
 			<version>LATEST</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}/libs/libimc.jar</systemPath>
+			<systemPath>${project.basedir}/lib/libimc.jar</systemPath>
 		</dependency>
 	</dependencies>
 

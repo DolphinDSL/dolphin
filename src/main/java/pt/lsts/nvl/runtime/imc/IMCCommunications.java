@@ -1,4 +1,4 @@
-package pt.lsts.nvl.standalone;
+package pt.lsts.nvl.runtime.imc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

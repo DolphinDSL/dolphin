@@ -31,7 +31,7 @@ class Engine {
   }
  
   private void ensureInitialized() {
-    if (runtime != null) {
+    if (runtime == null) {
       throw new NVLExecutionException("Engine not initialized!")
     }
   }
