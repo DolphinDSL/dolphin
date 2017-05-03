@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.VehicleRequirements;
 
 public class ConcurrentTaskComposition implements Task {
 

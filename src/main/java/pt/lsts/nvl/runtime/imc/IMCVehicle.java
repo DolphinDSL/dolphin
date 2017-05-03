@@ -13,6 +13,7 @@ import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
+import pt.lsts.nvl.util.Variable;
 
 public final class IMCVehicle implements NVLVehicle {
 
@@ -59,6 +60,13 @@ public final class IMCVehicle implements NVLVehicle {
     return port;
   }
 
+  public <T extends IMCMessage>
+  Variable<T> subscribe(Class<T> classOfMessages) {
+    Variable<T> var = new Variable<>();
+    subscribe(classOfMessages, msg -> var.set(msg));
+    return var;
+  }
+  
   @SuppressWarnings("unchecked")
   public <T extends IMCMessage>
   void subscribe(Class<T> classOfMessages, Subscriber<T> subscriber) {
@@ -115,5 +123,9 @@ public final class IMCVehicle implements NVLVehicle {
   @Override
   public List<PayloadComponent> getPayload() {
     return Collections.emptyList();
+  }
+
+  public void send(IMCMessage message) {
+    IMCCommunications.getInstance().send(message, address, port);    
   }
 }

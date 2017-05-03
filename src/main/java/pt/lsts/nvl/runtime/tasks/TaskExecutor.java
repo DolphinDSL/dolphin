@@ -1,10 +1,8 @@
 package pt.lsts.nvl.runtime.tasks;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLPlatform;
 import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.util.Clock;
@@ -28,14 +26,12 @@ public abstract class TaskExecutor {
   private State state;
   private double startTime;
   private double timeElapsed;
-  private List<NVLVehicle> boundVehicles;
   private CompletionState completionState;
 
   protected TaskExecutor(Task theTask) {
     task = theTask;
     state = State.INITIALIZING;
     startTime = -1;
-    boundVehicles = Collections.emptyList();
     completionState = new CompletionState(CompletionState.Type.UNDEFINED);
   }
 

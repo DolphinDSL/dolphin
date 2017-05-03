@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -181,13 +180,8 @@ public class IMCCommunications extends Thread {
     }
   }
   
-  public boolean send(String id, IMCMessage message) {
-    IMCVehicle vehicle = vehicles.get(id);
-    if (vehicle == null) {
-      return false;
-    }
-    send(messageLink, message, vehicle.address(), vehicle.port());
-    return true;
+  public void send(IMCMessage message, InetAddress address, int port) {
+    send(messageLink, message, address, port);
   }
   
   private void send(NetworkLink link, IMCMessage message, InetAddress address, int port) {
@@ -264,5 +258,6 @@ public class IMCCommunications extends Thread {
     list.addAll(vehicles.values());
     return list;
   }
+
   
 }
