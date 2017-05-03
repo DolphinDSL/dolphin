@@ -21,8 +21,8 @@ public final class IMCTask implements PlatformTask {
   }
 
   @Override
-  public List<VehicleRequirements> getRequirements() {
-    return Arrays.asList(new VehicleRequirements());
+  public void getRequirements(List<VehicleRequirements> requirements) {
+    requirements.add(new VehicleRequirements());
   }
 
   @Override

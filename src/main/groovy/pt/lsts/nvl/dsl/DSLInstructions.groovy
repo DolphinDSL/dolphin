@@ -3,6 +3,7 @@ package pt.lsts.nvl.dsl
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import pt.lsts.nvl.runtime.tasks.TaskExecutor
+import pt.lsts.nvl.runtime.NVLRuntime
 import pt.lsts.nvl.runtime.tasks.Task
 import static pt.lsts.nvl.util.Debug.d
 
@@ -20,7 +21,7 @@ class DSLInstructions {
   
   static def execute(TaskBuilder tb) {
     d tb.getTask().getId()
-    TaskExecutor.run tb.getTask()
+    Engine.instance.run tb.getTask()
   }
   
   private DSLInstructions() {

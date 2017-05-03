@@ -6,7 +6,6 @@ import pt.lsts.nvl.runtime.VehicleRequirements;
 
 public interface Task {
   String getId();
-  
-  List<VehicleRequirements> getRequirements();
+  void getRequirements(List<VehicleRequirements> requirements);
   TaskExecutor getExecutor();
 }

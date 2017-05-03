@@ -3,8 +3,8 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.Collections;
 import java.util.List;
 
-import pt.lsts.nvl.runtime.NVLRuntime;
-import pt.lsts.nvl.runtime.NVLRuntimeException;
+import pt.lsts.nvl.runtime.NVLPlatform;
+import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.util.Clock;
 
@@ -58,7 +58,7 @@ public abstract class TaskExecutor {
     return boundVehicles; 
   }
 
-  public boolean initialize(NVLRuntime runtime) {
+  public boolean initialize(NVLPlatform runtime) {
     requireState(State.INITIALIZING);
     onInitialize();
 //    List<NVLVehicle> reservedVehicles = new ArrayList<>();
@@ -104,22 +104,10 @@ public abstract class TaskExecutor {
 
   private void requireState(State s) {
     if (getState() != s) {
-      throw new NVLRuntimeException("Expected " + s + " state");
+      throw new NVLExecutionException("Expected " + s + " state");
     }
   }
   
   
-  public static void run(Task t) {
-    TaskExecutor executor = t.getExecutor();
-    executor.initialize(null);
-    executor.start();
-    while (executor.getState() != TaskExecutor.State.COMPLETED) {
-      executor.step();
-      try {
-        Thread.sleep(100);
-      } catch (InterruptedException e) {
-        throw new RuntimeException(e);
-      }
-    }
-  }
+ 
 }

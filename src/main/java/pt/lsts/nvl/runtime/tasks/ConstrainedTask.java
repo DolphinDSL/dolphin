@@ -7,6 +7,7 @@ import pt.lsts.nvl.runtime.VehicleRequirements;
 public abstract class ConstrainedTask implements Task {
 
   protected final Task theTask;
+  
   public ConstrainedTask(Task t) {
     theTask = t;
   }
@@ -17,7 +18,7 @@ public abstract class ConstrainedTask implements Task {
   }
 
   @Override
-  public final List<VehicleRequirements> getRequirements() {
-    return theTask.getRequirements();
+  public final void getRequirements(List<VehicleRequirements> requirements) {
+    theTask.getRequirements(requirements);
   }
 }

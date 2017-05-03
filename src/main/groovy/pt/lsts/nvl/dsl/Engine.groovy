@@ -5,7 +5,12 @@ import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
+import pt.lsts.nvl.runtime.NVLPlatform
 import pt.lsts.nvl.runtime.NVLRuntime
+import pt.lsts.nvl.runtime.tasks.Task
+import pt.lsts.nvl.runtime.NVLExecutionException
+
+
 
 
 /**
@@ -22,19 +27,27 @@ class Engine {
   static final Engine instance = new Engine()
   
   private Engine() {
-    
+    runtime = new NVLRuntime(NVLPlatform.create());
   }
  
+  private void ensureInitialized() {
+    if (runtime != null) {
+      throw new NVLExecutionException("Engine not initialized!")
+    }
+  }
+  
   private void ensureShellIsCreated() {
+    ensureInitialized()
     if (shell == null) {
       // Imports
       def ic = new ImportCustomizer()
       ic.with {
         addStaticStars 'java.lang.Math'
-        addStarImports 'pt.lsts.nvl.dsl'
         addStaticStars 'pt.lsts.nvl.dsl.DSLInstructions'
-        addStaticStars 'pt.lsts.nvl.runtime.NVLVehicleType'
+        addStarImports 'pt.lsts.nvl.dsl'
+        addStarImports 'pt.lsts.nvl.runtime'
       }
+      
       // Compiler configuration
       def cfg = new CompilerConfiguration()
       cfg.with {
@@ -54,6 +67,10 @@ class Engine {
   void bind(String var, Object value) {
     ensureShellIsCreated()
     shell.setVariable var, value
+  }
+  
+  void run(Task task) {
+    runtime.run(task);
   }
   
   public static void main(String... args) {

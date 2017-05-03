@@ -4,8 +4,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -20,7 +22,8 @@ import pt.lsts.nvl.net.MulticastUDPLink;
 import pt.lsts.nvl.net.NetworkInterfaces;
 import pt.lsts.nvl.net.NetworkLinkException;
 import pt.lsts.nvl.net.UDPLink;
-import pt.lsts.nvl.runtime.NVLRuntimeException;
+import pt.lsts.nvl.runtime.NVLExecutionException;
+import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.util.Clock;
 import static pt.lsts.nvl.util.Debug.d;
 
@@ -30,7 +33,7 @@ public class IMCCommunications extends Thread {
     try {
       ANNOUNCE_MCAST_ADDR = InetAddress.getByName("224.0.75.69");
     } catch (UnknownHostException e) {
-      throw new NVLRuntimeException(e);
+      throw new NVLExecutionException(e);
     }
   }
 
@@ -194,7 +197,7 @@ public class IMCCommunications extends Thread {
       link.sendTo(data, 0, data.length, address, port);
       d("OUT " + address.toString() + ":" + port + " " + message.getAbbrev() );
     } catch (IOException e) {
-      throw new NVLRuntimeException(e);
+      throw new NVLExecutionException(e);
     }
   }
   
@@ -204,7 +207,7 @@ public class IMCCommunications extends Thread {
       messageLink = new UDPLink();
       messageLink.enable();
     } catch (NetworkLinkException e) {
-      throw new NVLRuntimeException(e);
+      throw new NVLExecutionException(e);
     }
     for (int port = FIRST_ANNOUNCE_PORT; announceLink == null && port <= LAST_ANNOUNCE_PORT; port++) {
       try {
@@ -218,7 +221,7 @@ public class IMCCommunications extends Thread {
       }
     }
     if (announceLink == null) {
-      throw new NVLRuntimeException("Could not setup announce link");
+      throw new NVLExecutionException("Could not setup announce link");
     }
   }
   
@@ -253,6 +256,10 @@ public class IMCCommunications extends Thread {
   public static void main(String[] args) {
     IMCCommunications comm = getInstance();
     comm.start();
+  }
+
+  public List<NVLVehicle> getConnectedVehicles() {
+    return Arrays.asList(vehicles.values().toArray(new IMCVehicle[vehicles.size()]));
   }
   
 }

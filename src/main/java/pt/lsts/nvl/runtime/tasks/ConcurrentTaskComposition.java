@@ -1,6 +1,5 @@
 package pt.lsts.nvl.runtime.tasks;
 
-import java.util.Collections;
 import java.util.List;
 
 import pt.lsts.nvl.runtime.VehicleRequirements;
@@ -20,8 +19,9 @@ public class ConcurrentTaskComposition implements Task {
   }
 
   @Override
-  public List<VehicleRequirements> getRequirements() {
-     return Collections.emptyList();
+  public void  getRequirements(List<VehicleRequirements> requirements) {
+     first.getRequirements(requirements);
+     second.getRequirements(requirements);
   }
 
   @Override

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 
-import pt.lsts.nvl.runtime.NVLRuntimeException;
+import pt.lsts.nvl.runtime.NVLExecutionException;
 
 public final class NetworkInterfaces {
 
@@ -36,7 +36,7 @@ public final class NetworkInterfaces {
       }
     }
     catch (Exception e) {
-      throw new NVLRuntimeException(e);
+      throw new NVLExecutionException(e);
     }
     return itfs;
   }
