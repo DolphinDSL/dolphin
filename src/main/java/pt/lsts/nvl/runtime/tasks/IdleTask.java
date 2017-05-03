@@ -5,20 +5,17 @@ import java.util.List;
 import java.util.Map;
 
 import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.VehicleRequirements;
 import static pt.lsts.nvl.util.Debug.d;
 
 public class IdleTask implements Task {
-
-  private final String id;
   
-  public IdleTask(String id) {
-    this.id = id;
+  public IdleTask() {
+   
   }
   
   @Override
   public String getId() {
-    return id;
+    return "<idle>";
   }
 
   

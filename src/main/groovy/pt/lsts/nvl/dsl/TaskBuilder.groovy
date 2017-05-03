@@ -33,7 +33,6 @@ final class TaskBuilder extends Instruction<Void> {
   }
   
   TaskBuilder or(TaskBuilder tb) {
-    println "OR"
     new TaskBuilder ( new ConcurrentTaskComposition(task, tb.getTask()) )
   }
   
