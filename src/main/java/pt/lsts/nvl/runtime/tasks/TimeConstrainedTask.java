@@ -21,7 +21,7 @@ public final class TimeConstrainedTask extends ConstrainedTask {
       @Override
       protected boolean terminationCondition() {
         double now = clock();
-        d("%s %f >= %f ?", theTask.getId(), now, duration);
+        // d("%s %f >= %f ?", theTask.getId(), now, duration);
         return now >= duration;
       }
     };

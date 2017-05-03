@@ -1,5 +1,7 @@
 package pt.lsts.nvl.runtime.imc;
 
+import static pt.lsts.nvl.util.Debug.d;
+
 import java.util.List;
 
 import pt.lsts.nvl.runtime.VehicleRequirements;
@@ -15,7 +17,9 @@ public final class IMCTask extends PlatformTask {
   @Override
   public void getRequirements(List<VehicleRequirements> requirements) {
     requirements.add(new VehicleRequirements());
+    d("Requirements: %d / %s", requirements.size(), requirements);
   }
+  
 
   @Override
   public TaskExecutor getExecutor() {

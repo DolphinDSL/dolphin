@@ -1,8 +1,7 @@
 package pt.lsts.nvl.runtime;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
+import java.util.function.Function;
 
 public final class VehicleRequirements {
 
@@ -50,19 +49,12 @@ public final class VehicleRequirements {
   }
 
   public boolean matchedBy(NVLVehicle v) {
-   return     (requiredName!= null && requiredName.equals(v.getId()))
-           && (requiredType != null && (v.getType() == requiredType))
-           && ((requiredPayload != null && v.getPayload().containsAll(requiredPayload)))
-           && ((areaCenter != null && v.getPosition().near(areaCenter, areaRadius) ));
+   return     (requiredName == null || requiredName.equals(v.getId()))
+           && (requiredType == null || (v.getType() == requiredType))
+           && ((requiredPayload == null || v.getPayload().containsAll(requiredPayload)))
+           && ((areaCenter == null || v.getPosition().near(areaCenter, areaRadius) ));
   }
 
-  public static List<NVLVehicle> filter(List<VehicleRequirements> reqs, List<NVLVehicle> allVehicles) {
-    List<NVLVehicle> result = new ArrayList<>();
-    for (VehicleRequirements req: reqs)  
-        allVehicles.stream().filter(v -> req.matchedBy(v)).forEach(ok -> result.add(ok));
-    return result; 
-  }
-  
   /**
    * @return the requiredType
    */
@@ -121,27 +113,13 @@ public final class VehicleRequirements {
   
   @Override
   public String toString() {
-      String result="";
-      if(requiredName != null)
-          result+="Vehicle Name: "+requiredName+"\n";
-      
-      if(requiredType != null ){
-          result+="Type: " + requiredType;
-      }
-      if(requiredPayload != null){
-          result+="Payloads: \n";
-          for(PayloadComponent p: requiredPayload){
-            result+=p.getName()+"\n";
-            if(p.getParameters()!=null){
-                Iterator<String> it = p.getParameters().keySet().iterator();
-                while(it.hasNext())
-                    result+="\t"+it.next();
-                result+="\n";
-            }
-          }
-      }
-      
-      return result;
+    Function<Object, String> str = x -> (x != null ? x.toString() : "<null>");
+    
+    return String.format("name=%s,type=%s,payload=%s,area=%s",
+        str.apply(requiredName), 
+        str.apply(requiredType),
+        str.apply(requiredPayload),
+        str.apply(areaCenter) );
   }
 
 

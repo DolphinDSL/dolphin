@@ -8,6 +8,8 @@ import java.util.Optional;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 
+import static pt.lsts.nvl.util.Debug.d;
+
 public abstract class PlatformTask implements Task { 
   
  private final String id;
@@ -24,16 +26,22 @@ public abstract class PlatformTask implements Task {
   public abstract void getRequirements(List<VehicleRequirements> requirements);
   
   public final boolean allocate(List<NVLVehicle> available, Map<Task,List<NVLVehicle>> allocation) {
-    LinkedList<VehicleRequirements> requirements = new LinkedList<>();
     LinkedList<NVLVehicle> selection = new LinkedList<>();
+    LinkedList<VehicleRequirements> requirements = new LinkedList<>();
     getRequirements(requirements);
+    
+    d("Requirements: %s", requirements);
+    d("Vehicles: %s", available);
+  
     for (VehicleRequirements r : requirements) {
-      Optional<NVLVehicle> ov = available.stream().filter(v -> r.matchedBy(v)).findFirst();
-      if (ov.isPresent()) {
-        NVLVehicle v = ov.get();
+      Optional<NVLVehicle> optV = available.stream().filter(v -> r.matchedBy(v)).findFirst();
+      if (optV.isPresent()) {
+        NVLVehicle v = optV.get();
         available.remove(v);
         selection.add(v);
+        d("Selected: %s", v);
       } else {
+        d("No match for %s", r);
         break;
       }
     }

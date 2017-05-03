@@ -2,11 +2,11 @@ package pt.lsts.nvl.runtime.imc;
 
 import pt.lsts.imc.PlanControl;
 import pt.lsts.imc.PlanControlState;
-import pt.lsts.imc.VehicleState;
 import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
 import pt.lsts.nvl.util.Variable;
+import static pt.lsts.nvl.util.Debug.d;
 
 public final class IMCTaskExecutor extends PlatformTaskExecutor {
 
@@ -33,6 +33,7 @@ public final class IMCTaskExecutor extends PlatformTaskExecutor {
 
     vehicle.send(pc);
     pcsVar = vehicle.subscribe(PlanControlState.class);
+    d("Started %s on %s", getTask().getId(), vehicle.getId());
   }
 
   @Override
@@ -46,6 +47,7 @@ public final class IMCTaskExecutor extends PlatformTaskExecutor {
     if (!getTask().getId().equals(pcs.getPlanId())) {
       if (clock() > WARMUP_TIME) {
         cs = new CompletionState(CompletionState.Type.ERROR);
+        d("Wrong plan id: %s != %s", pcs.getPlanId(), getTask().getId());
       }
     } else {
       switch (pcs.getState()) {
@@ -56,14 +58,16 @@ public final class IMCTaskExecutor extends PlatformTaskExecutor {
         case INITIALIZING:
           break;
         case READY:
+          d("Terminated %s on %s : %s", getTask().getId(), getVehicle().getId(), pcs.getLastOutcome());
           switch (pcs.getLastOutcome()) {
             case FAILURE:
             case NONE:
               cs = new CompletionState(CompletionState.Type.ERROR);
-              //log().message("vehicle FAIL");
+              d("Failure!");
               break;
             case SUCCESS:
               cs = new CompletionState(CompletionState.Type.DONE);
+              d("IMC plan completed!");
               break;
             default:
               throw new NVLExecutionException();

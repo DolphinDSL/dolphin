@@ -37,8 +37,6 @@ public final class NVLRuntime {
     if (task.allocate(available, allocation) == false) {
       throw new NVLExecutionException("No vehicles to run task!");
     }
-
-    
     TaskExecutor executor = task.getExecutor();
     executor.initialize(allocation);
     executor.start();

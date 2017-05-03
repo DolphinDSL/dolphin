@@ -131,12 +131,14 @@ public class IMCCommunications extends Thread {
       IMCMessage message = IMCDefinition.getInstance().parseMessage(rcvBuffer);
       message.setTimestamp(timeOfStep);
       
-      d("Incoming message: %s", message.getAbbrev());
       IMCVehicle node = vehicles.get(message.getSrc());
+      
       if (node != null) {
         node.handleIncomingMessage(message);
       } else if(message instanceof Announce) {
         handleNewNode((Announce) message);
+      } else {
+        d("Ignored message: %d/%s", message.getSrc(), message.getAbbrev());
       }
     } 
     catch (IOException e) {
@@ -146,7 +148,6 @@ public class IMCCommunications extends Thread {
   }
   
   private void handleNewNode(Announce message) {
-    d("New node: " + message.getSysName());
 
     switch (message.getSysType()) {
       case CCU:
@@ -158,6 +159,8 @@ public class IMCCommunications extends Thread {
       default:
         break;
     }
+    d("New vehicle: " + message.getSysName());
+
     IMCVehicle vehicle = null;
     for (String serv : message.getServices().split(";")) {
       if (serv.startsWith("imc+udp://")) {
@@ -190,7 +193,6 @@ public class IMCCommunications extends Thread {
       message.serialize(new IMCOutputStream(baos));
       byte[] data = baos.toByteArray();
       link.sendTo(data, 0, data.length, address, port);
-      d("OUT " + address.toString() + ":" + port + " " + message.getAbbrev() );
     } catch (IOException e) {
       throw new NVLExecutionException(e);
     }
@@ -211,8 +213,9 @@ public class IMCCommunications extends Thread {
         announceLink = link;
       }
       catch (NetworkLinkException e) { 
-        e.printStackTrace();
-        
+        if (e.getCause().getClass() != java.net.BindException.class) {
+          throw new NVLExecutionException(e);
+        }
       }
     }
     if (announceLink == null) {

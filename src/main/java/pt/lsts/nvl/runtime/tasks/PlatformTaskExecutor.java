@@ -15,7 +15,7 @@ public abstract class PlatformTaskExecutor extends TaskExecutor {
   
   @Override
   protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
-    vehicles = allocation.get(this);
+    vehicles = allocation.get(getTask());
   }
    
   protected final List<NVLVehicle> getVehicles() {
