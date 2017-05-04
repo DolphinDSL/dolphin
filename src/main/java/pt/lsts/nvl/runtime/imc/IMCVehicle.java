@@ -15,6 +15,9 @@ import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.util.Variable;
 
+import static pt.lsts.nvl.util.Debug.d;
+
+
 public final class IMCVehicle implements NVLVehicle {
 
   public interface Subscriber<T extends IMCMessage> {
@@ -87,6 +90,7 @@ public final class IMCVehicle implements NVLVehicle {
   }
 
   public void handleIncomingMessage(IMCMessage message) {
+    // d("IN: %s %s", getId(), message.getAbbrev());
     List<Subscriber<IMCMessage>> obsList = subscriptions.get(message.getClass());
     if (obsList != null) {
       for (Subscriber<IMCMessage> obs : obsList) {
@@ -96,6 +100,12 @@ public final class IMCVehicle implements NVLVehicle {
     lastMsgTime = message.getTimestamp();
   }
 
+
+  public void send(IMCMessage message) {
+    d("OUT: %s %s", getId(), message.getAbbrev());
+    IMCCommunications.getInstance().send(message, address, port);    
+  }
+  
   public void setRunningTask(Task t) {
     runningTask = t;
   }
@@ -124,8 +134,10 @@ public final class IMCVehicle implements NVLVehicle {
   public List<PayloadComponent> getPayload() {
     return Collections.emptyList();
   }
-
-  public void send(IMCMessage message) {
-    IMCCommunications.getInstance().send(message, address, port);    
+  
+  @Override
+  public String toString() {
+    return getId();
   }
+
 }
