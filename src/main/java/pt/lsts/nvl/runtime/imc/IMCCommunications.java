@@ -135,9 +135,11 @@ public class IMCCommunications extends Thread {
       
       if (node != null) {
         node.handleIncomingMessage(message);
-      } else if(message instanceof Announce) {
+      } 
+      else if(message instanceof Announce) {
         handleNewNode((Announce) message);
-      } else {
+      } 
+      else {
         d("Ignored message: %d/%s", message.getSrc(), message.getAbbrev());
       }
     } 
