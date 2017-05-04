@@ -50,6 +50,7 @@ public final class IMCTaskExecutor extends PlatformTaskExecutor {
         d("Wrong plan id: %s != %s", pcs.getPlanId(), getTask().getId());
       }
     } else {
+      
       switch (pcs.getState()) {
         case BLOCKED:
           cs = new CompletionState(CompletionState.Type.ERROR);

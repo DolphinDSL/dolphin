@@ -6,7 +6,7 @@ import java.util.function.Function;
 public final class VehicleRequirements {
 
   private String requiredType;
-  private String requiredName = null;
+  private String requiredName;
   private List<PayloadComponent> requiredPayload;
   private Position areaCenter;
   private double areaRadius;
@@ -15,8 +15,7 @@ public final class VehicleRequirements {
       requiredName = null;
       requiredPayload = null;
       areaCenter = null;
-      areaRadius = 0;
-      
+      areaRadius = 0;  
   }
 
 
