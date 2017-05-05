@@ -2,19 +2,20 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pt.lsts.nvl</groupId>
-	<artifactId>nvl</artifactId>
-	<packaging>jar</packaging>
+	<artifactId>nvl-parent</artifactId>
+	<packaging>pom</packaging>
 	<version>0.1-SNAPSHOT</version>
-	<name>NVL</name>
+	<name>NVL parent project</name>
 	<prerequisites>
 		<maven>3.2.5</maven>
 	</prerequisites>
+        <!-- Modules -->
+        <modules>
+          <module>nvl</module>
+          <module>nvl-imc</module>
+        </modules>
+        <!-- Common dependencies -->
 	<dependencies>
-		<dependency>
-			<groupId>org.codehaus.groovy</groupId>
-			<artifactId>groovy-all</artifactId>
-			<version>2.4.10</version>
-		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -27,33 +28,12 @@
 			<version>1.1-groovy-2.4</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>pt.lsts</groupId>
-			<artifactId>imc</artifactId>
-			<version>LATEST</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/libimc.jar</systemPath>
-		</dependency>
 	</dependencies>
 
+        <!-- Common plugins -->
 	<build>
+	<pluginManagement>
 		<plugins>
-			<plugin>
-				<groupId>org.codehaus.gmavenplus</groupId>
-				<artifactId>gmavenplus-plugin</artifactId>
-				<version>1.5</version>
-				<configuration>
-					<targetBytecode>1.8</targetBytecode>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>compile</goal>
-							<goal>testCompile</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -111,5 +91,6 @@
 				<version>2.5.2</version>
 			</plugin>
 		</plugins>
+        </pluginManagement>
 	</build>
 </project>

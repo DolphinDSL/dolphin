@@ -7,5 +7,4 @@ execute {
   idle().during(10.seconds)
   idle().during(1.seconds)
 }
-execute t1 
 
