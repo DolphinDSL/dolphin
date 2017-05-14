@@ -8,7 +8,6 @@ import java.util.Optional;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 
-import static pt.lsts.nvl.util.Debug.d;
 
 public abstract class PlatformTask implements Task { 
   

@@ -1,6 +1,5 @@
 package pt.lsts.nvl.runtime.tasks;
 
-import static pt.lsts.nvl.util.Debug.d;
 
 public final class TimeConstrainedTask extends ConstrainedTask {
 

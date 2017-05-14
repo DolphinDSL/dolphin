@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import pt.lsts.nvl.runtime.NVLVehicle;
-import static pt.lsts.nvl.util.Debug.d;
 
 public class IdleTask implements Task {
   
