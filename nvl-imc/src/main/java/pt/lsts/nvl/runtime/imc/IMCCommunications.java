@@ -25,9 +25,9 @@ import pt.lsts.nvl.net.UDPLink;
 import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.util.Clock;
-import static pt.lsts.nvl.util.Debug.d;
+import pt.lsts.nvl.util.Debuggable;
 
-public class IMCCommunications extends Thread {
+public class IMCCommunications extends Thread implements Debuggable {
   
   static {
     try {

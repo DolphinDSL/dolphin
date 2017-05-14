@@ -6,7 +6,7 @@ import pt.lsts.nvl.runtime.NVLPlatform;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 
-public final class IMCPlatform implements NVLPlatform {
+public final class IMCPlatform implements NVLPlatform, Debuggable {
 
   private final IMCCommunications comm = IMCCommunications.getInstance();
   

@@ -6,7 +6,6 @@ import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
 import pt.lsts.nvl.util.Variable;
-import static pt.lsts.nvl.util.Debug.d;
 
 public final class IMCTaskExecutor extends PlatformTaskExecutor {
 

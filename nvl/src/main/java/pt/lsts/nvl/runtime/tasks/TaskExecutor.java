@@ -6,8 +6,9 @@ import java.util.Map;
 import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.util.Clock;
+import pt.lsts.nvl.util.Debuggable;
 
-public abstract class TaskExecutor {
+public abstract class TaskExecutor implements Debuggable {
   /**
    * Task executor state.
    */

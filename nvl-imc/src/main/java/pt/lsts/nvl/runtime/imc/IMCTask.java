@@ -1,6 +1,5 @@
 package pt.lsts.nvl.runtime.imc;
 
-import static pt.lsts.nvl.util.Debug.d;
 
 import java.util.List;
 
