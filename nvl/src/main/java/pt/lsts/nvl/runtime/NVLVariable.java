@@ -1,10 +1,10 @@
-package pt.lsts.nvl.util;
+package pt.lsts.nvl.runtime;
 
-public final class Variable<T> {
+public final class NVLVariable<T> {
   private T value;
   private boolean fresh;
 
-  public Variable() {
+  public NVLVariable() {
     value = null;
     fresh = false;
   }

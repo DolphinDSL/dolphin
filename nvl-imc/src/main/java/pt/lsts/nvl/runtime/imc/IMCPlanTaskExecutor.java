@@ -3,17 +3,17 @@ package pt.lsts.nvl.runtime.imc;
 import pt.lsts.imc.PlanControl;
 import pt.lsts.imc.PlanControlState;
 import pt.lsts.nvl.runtime.NVLExecutionException;
+import pt.lsts.nvl.runtime.NVLVariable;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
-import pt.lsts.nvl.util.Variable;
 
-public final class IMCTaskExecutor extends PlatformTaskExecutor {
+public final class IMCPlanTaskExecutor extends PlatformTaskExecutor {
 
   private final static double WARMUP_TIME = 2.0;
 
-  private Variable<PlanControlState> pcsVar; 
+  private NVLVariable<PlanControlState> pcsVar; 
 
-  public IMCTaskExecutor(IMCTask theTask) {
+  public IMCPlanTaskExecutor(IMCPlanTask theTask) {
     super(theTask);
   }
 

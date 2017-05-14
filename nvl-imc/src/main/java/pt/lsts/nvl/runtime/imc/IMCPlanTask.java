@@ -7,9 +7,9 @@ import pt.lsts.nvl.runtime.VehicleRequirements;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
-public final class IMCTask extends PlatformTask {
+public final class IMCPlanTask extends PlatformTask {
 
-  public IMCTask(String id) {
+  public IMCPlanTask(String id) {
     super(id);
   }
 
@@ -22,7 +22,7 @@ public final class IMCTask extends PlatformTask {
 
   @Override
   public TaskExecutor getExecutor() {
-    return new IMCTaskExecutor(this);
+    return new IMCPlanTaskExecutor(this);
   }
 
 }

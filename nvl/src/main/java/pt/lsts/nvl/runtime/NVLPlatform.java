@@ -3,8 +3,9 @@ package pt.lsts.nvl.runtime;
 import java.util.List;
 
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
+import pt.lsts.nvl.util.Debuggable;
 
-public interface NVLPlatform {
+public interface NVLPlatform extends Debuggable {
   
   String NVL_PLATFORM_PROPERTY = "nvl.platform.class";
   

@@ -9,11 +9,11 @@ import java.util.List;
 import pt.lsts.imc.Announce;
 import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.IMCMessage;
+import pt.lsts.nvl.runtime.NVLVariable;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
-import pt.lsts.nvl.util.Variable;
 
 import static pt.lsts.nvl.util.Debug.d;
 
@@ -64,8 +64,8 @@ public final class IMCVehicle implements NVLVehicle {
   }
 
   public <T extends IMCMessage>
-  Variable<T> subscribe(Class<T> classOfMessages) {
-    Variable<T> var = new Variable<>();
+  NVLVariable<T> subscribe(Class<T> classOfMessages) {
+    NVLVariable<T> var = new NVLVariable<>();
     subscribe(classOfMessages, msg -> var.set(msg));
     return var;
   }
