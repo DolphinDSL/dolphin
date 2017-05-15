@@ -15,25 +15,25 @@ import pt.lsts.nvl.runtime.NVLExecutionException
  */
 @CompileStatic
 @TypeChecked
-class Engine {
+class NVLEngine {
   
-  static Engine create(NVLPlatform platform) {
+  static NVLEngine create(NVLPlatform platform) {
     if (instance != null)
       throw new NVLExecutionException('Engine already created!')
       
-    instance = new Engine(platform)
+    instance = new NVLEngine(platform)
   }
   
-  static Engine getInstance() {
+  static NVLEngine getInstance() {
     if (instance == null)
       throw new NVLExecutionException('Engine has not been created!')
     
     instance
   }
   
-  private static Engine instance
+  private static NVLEngine instance
   
-  private Engine(NVLPlatform platform) {
+  private NVLEngine(NVLPlatform platform) {
     runtime = NVLRuntime.create platform
   }
 

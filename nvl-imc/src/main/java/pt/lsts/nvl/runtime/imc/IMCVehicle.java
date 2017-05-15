@@ -14,11 +14,12 @@ import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
+import pt.lsts.nvl.util.Clock;
+import pt.lsts.nvl.util.Debuggable;
 
-import static pt.lsts.nvl.util.Debug.d;
 
 
-public final class IMCVehicle implements NVLVehicle {
+public final class IMCVehicle implements NVLVehicle, Debuggable {
 
   public interface Subscriber<T extends IMCMessage> {
     void consume(T message);
@@ -66,7 +67,7 @@ public final class IMCVehicle implements NVLVehicle {
   public <T extends IMCMessage>
   NVLVariable<T> subscribe(Class<T> classOfMessages) {
     NVLVariable<T> var = new NVLVariable<>();
-    subscribe(classOfMessages, msg -> var.set(msg));
+    subscribe(classOfMessages, msg -> var.set(msg, Clock.now()));
     return var;
   }
   

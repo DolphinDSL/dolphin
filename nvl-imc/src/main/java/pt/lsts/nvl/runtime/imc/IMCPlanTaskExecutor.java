@@ -38,13 +38,14 @@ public final class IMCPlanTaskExecutor extends PlatformTaskExecutor {
   @Override
   protected CompletionState onStep() {
     CompletionState cs = new CompletionState(CompletionState.Type.IN_PROGRESS);
+    
     if (!pcsVar.hasFreshValue()) {
       return cs;
     }
 
     PlanControlState pcs = pcsVar.get();
     if (!getTask().getId().equals(pcs.getPlanId())) {
-      if (clock() > WARMUP_TIME) {
+      if (timeElapsed() > WARMUP_TIME) {
         cs = new CompletionState(CompletionState.Type.ERROR);
         d("Wrong plan id: %s != %s", pcs.getPlanId(), getTask().getId());
       }

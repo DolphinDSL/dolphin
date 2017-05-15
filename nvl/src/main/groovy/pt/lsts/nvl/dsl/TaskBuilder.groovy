@@ -16,7 +16,7 @@ final class TaskBuilder extends Instruction<Void> {
   Task task
 
   TaskBuilder(String id) {
-    task = Engine.getInstance().getRuntime().getPlatform().getPlatformTask(id)
+    task = NVLEngine.getInstance().getRuntime().getPlatform().getPlatformTask(id)
   }
   
   TaskBuilder(Task t) {

@@ -2,7 +2,7 @@ package pt.lsts.nvl.runtime.imc;
 
 import java.io.File;
 
-import pt.lsts.nvl.dsl.Engine;
+import pt.lsts.nvl.dsl.NVLEngine;
 
 public final class Main {
 
@@ -13,7 +13,7 @@ public final class Main {
       return;
     }
 
-    Engine engine = Engine.create(new IMCPlatform());
+    NVLEngine engine = NVLEngine.create(new IMCPlatform());
 
     for (String fileName : args) {
       engine.run(new File(fileName));

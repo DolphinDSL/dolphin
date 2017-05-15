@@ -78,7 +78,7 @@ public abstract class TaskExecutor implements Debuggable {
     return completionState;
   }
 
-  public final double clock() {
+  public final double timeElapsed() {
     return timeElapsed;
   }
 
