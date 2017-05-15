@@ -26,7 +26,7 @@ class DSLInstructions {
   
   static def execute(TaskBuilder tb) {
     d tb.getTask().getId()
-    Engine.instance.run tb.getTask()
+    Engine.getInstance().run tb.getTask()
   }
   
   static def execute(Closure<TaskBuilder> cl) {

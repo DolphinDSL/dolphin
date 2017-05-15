@@ -17,24 +17,31 @@ import pt.lsts.nvl.runtime.NVLExecutionException
 @TypeChecked
 class Engine {
   
+  static Engine create(NVLPlatform platform) {
+    if (instance != null)
+      throw new NVLExecutionException('Engine already created!')
+      
+    instance = new Engine(platform)
+  }
+  
+  static Engine getInstance() {
+    if (instance == null)
+      throw new NVLExecutionException('Engine has not been created!')
+    
+    instance
+  }
+  
+  private static Engine instance
+  
+  private Engine(NVLPlatform platform) {
+    runtime = NVLRuntime.create platform
+  }
+
+  NVLRuntime runtime;
   private GroovyShell shell
   
-  NVLRuntime runtime;
-  
-  static final Engine instance = new Engine()
-  
-  private Engine() {
-    runtime = NVLRuntime.getInstance()
-  }
- 
-  private void ensureInitialized() {
-    if (runtime == null) {
-      throw new NVLExecutionException("Engine not initialized!")
-    }
-  }
   
   private void ensureShellIsCreated() {
-    ensureInitialized()
     if (shell == null) {
       // Imports
       def ic = new ImportCustomizer()
@@ -56,6 +63,7 @@ class Engine {
       shell.evaluate 'BaseScript.main()'
     }
   }
+  
   void run(File script) {
     ensureShellIsCreated()
     shell.evaluate script
@@ -70,9 +78,4 @@ class Engine {
     runtime.run task
   }
   
-  public static void main(String... args) {
-    for (String f : args) {
-      Engine.instance.run new File(f)
-    }
-  }
 }

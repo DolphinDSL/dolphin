@@ -1,1 +1,1 @@
-java -Dnvl.platform.class=pt.lsts.nvl.runtime.imc.IMCPlatform -cp ~/.m2/repository/org/codehaus/groovy/groovy-all/2.4.10/groovy-all-2.4.10.jar:nvl/target/nvl-0.1-SNAPSHOT.jar:nvl-imc/target/nvl-imc-0.1-SNAPSHOT.jar:nvl-imc/lib/libimc.jar pt.lsts.nvl.dsl.Engine $*
+java -cp ~/.m2/repository/org/codehaus/groovy/groovy-all/2.4.10/groovy-all-2.4.10.jar:nvl/target/nvl-0.1-SNAPSHOT.jar:nvl-imc/target/nvl-imc-0.1-SNAPSHOT.jar:nvl-imc/lib/libimc.jar pt.lsts.nvl.runtime.imc.Main $*

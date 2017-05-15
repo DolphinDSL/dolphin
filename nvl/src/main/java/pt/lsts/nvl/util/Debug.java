@@ -22,7 +22,7 @@ public class Debug {
 
   public static boolean d(String format, Object... args) {
     if (debugOn) {
-      StackTraceElement info = Thread.currentThread().getStackTrace()[2];
+      StackTraceElement info = Thread.currentThread().getStackTrace()[3];
       String fullFmt = 
           String.format("%-16s %d %-16s %s", 
                         info.getFileName(), info.getLineNumber(),

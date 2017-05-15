@@ -9,17 +9,24 @@ import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
 public final class NVLRuntime {
 
-  private static  NVLRuntime INSTANCE;
+  private static NVLRuntime INSTANCE;
   
+  public static NVLRuntime create(NVLPlatform platform) {
+    if (INSTANCE != null) {
+      throw new NVLExecutionException("Runtime has already been created");
+    } 
+    INSTANCE = new NVLRuntime(platform);
+    return INSTANCE;
+  }
   public static NVLRuntime getInstance() {
      if (INSTANCE == null) {
-       INSTANCE = new NVLRuntime();
+       throw new NVLExecutionException("Runtime has not been created");
      }
      return INSTANCE;
   }
   
-  private NVLRuntime() {
-    this.platform = NVLPlatform.create();
+  private NVLRuntime(NVLPlatform platform) {
+    this.platform = platform;
   }
 
   private final NVLPlatform platform;

@@ -16,7 +16,6 @@ public final class IMCPlanTask extends PlatformTask {
   @Override
   public void getRequirements(List<VehicleRequirements> requirements) {
     requirements.add(new VehicleRequirements());
-    d("Requirements: %d / %s", requirements.size(), requirements);
   }
   
 
