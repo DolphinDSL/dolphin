@@ -110,6 +110,7 @@ public final class IMCVehicle implements NVLVehicle, Debuggable {
   public void setRunningTask(Task t) {
     runningTask = t;
   }
+  
   @Override
   public Task getRunningTask() {
     return runningTask;

@@ -2,17 +2,17 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<artifactId>nvl-parent</artifactId>
+		<artifactId>nvl</artifactId>
 		<groupId>pt.lsts.nvl</groupId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>nvl-imc</artifactId>
 	<packaging>jar</packaging>
-	<name>Standalone IMC NVL runtime</name>
+	<name>NVL common support for IMC</name>
 	<dependencies>
 		<dependency>
 			<groupId>pt.lsts.nvl</groupId>
-			<artifactId>nvl</artifactId>
+			<artifactId>nvl-core</artifactId>
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
