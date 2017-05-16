@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>nvl-neptus</artifactId>
 	<packaging>jar</packaging>
-	<name>NVL common support for IMC</name>
+	<name>Grouping of dependencies for Neptus</name>
 	<dependencies>
 		<dependency>
 			<groupId>pt.lsts.nvl</groupId>
@@ -21,7 +21,6 @@
 			<version>0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
                         <plugin>
