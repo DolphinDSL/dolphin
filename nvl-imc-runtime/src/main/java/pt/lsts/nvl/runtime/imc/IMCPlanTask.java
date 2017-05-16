@@ -3,11 +3,13 @@ package pt.lsts.nvl.runtime.imc;
 
 import java.util.List;
 
+import pt.lsts.nvl.imc.AbstractIMCPlanExecutor;
+import pt.lsts.nvl.imc.AbstractIMCPlanTask;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
-public final class IMCPlanTask extends PlatformTask {
+public final class IMCPlanTask extends AbstractIMCPlanTask {
 
   public IMCPlanTask(String id) {
     super(id);
@@ -20,7 +22,7 @@ public final class IMCPlanTask extends PlatformTask {
   
 
   @Override
-  public TaskExecutor getExecutor() {
+  public IMCPlanTaskExecutor getExecutor() {
     return new IMCPlanTaskExecutor(this);
   }
 

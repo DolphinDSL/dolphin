@@ -14,6 +14,7 @@
           <module>nvl-core</module>
           <module>nvl-imc</module>
           <module>nvl-imc-runtime</module>
+          <module>nvl-neptus</module>
         </modules>
         <!-- Common dependencies -->
 	<dependencies>
