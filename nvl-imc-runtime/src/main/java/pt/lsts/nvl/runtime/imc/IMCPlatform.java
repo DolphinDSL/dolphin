@@ -27,6 +27,13 @@ public final class IMCPlatform implements NVLPlatform, Debuggable {
     return comm.getConnectedVehicles();
   }
 
+  @Override
+  public void nvlInfoMessage(String format, Object... args) {
+     System.out.printf(format, args);
+     System.out.println();
+    
+  }
+
 
 
 }

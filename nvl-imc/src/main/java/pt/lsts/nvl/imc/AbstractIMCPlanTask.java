@@ -6,7 +6,6 @@ import java.util.List;
 import pt.lsts.imc.PlanSpecification;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
-import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 
 public abstract class AbstractIMCPlanTask extends PlatformTask {
 

@@ -1,4 +1,4 @@
 
 execute idle().during(20.seconds) 
 
-execute task('samplePlan')
+execute task('imc:test')

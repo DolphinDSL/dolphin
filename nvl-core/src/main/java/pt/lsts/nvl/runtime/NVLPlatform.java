@@ -11,4 +11,5 @@ public interface NVLPlatform extends Debuggable {
   
   PlatformTask getPlatformTask(String id);
   
+  void nvlInfoMessage(String format, Object... args);
 }
