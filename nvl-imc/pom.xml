@@ -9,6 +9,9 @@
 	<artifactId>nvl-imc</artifactId>
 	<packaging>jar</packaging>
 	<name>NVL common support for IMC</name>
+        <prerequisites>
+                <maven>3.2</maven>
+        </prerequisites>
 	<dependencies>
 		<dependency>
 			<groupId>pt.lsts.nvl</groupId>

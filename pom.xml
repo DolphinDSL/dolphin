@@ -7,7 +7,7 @@
 	<version>0.1-SNAPSHOT</version>
 	<name>NVL parent project</name>
 	<prerequisites>
-		<maven>3.2.5</maven>
+		<maven>3.2</maven>
 	</prerequisites>
         <!-- Modules -->
         <modules>

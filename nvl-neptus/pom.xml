@@ -9,6 +9,9 @@
 	<artifactId>nvl-neptus</artifactId>
 	<packaging>jar</packaging>
 	<name>Grouping of dependencies for Neptus</name>
+        <prerequisites>
+                <maven>3.2</maven>
+        </prerequisites>
 	<dependencies>
 		<dependency>
 			<groupId>pt.lsts.nvl</groupId>

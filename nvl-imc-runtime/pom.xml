@@ -9,6 +9,9 @@
 	<artifactId>nvl-imc-runtime</artifactId>
 	<packaging>jar</packaging>
 	<name>Standalone IMC NVL runtime</name>
+        <prerequisites>
+                <maven>3.2</maven>
+        </prerequisites>
 	<dependencies>
 		<dependency>
 			<groupId>pt.lsts.nvl</groupId>
