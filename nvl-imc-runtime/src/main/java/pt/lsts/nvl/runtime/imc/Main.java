@@ -12,7 +12,7 @@ public final class Main {
       System.out.println("Please specify the script(s) to run!");
       return;
     }
-
+    pt.lsts.nvl.util.Debug.enable();
     NVLEngine engine = NVLEngine.create(new IMCPlatform());
 
     for (String fileName : args) {
