@@ -15,7 +15,7 @@ public final class TimeConstrainedTask extends ConstrainedTask {
   }
   
   @Override
-  public TaskExecutor getExecutor() {
+  public ConstrainedTaskExecutor getExecutor() {
     return new ConstrainedTaskExecutor(theTask) {
       @Override
       protected boolean terminationCondition() {
@@ -25,7 +25,4 @@ public final class TimeConstrainedTask extends ConstrainedTask {
       }
     };
   }
-
- 
-
 }

@@ -1,0 +1,4 @@
+
+x=0
+
+execute ( idle()  until {  ++x == 100 } )

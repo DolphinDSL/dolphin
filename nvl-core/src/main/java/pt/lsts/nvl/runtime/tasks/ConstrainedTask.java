@@ -23,4 +23,6 @@ public abstract class ConstrainedTask implements Task {
     return theTask.allocate(available, allocation);
   }
   
+  @Override
+  public abstract ConstrainedTaskExecutor getExecutor();
 }

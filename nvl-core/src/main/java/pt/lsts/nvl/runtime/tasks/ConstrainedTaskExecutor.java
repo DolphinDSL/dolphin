@@ -7,11 +7,10 @@ import pt.lsts.nvl.runtime.NVLVehicle;
 
 public abstract class ConstrainedTaskExecutor extends TaskExecutor {
 
-  private final TaskExecutor task;
+  private  TaskExecutor exec;
   
   public ConstrainedTaskExecutor(Task theTask) {
     super(theTask);
-    task = theTask.getExecutor();
   }
 
   protected abstract boolean terminationCondition(); 
@@ -20,17 +19,18 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
   protected CompletionState onStep() {
     return terminationCondition() ?
         new CompletionState(CompletionState.Type.DONE)
-       : task.step();
+       : exec.step();
   }
 
   @Override
   protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
-    task.initialize(allocation);
+    exec = getTask().getExecutor();
+    exec.initialize(allocation);
   }
 
   @Override
   protected void onStart() {
-    task.start();
+    exec.start();
   }
 
   @Override
