@@ -17,15 +17,15 @@ import pt.lsts.imc.IMCDefinition;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.IMCOutputStream;
 import pt.lsts.imc.def.SystemType;
-import pt.lsts.nvl.net.NetworkLink;
-import pt.lsts.nvl.net.MulticastUDPLink;
-import pt.lsts.nvl.net.NetworkInterfaces;
-import pt.lsts.nvl.net.NetworkLinkException;
-import pt.lsts.nvl.net.UDPLink;
 import pt.lsts.nvl.runtime.NVLExecutionException;
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.util.Clock;
 import pt.lsts.nvl.util.Debuggable;
+import pt.lsts.nvl.util.net.MulticastUDPLink;
+import pt.lsts.nvl.util.net.NetworkInterfaces;
+import pt.lsts.nvl.util.net.NetworkLink;
+import pt.lsts.nvl.util.net.NetworkLinkException;
+import pt.lsts.nvl.util.net.UDPLink;
 
 public class IMCCommunications extends Thread implements Debuggable {
   

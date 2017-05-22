@@ -1,4 +1,4 @@
-package pt.lsts.nvl.net;
+package pt.lsts.nvl.util.net;
 
 import java.io.IOException;
 
