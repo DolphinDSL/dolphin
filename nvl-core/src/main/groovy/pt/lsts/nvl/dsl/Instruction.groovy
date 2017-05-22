@@ -1,7 +1,9 @@
 package pt.lsts.nvl.dsl
 
+import pt.lsts.nvl.util.Debuggable
+
 @DSLClass
-abstract class Instruction<T> {
+abstract class Instruction<T> implements Debuggable {
   abstract T execute()
 
   final void build(Closure cl) {

@@ -3,6 +3,7 @@ package pt.lsts.nvl.dsl
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
 import pt.lsts.nvl.runtime.tasks.TaskExecutor
+import pt.lsts.nvl.runtime.tasks.TimeConstrainedTask
 import pt.lsts.nvl.util.Debuggable
 import pt.lsts.nvl.runtime.NVLRuntime
 import pt.lsts.nvl.runtime.tasks.IdleTask
@@ -22,6 +23,10 @@ class DSLInstructions {
   
   static TaskBuilder idle() {
     new TaskBuilder(new IdleTask())
+  }
+  
+  static TaskBuilder during(double duration, Closure<TaskBuilder> cl) {
+    new TaskBuilder ( new TimeConstrainedTask(cl.call().getTask(), duration) ) 
   }
   
   static def execute(TaskBuilder tb) {

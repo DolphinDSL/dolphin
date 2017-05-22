@@ -1,10 +1,20 @@
-t1 = task 't1' during 2.seconds
-t2 = task 't2' during 1.seconds
-t3 = task 't3' during 5.seconds 
-t4 = task 't4' during 5.seconds 
+
+t1 = during (2.seconds) { idle() }
+t2 = t1
+
+t3 = t1 >> t2
+
+t =  
+ t1 >> idle()
+
+/*execute {
+ during (1.seconds) {idle()} >> idle()
+}
+*/
 
 execute {
-  idle().during(10.seconds)
-  idle().during(1.seconds)
+   during (1.seconds) {idle()} >> 
+   during(1.seconds) { idle() }
 }
+
 

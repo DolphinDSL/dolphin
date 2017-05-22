@@ -10,7 +10,7 @@ import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 public final class NVLRuntime {
 
   private static NVLRuntime INSTANCE;
-  
+
   public static NVLRuntime create(NVLPlatform platform) {
     if (INSTANCE != null) {
       throw new NVLExecutionException("Runtime has already been created");
@@ -19,12 +19,12 @@ public final class NVLRuntime {
     return INSTANCE;
   }
   public static NVLRuntime getInstance() {
-     if (INSTANCE == null) {
-       throw new NVLExecutionException("Runtime has not been created");
-     }
-     return INSTANCE;
+    if (INSTANCE == null) {
+      throw new NVLExecutionException("Runtime has not been created");
+    }
+    return INSTANCE;
   }
-  
+
   private NVLRuntime(NVLPlatform platform) {
     this.platform = platform;
   }
@@ -38,9 +38,9 @@ public final class NVLRuntime {
 
   public void run(Task task) {
     List<NVLVehicle> available = platform.getConnectedVehicles();
-    
+
     Map<Task,List<NVLVehicle>> allocation = new HashMap<>();
-    
+
     if (task.allocate(available, allocation) == false) {
       throw new NVLExecutionException("No vehicles to run task!");
     }

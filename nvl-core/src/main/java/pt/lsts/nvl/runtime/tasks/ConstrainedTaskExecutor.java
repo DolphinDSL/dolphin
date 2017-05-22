@@ -35,6 +35,6 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
 
   @Override
   protected void onCompletion() {
-    
+    exec.onCompletion();
   }
 }

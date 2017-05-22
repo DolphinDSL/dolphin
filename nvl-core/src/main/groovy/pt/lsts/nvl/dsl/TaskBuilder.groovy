@@ -15,7 +15,7 @@ import pt.lsts.nvl.util.Debuggable
 import pt.lsts.nvl.runtime.tasks.IdleTask
 
 @DSLClass
-final class TaskBuilder extends Instruction<Void> implements Debuggable {
+final class TaskBuilder extends Instruction<Void>  {
   Task task
 
   TaskBuilder(String id) {
@@ -24,10 +24,6 @@ final class TaskBuilder extends Instruction<Void> implements Debuggable {
 
   TaskBuilder(Task t) {
     task = t
-  }
-
-  TaskBuilder during(double duration) {
-    new TaskBuilder ( new TimeConstrainedTask(task, duration) )
   }
 
   TaskBuilder until(Closure<Boolean> condition) {
