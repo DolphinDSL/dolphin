@@ -3,9 +3,11 @@ package pt.lsts.nvl.runtime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
+import pt.lsts.nvl.util.Clock;
 
 public final class NVLRuntime {
 
@@ -18,6 +20,7 @@ public final class NVLRuntime {
     INSTANCE = new NVLRuntime(platform);
     return INSTANCE;
   }
+
   public static NVLRuntime getInstance() {
     if (INSTANCE == null) {
       throw new NVLExecutionException("Runtime has not been created");
@@ -57,5 +60,42 @@ public final class NVLRuntime {
     }
   }
 
+  public NVLVehicleSet select(List<VehicleRequirements> reqList) {
+    
+    List<NVLVehicle> available = platform.getConnectedVehicles();
+    NVLVehicleSet set = new NVLVehicleSet();
+    for (VehicleRequirements req : reqList) {
+      Optional<NVLVehicle> ov = 
+        available.stream()
+                 .filter(v -> !set.contains(v) && req.matchedBy(v))
+                 .findFirst();
+      if (!ov.isPresent()) {
+        return NVLVehicleSet.EMPTY;
+      }
+      set.add(ov.get());
+    }
+    return set;
+  }
+
+ public NVLVehicleSet select(List<VehicleRequirements> reqList, double timeout) {
+    double startTime = Clock.now();
+    
+    NVLVehicleSet set = NVLVehicleSet.EMPTY;
+    
+    while (Clock.now() - startTime < timeout) {
+      set = select(reqList);
+      if (set != NVLVehicleSet.EMPTY) {
+        break;
+      }
+      try {
+        Thread.sleep(100);
+      }
+      catch(InterruptedException e) {
+        throw new NVLExecutionException(e);
+      }
+    }
+    return set;
+   
+  }
 }
 

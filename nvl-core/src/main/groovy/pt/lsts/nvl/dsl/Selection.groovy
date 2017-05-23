@@ -1,10 +1,11 @@
 package pt.lsts.nvl.dsl;
 
 import java.util.List;
+import pt.lsts.nvl.runtime.NVLVehicleSet
 import pt.lsts.nvl.runtime.VehicleRequirements
 
 @DSLClass
-final class Selection extends Instruction<Void> {
+final class Selection extends Instruction<NVLVehicleSet> {
   double time = 0;
   List<VehicleRequirements> req = [];
 
@@ -17,8 +18,8 @@ final class Selection extends Instruction<Void> {
   }
 
   @Override
-  public Void execute() {
-    println "e " + toString()
+  public NVLVehicleSet execute() {
+    NVLEngine.getInstance().getRuntime().select req, time
   }
 }
 

@@ -4,8 +4,7 @@ t2 = t1
 
 t3 = t1 >> t2
 
-t =  
- t1 >> idle()
+t =  t1 >> idle()
 
 /*execute {
  during (1.seconds) {idle()} >> idle()
@@ -13,8 +12,8 @@ t =
 */
 
 execute {
-   during (1.seconds) {idle()} >> 
-   during(1.seconds) { idle() }
+   during (1.seconds) { idle() } >>
+   during(1 seconds) { idle() }
 }
 
 
