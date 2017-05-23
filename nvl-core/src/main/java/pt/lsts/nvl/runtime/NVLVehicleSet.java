@@ -1,9 +1,12 @@
 package pt.lsts.nvl.runtime;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Stream;
+
 
 public final class NVLVehicleSet implements Iterable<NVLVehicle> {
 
@@ -49,5 +52,18 @@ public final class NVLVehicleSet implements Iterable<NVLVehicle> {
     return sb.append(' ').append('}').toString();
   }
 
- 
+  public Stream<NVLVehicle> stream() {
+    return theSet.values().stream();
+  }
+
+  public void addAll(Collection<? extends NVLVehicle> coll) {
+     for (NVLVehicle v : coll) {
+       add(v);
+     }
+  }
+
+  public void remove(NVLVehicle v) {
+     theSet.remove(v.getId()); 
+  }
+
 }

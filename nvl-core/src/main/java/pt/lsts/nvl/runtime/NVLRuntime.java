@@ -8,8 +8,9 @@ import java.util.Optional;
 import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 import pt.lsts.nvl.util.Clock;
+import pt.lsts.nvl.util.Debuggable;
 
-public final class NVLRuntime {
+public final class NVLRuntime implements Debuggable {
 
   private static NVLRuntime INSTANCE;
 
@@ -40,7 +41,7 @@ public final class NVLRuntime {
 
 
   public void run(Task task) {
-    List<NVLVehicle> available = platform.getConnectedVehicles();
+    NVLVehicleSet available = platform.getConnectedVehicles();
 
     Map<Task,List<NVLVehicle>> allocation = new HashMap<>();
 
@@ -62,16 +63,26 @@ public final class NVLRuntime {
 
   public NVLVehicleSet select(List<VehicleRequirements> reqList) {
     
-    List<NVLVehicle> available = platform.getConnectedVehicles();
+    NVLVehicleSet available = platform.getConnectedVehicles();
+   
+    d("Available vehicles: %d", available.size());
+    
+    for (NVLVehicle v : available) {
+      d("  id=%s type=%s", v.getId(), v.getType());
+    }
+    
     NVLVehicleSet set = new NVLVehicleSet();
     for (VehicleRequirements req : reqList) {
+      d("Matching requirement: %s", req.toString());
       Optional<NVLVehicle> ov = 
         available.stream()
                  .filter(v -> !set.contains(v) && req.matchedBy(v))
                  .findFirst();
-      if (!ov.isPresent()) {
+      if (! ov.isPresent()) {
+        d("Requirement was not met!");
         return NVLVehicleSet.EMPTY;
       }
+      d("Requirement met by vehicle %s", ov.get().getId());
       set.add(ov.get());
     }
     return set;
@@ -79,7 +90,8 @@ public final class NVLRuntime {
 
  public NVLVehicleSet select(List<VehicleRequirements> reqList, double timeout) {
     double startTime = Clock.now();
-    
+    d("Performing selection with timeout %f", timeout);
+    long delayTime = Math.max(1000, (Math.round(timeout) * 1000) / 10);
     NVLVehicleSet set = NVLVehicleSet.EMPTY;
     
     while (Clock.now() - startTime < timeout) {
@@ -88,7 +100,7 @@ public final class NVLRuntime {
         break;
       }
       try {
-        Thread.sleep(100);
+        Thread.sleep(delayTime);
       }
       catch(InterruptedException e) {
         throw new NVLExecutionException(e);

@@ -49,7 +49,7 @@ public final class VehicleRequirements {
 
   public boolean matchedBy(NVLVehicle v) {
    return     (requiredName == null || requiredName.equals(v.getId()))
-           && (requiredType == null || (v.getType() == requiredType))
+           && (requiredType == null || v.getType().equals(requiredType))
            && ((requiredPayload == null || v.getPayload().containsAll(requiredPayload)))
            && ((areaCenter == null || v.getPosition().near(areaCenter, areaRadius) ));
   }

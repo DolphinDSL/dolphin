@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.NVLVehicleSet;
 
 public class SequentialTaskComposition implements Task {
 
@@ -20,7 +21,7 @@ public class SequentialTaskComposition implements Task {
   }
   
   @Override
-  public boolean allocate(List<NVLVehicle> available, Map<Task, List<NVLVehicle>> allocation) {
+  public boolean allocate(NVLVehicleSet available, Map<Task, List<NVLVehicle>> allocation) {
     return first.allocate(available, allocation) && second.allocate(available, allocation);
   }
 

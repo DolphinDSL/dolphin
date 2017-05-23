@@ -109,8 +109,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
 
   @Override
   protected final void onCompletion() {
-    PlanControlState pcs = pcsVar.get();
-    if (getTask().getId().equals(pcs.getPlanId()))
+    //PlanControlState pcs = pcsVar.get();
     
     teardown();
   }

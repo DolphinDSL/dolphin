@@ -70,7 +70,7 @@ public final class MulticastUDPLink implements NetworkLink {
 			sendSocket = new DatagramSocket();
 			socket = new MulticastSocket(port);
 			socket.joinGroup(address);
-			socket.setLoopbackMode(true);
+			socket.setLoopbackMode(false);
 			socket.setTimeToLive(5);
 			sendSocket.setBroadcast(true);
 		} catch (Exception e) {
@@ -131,7 +131,7 @@ public final class MulticastUDPLink implements NetworkLink {
 			throws NetworkLinkException {
 		checkConnected();
 		try {
-			sendSocket.send(new DatagramPacket(data, off, len, addr, port));
+			socket.send(new DatagramPacket(data, off, len, addr, port));
 		} catch (IOException e) {
 			throw new NetworkLinkException(e);
 		}

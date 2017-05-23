@@ -1,19 +1,13 @@
 
-t1 = during (2.seconds) { idle() }
-t2 = t1
-
-t3 = t1 >> t2
-
-t =  t1 >> idle()
-
-/*execute {
- during (1.seconds) {idle()} >> idle()
+uuv = select {
+  time 20
+  vehicle {
+    type 'UUV'
+  }
 }
-*/
 
-execute {
-   during (1.seconds) { idle() } >>
-   during(1 seconds) { idle() }
-}
+t = using uuv { task('x') }
+execute t
+
 
 

@@ -26,21 +26,7 @@ final class TaskBuilder extends Instruction<Void>  {
     task = t
   }
 
-  TaskBuilder until(Closure<Boolean> condition) {
-    new TaskBuilder ( 
-       new ConstrainedTask(task) {
-          @Override
-          public ConstrainedTaskExecutor getExecutor() {
-            return new ConstrainedTaskExecutor(task) {
-                  @Override
-                  public boolean terminationCondition() {
-                    condition.call()
-                  }
-                }
-          }
-        }
-        )
-  }
+ 
 
   TaskBuilder rightShift(TaskBuilder tb) {
     new TaskBuilder ( new SequentialTaskComposition(task, tb.getTask()) )

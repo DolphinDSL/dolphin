@@ -6,8 +6,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -18,7 +16,7 @@ import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.IMCOutputStream;
 import pt.lsts.imc.def.SystemType;
 import pt.lsts.nvl.runtime.NVLExecutionException;
-import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.NVLVehicleSet;
 import pt.lsts.nvl.util.Clock;
 import pt.lsts.nvl.util.Debuggable;
 import pt.lsts.nvl.util.net.MulticastUDPLink;
@@ -258,10 +256,11 @@ public class IMCCommunications extends Thread implements Debuggable {
     comm.start();
   }
 
-  public List<NVLVehicle> getConnectedVehicles() {
-    List<NVLVehicle> list = new LinkedList<>();
-    list.addAll(vehicles.values());
-    return list;
+  public NVLVehicleSet getConnectedVehicles() {
+    NVLVehicleSet vs = new NVLVehicleSet();
+   
+    vs.addAll(vehicles.values());
+    return vs;
   }
 
   

@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.NVLVehicleSet;
 import pt.lsts.nvl.runtime.VehicleRequirements;
 
 
@@ -24,7 +25,8 @@ public abstract class PlatformTask implements Task {
   
   public abstract void getRequirements(List<VehicleRequirements> requirements);
   
-  public final boolean allocate(List<NVLVehicle> available, Map<Task,List<NVLVehicle>> allocation) {
+  @Override
+  public final boolean allocate(NVLVehicleSet available, Map<Task,List<NVLVehicle>> allocation) {
     LinkedList<NVLVehicle> selection = new LinkedList<>();
     LinkedList<VehicleRequirements> requirements = new LinkedList<>();
     getRequirements(requirements);
