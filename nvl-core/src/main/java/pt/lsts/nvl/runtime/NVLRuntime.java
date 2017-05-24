@@ -61,23 +61,74 @@ public final class NVLRuntime implements Debuggable {
     }
   }
 
-  public NVLVehicleSet select(List<VehicleRequirements> reqList) {
-    
+  public boolean select(double timeout, Map<String,VehicleRequirements> reqs, Map<String,NVLVehicleSet> choice) {
+    double startTime = Clock.now();
+    d("Performing selection with timeout %f", timeout);
+    long delayTime = Math.max(1000, (Math.round(timeout) * 1000) / 10);
+
+    while (Clock.now() - startTime < timeout) {
+      if (select(reqs,choice)) {
+        return true;
+      }
+      try {
+        Thread.sleep(delayTime);
+      }
+      catch(InterruptedException e) {
+        throw new NVLExecutionException(e);
+      }
+    }
+    return false;
+  }
+  public boolean select(Map<String,VehicleRequirements> reqs, Map<String,NVLVehicleSet> choice) {
+
     NVLVehicleSet available = platform.getConnectedVehicles();
-   
+
     d("Available vehicles: %d", available.size());
-    
+
     for (NVLVehicle v : available) {
       d("  id=%s type=%s", v.getId(), v.getType());
     }
-    
+
+    NVLVehicleSet chosen = new NVLVehicleSet();
+    choice.clear();
+
+    for (Map.Entry<String,VehicleRequirements> e : reqs.entrySet()) {
+      String id = e.getKey();
+      VehicleRequirements vr = e.getValue();
+      d("Matching requirement: %s -> %s", id, vr.toString());
+      Optional<NVLVehicle> ov = 
+          available.stream()
+          .filter(v -> !chosen.contains(v) && vr.matchedBy(v))
+          .findFirst();
+      if (! ov.isPresent()) {
+        d("Requirement was not met!");
+        return false;
+      }
+      d("Requirement met by vehicle %s", ov.get().getId());
+      NVLVehicle v = ov.get();
+      chosen.add(v);
+      choice.put(id, NVLVehicleSet.singleton(ov.get()));
+    }
+    return true;
+  }
+
+  public NVLVehicleSet select(List<VehicleRequirements> reqList) {
+
+    NVLVehicleSet available = platform.getConnectedVehicles();
+
+    d("Available vehicles: %d", available.size());
+
+    for (NVLVehicle v : available) {
+      d("  id=%s type=%s", v.getId(), v.getType());
+    }
+
     NVLVehicleSet set = new NVLVehicleSet();
     for (VehicleRequirements req : reqList) {
       d("Matching requirement: %s", req.toString());
       Optional<NVLVehicle> ov = 
-        available.stream()
-                 .filter(v -> !set.contains(v) && req.matchedBy(v))
-                 .findFirst();
+          available.stream()
+          .filter(v -> !set.contains(v) && req.matchedBy(v))
+          .findFirst();
       if (! ov.isPresent()) {
         d("Requirement was not met!");
         return NVLVehicleSet.EMPTY;
@@ -88,12 +139,12 @@ public final class NVLRuntime implements Debuggable {
     return set;
   }
 
- public NVLVehicleSet select(List<VehicleRequirements> reqList, double timeout) {
+  public NVLVehicleSet select(List<VehicleRequirements> reqList, double timeout) {
     double startTime = Clock.now();
     d("Performing selection with timeout %f", timeout);
     long delayTime = Math.max(1000, (Math.round(timeout) * 1000) / 10);
     NVLVehicleSet set = NVLVehicleSet.EMPTY;
-    
+
     while (Clock.now() - startTime < timeout) {
       set = select(reqList);
       if (set != NVLVehicleSet.EMPTY) {
@@ -107,7 +158,7 @@ public final class NVLRuntime implements Debuggable {
       }
     }
     return set;
-   
+
   }
 }
 

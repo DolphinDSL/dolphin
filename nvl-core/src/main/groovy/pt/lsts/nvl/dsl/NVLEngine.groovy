@@ -75,6 +75,10 @@ class NVLEngine {
     shell.setVariable var, value
   }
   
+  void unbind(String var) {
+    ensureShellIsCreated()
+    shell.setVariable var, null
+  }
   void run(Task task) {
     runtime.run task
   }

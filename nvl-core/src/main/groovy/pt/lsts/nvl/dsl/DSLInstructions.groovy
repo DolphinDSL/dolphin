@@ -1,5 +1,7 @@
 package pt.lsts.nvl.dsl
 
+import java.util.concurrent.ForkJoinTask.AdaptedCallable
+
 import groovy.lang.Closure
 import groovy.transform.CompileStatic
 import groovy.transform.TypeChecked
@@ -32,6 +34,13 @@ class DSLInstructions implements Debuggable {
   
   static TaskBuilder during(double duration, Closure<TaskBuilder> cl) {
     new TaskBuilder ( new TimeConstrainedTask(cl.call().getTask(), duration) ) 
+  }
+  
+  static def during(double duration) {
+    [execute: { 
+      Closure<TaskBuilder> what -> 
+         new TaskBuilder(  new TimeConstrainedTask(what.call().getTask(), duration) )
+    }]    
   }
   
   static TaskBuilder until(Closure<Boolean> condition, Closure<TaskBuilder> tb) {

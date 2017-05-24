@@ -1,17 +1,16 @@
 
-uuv = select {
+select {
   time 20
-  vehicle {
-    type 'UUV'
-  }
+  vehicles a : {
+             type 'UUV'
+          }
 }
 
-println uuv
-println (uuv - uuv)
-println (uuv + uuv)
-println (uuv & uuv)
+println a
+println (a + a)
+println (a & a)
 
-t = uuv << { task('x') }
+t = a << { task('x') }
 execute t
 
 

@@ -100,5 +100,11 @@ public final class NVLVehicleSet implements Iterable<NVLVehicle> {
     }
     return iSet;
   }
+
+  public static NVLVehicleSet singleton(NVLVehicle v) {
+    NVLVehicleSet set = new NVLVehicleSet();
+    set.add(v);
+    return set;
+  }
   
 }
