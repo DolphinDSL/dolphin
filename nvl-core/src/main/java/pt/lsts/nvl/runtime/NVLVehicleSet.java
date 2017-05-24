@@ -88,13 +88,11 @@ public final class NVLVehicleSet implements Iterable<NVLVehicle> {
   
   public static NVLVehicleSet intersection(NVLVehicleSet a, NVLVehicleSet b) {
     NVLVehicleSet iSet = new NVLVehicleSet();
-    
     for (NVLVehicle v : a) {
       if (b.contains(v)) {
         iSet.add(v);
       }
     }
-    
     for (NVLVehicle v : b) {
       if (a.contains(v)) {
         iSet.add(v);
