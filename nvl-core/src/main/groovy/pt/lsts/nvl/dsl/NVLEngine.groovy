@@ -67,7 +67,16 @@ class NVLEngine {
   
   void run(File scriptFile) {
     ensureShellIsCreated()
-    shell.evaluate scriptFile
+    try {
+      shell.evaluate scriptFile
+    }
+    catch (HaltProgramException e) {
+      println 'Program halted: ' + e.getMessage() 
+    }
+    catch (Throwable e) {
+      println 'Program terminated with unexpected exception!' 
+      e.printStackTrace(System.out)
+    }
   }
   
   void bind(String var, Object value) {
@@ -79,6 +88,7 @@ class NVLEngine {
     ensureShellIsCreated()
     shell.setVariable var, null
   }
+  
   void run(Task task) {
     runtime.run task
   }

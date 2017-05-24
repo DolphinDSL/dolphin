@@ -142,7 +142,7 @@ public final class NVLRuntime implements Debuggable {
   public NVLVehicleSet select(List<VehicleRequirements> reqList, double timeout) {
     double startTime = Clock.now();
     d("Performing selection with timeout %f", timeout);
-    long delayTime = Math.max(1000, (Math.round(timeout) * 1000) / 10);
+    double delayTime = Math.max(1.0,  timeout * 0.1);
     NVLVehicleSet set = NVLVehicleSet.EMPTY;
 
     while (Clock.now() - startTime < timeout) {
@@ -150,15 +150,18 @@ public final class NVLRuntime implements Debuggable {
       if (set != NVLVehicleSet.EMPTY) {
         break;
       }
-      try {
-        Thread.sleep(delayTime);
-      }
-      catch(InterruptedException e) {
-        throw new NVLExecutionException(e);
-      }
+      pause(delayTime);
     }
     return set;
-
+  }
+  
+  public static void pause(double time) {
+    try {
+      Thread.sleep(Math.round(time * 1e+03));
+    }
+    catch (InterruptedException e) {
+      throw new NVLExecutionException(e);
+    }
   }
 }
 

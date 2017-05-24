@@ -1,8 +1,8 @@
 
 select {
-  time 20
+  time 1
   vehicles a : {
-             type 'UUV'
+             type 'UAV'
           }
 }
 

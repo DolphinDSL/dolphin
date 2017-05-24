@@ -9,7 +9,7 @@ final class Selection extends Instruction<Boolean> {
   double time = 0
   Map<String,VehicleRequirements> req = [:]
   Closure success
-  Closure failure
+  Closure failure = { DSLInstructions.halt 'vehicle selection failed' }
   
   void time (double arg) {
     time = arg;
