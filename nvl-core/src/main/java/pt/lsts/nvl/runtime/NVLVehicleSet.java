@@ -1,6 +1,5 @@
 package pt.lsts.nvl.runtime;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -56,14 +55,52 @@ public final class NVLVehicleSet implements Iterable<NVLVehicle> {
     return theSet.values().stream();
   }
 
-  public void addAll(Collection<? extends NVLVehicle> coll) {
-     for (NVLVehicle v : coll) {
+  public void addAll(Iterable<? extends NVLVehicle> vehicles) {
+     for (NVLVehicle v :  vehicles) {
        add(v);
      }
   }
 
+ 
   public void remove(NVLVehicle v) {
      theSet.remove(v.getId()); 
   }
 
+  public void removeAll(Iterable<? extends NVLVehicle> vehicles) {
+    for (NVLVehicle v : vehicles) {
+      remove(v);
+    }
+ }
+  
+  public static NVLVehicleSet union(NVLVehicleSet a, NVLVehicleSet b) {
+    NVLVehicleSet unionSet = new NVLVehicleSet();
+    unionSet.addAll(a);
+    unionSet.addAll(b);
+    return unionSet;
+  }
+  
+  public static NVLVehicleSet difference(NVLVehicleSet a, NVLVehicleSet b) {
+    NVLVehicleSet diffSet = new NVLVehicleSet();
+    diffSet.addAll(a);
+    diffSet.removeAll(b);
+    return diffSet;
+  }
+  
+  public static NVLVehicleSet intersection(NVLVehicleSet a, NVLVehicleSet b) {
+    NVLVehicleSet iSet = new NVLVehicleSet();
+    
+    for (NVLVehicle v : a) {
+      if (b.contains(v)) {
+        iSet.add(v);
+      }
+    }
+    
+    for (NVLVehicle v : b) {
+      if (a.contains(v)) {
+        iSet.add(v);
+      }
+    }
+    return iSet;
+  }
+  
 }

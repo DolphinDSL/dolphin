@@ -6,7 +6,12 @@ uuv = select {
   }
 }
 
-t = using uuv { task('x') }
+println uuv
+println (uuv - uuv)
+println (uuv + uuv)
+println (uuv & uuv)
+
+t = uuv << { task('x') }
 execute t
 
 

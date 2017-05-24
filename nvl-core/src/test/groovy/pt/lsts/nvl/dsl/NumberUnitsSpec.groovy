@@ -7,7 +7,7 @@ import spock.lang.Specification
 class NumberUnitsSpec extends Specification {
 
   def setupSpec() {
-    NumberUnits.main()
+    Units.main()
   }
 
   def 'Distance Units' () {
