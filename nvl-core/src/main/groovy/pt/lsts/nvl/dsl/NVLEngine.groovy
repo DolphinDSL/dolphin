@@ -56,17 +56,18 @@ class NVLEngine {
       def cfg = new CompilerConfiguration()
       cfg.with {
         addCompilationCustomizers ic
-        scriptBaseClass = 'pt.lsts.nvl.dsl.BaseScript'
+        setTargetBytecode CompilerConfiguration.JDK8
       }
+      
       // Define the shell
       shell = new GroovyShell(cfg)
       shell.evaluate 'BootScript.main()'
     }
   }
   
-  void run(File script) {
+  void run(File scriptFile) {
     ensureShellIsCreated()
-    shell.evaluate script
+    shell.evaluate scriptFile
   }
   
   void bind(String var, Object value) {
