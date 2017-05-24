@@ -60,7 +60,7 @@ class NVLEngine {
       }
       // Define the shell
       shell = new GroovyShell(cfg)
-      shell.evaluate 'BaseScript.main()'
+      shell.evaluate 'BootScript.main()'
     }
   }
   
