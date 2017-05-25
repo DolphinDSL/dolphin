@@ -22,7 +22,7 @@ import pt.lsts.nvl.runtime.tasks.Task
 class DSLInstructions implements Debuggable {
 
   static void message(String message) {
-    println message
+    NVLEngine.getInstance().getRuntime().getPlatform().nvlInfoMessage(message)
   }
   
   static void halt(String message='') {
@@ -41,6 +41,10 @@ class DSLInstructions implements Debuggable {
     new TaskBuilder(id)
   }
 
+  static Task task0(String id) {
+    NVLEngine.getInstance().getRuntime().getPlatform().getPlatformTask(id)
+  }
+  
   static TaskBuilder idle() {
     new TaskBuilder(new IdleTask())
   }

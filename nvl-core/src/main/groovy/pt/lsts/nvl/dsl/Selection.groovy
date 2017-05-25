@@ -1,5 +1,6 @@
 package pt.lsts.nvl.dsl;
 
+import java.nio.channels.spi.AbstractSelectionKey
 import java.util.List;
 import pt.lsts.nvl.runtime.NVLVehicleSet
 import pt.lsts.nvl.runtime.VehicleRequirements
@@ -37,10 +38,19 @@ final class Selection extends Instruction<Boolean> {
   public Boolean execute() {
     Map<String, NVLVehicleSet> choice = [:]
     if ( NVLEngine.getInstance().getRuntime().select (time, req, choice )) {
-      choice.each {
-        id, vs -> NVLEngine.getInstance().bind id, vs
+      for (e in choice) {
+        def id = e.key
+        def vs = e.value
+         println "$id was set"
+         
+          NVLEngine.getInstance().bind id, vs
+          println "$id was set (2)"
+          
+  
       }
+      
       success?.call()
+      
       true
     } else {
       failure?.call()

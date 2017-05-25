@@ -6,13 +6,13 @@ import java.util.function.Function;
 public final class VehicleRequirements {
 
   private String requiredType;
-  private String requiredName;
+  private String requiredId;
   private List<PayloadComponent> requiredPayload;
   private Position areaCenter;
   private double areaRadius;
   
   public VehicleRequirements() {
-      requiredName = null;
+      requiredId = null;
       requiredPayload = null;
       areaCenter = null;
       areaRadius = 0;  
@@ -25,7 +25,7 @@ public final class VehicleRequirements {
   }
   
   public VehicleRequirements name(String name) {
-      requiredName = name;
+      requiredId = name;
       return this; 
     }
 
@@ -48,7 +48,7 @@ public final class VehicleRequirements {
   }
 
   public boolean matchedBy(NVLVehicle v) {
-   return     (requiredName == null || requiredName.equals(v.getId()))
+   return     (requiredId == null || requiredId.equals(v.getId()))
            && (requiredType == null || v.getType().equals(requiredType))
            && ((requiredPayload == null || v.getPayload().containsAll(requiredPayload)))
            && ((areaCenter == null || v.getPosition().near(areaCenter, areaRadius) ));
@@ -61,6 +61,14 @@ public final class VehicleRequirements {
   	return requiredType;
   }
 
+  /**
+   * @param requiredId the required id to set
+   */
+  public void setRequiredId(String requiredId) {
+    this.requiredId = requiredId;
+  }
+  
+  
   /**
    * @param requiredType the requiredType to set
    */
@@ -114,8 +122,8 @@ public final class VehicleRequirements {
   public String toString() {
     Function<Object, String> str = x -> (x != null ? x.toString() : "<null>");
     
-    return String.format("name=%s,type=%s,payload=%s,area=%s",
-        str.apply(requiredName), 
+    return String.format("id=%s,type=%s,payload=%s,area=%s",
+        str.apply(requiredId), 
         str.apply(requiredType),
         str.apply(requiredPayload),
         str.apply(areaCenter) );

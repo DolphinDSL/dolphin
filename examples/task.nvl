@@ -1,17 +1,53 @@
 
 select {
-  time 1
+  time 15
   vehicles a : {
-             type 'UAV'
+             id 'lauv-seacon-1'
+             type 'UUV'
+          },
+          b : {
+             type 'UUV'
           }
+  then {
+    t = a << { task('x') }
+    execute t
+  }
+  otherwise {
+    message 'falhou!'
+  }
 }
+t = a << { task('x') }
+    execute t
+message 'fim'
 
+/*
 println a
-println (a + a)
-println (a & a)
+println (a + b)
+println (a + b - b)
+println (a & b)
 
 t = a << { task('x') }
+//t = task('x')
 execute t
 
+select 
+  uuv1: ...
+  uuv2: ...
+  uuv3: ...
+
+execute 
+    uuv1: 
+       task('a1'),
+    uuv2: 
+       task('a2'),
+    uuv3:
+       task('a3')
 
 
+variante:
+execute:
+     uuv:
+         task('a1') | task('a2') | task('a3')
+
+
+*/

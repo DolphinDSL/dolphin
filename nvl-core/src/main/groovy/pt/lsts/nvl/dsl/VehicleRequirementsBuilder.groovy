@@ -13,6 +13,10 @@ final class VehicleRequirementsBuilder
   
   VehicleRequirementsBuilder() {
   }
+
+  void id(String s) {
+    req.setRequiredId s
+  }
   
   void type(String t) {
     req.setRequiredType t
