@@ -8,20 +8,22 @@ import org.codehaus.groovy.control.customizers.ImportCustomizer
 import pt.lsts.nvl.runtime.NVLPlatform
 import pt.lsts.nvl.runtime.NVLRuntime
 import pt.lsts.nvl.runtime.tasks.Task
+import pt.lsts.nvl.util.Debuggable
 import pt.lsts.nvl.runtime.NVLExecutionException
 
 /**
  * The NVL engine.
  */
-@CompileStatic
-@TypeChecked
-class NVLEngine {
+@DSLClass
+class NVLEngine implements Debuggable {
   
   static NVLEngine create(NVLPlatform platform) {
     if (instance != null)
       throw new NVLExecutionException('Engine already created!')
       
     instance = new NVLEngine(platform)
+    msg 'Engine on !'
+    instance
   }
   
   static NVLEngine getInstance() {
@@ -31,16 +33,33 @@ class NVLEngine {
     instance
   }
   
+  static NVLRuntime runtime() {
+    return instance.runtime
+  }
+  
+  static NVLPlatform platform() {
+    return instance.runtime.getPlatform()
+  }
+  
+  static void msg (String fmt, Object... args) {
+    getInstance().d fmt, args
+    platform().nvlInfoMessage fmt, args
+  }
+  
+  static void halt(String message='') {
+    msg 'Halting program ... \'%s\'', message
+    throw new HaltProgramException(message)
+  }
+  
   private static NVLEngine instance
   
   private NVLEngine(NVLPlatform platform) {
     runtime = NVLRuntime.create platform
   }
 
-  NVLRuntime runtime;
+  private NVLRuntime runtime;
   private GroovyShell shell
-  
-  
+ 
   private void ensureShellIsCreated() {
     if (shell == null) {
       // Imports
@@ -67,6 +86,7 @@ class NVLEngine {
   
   void run(File scriptFile) {
     ensureShellIsCreated()
+    msg 'Running script \'%s\'', scriptFile
     try {
       shell.evaluate scriptFile
     }
@@ -86,7 +106,7 @@ class NVLEngine {
   
   void unbind(String var) {
     ensureShellIsCreated()
-    shell.setVariable var, null
+    shell.context.variables.remove var
   }
   
   void run(Task task) {

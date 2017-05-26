@@ -17,24 +17,24 @@ import pt.lsts.nvl.runtime.tasks.ResourceExplicitTask
 import pt.lsts.nvl.runtime.tasks.Task
 
 // DSL instructions
-@CompileStatic
-@TypeChecked
+@DSLClass
 class DSLInstructions implements Debuggable {
 
   static void message(String message) {
-    NVLEngine.getInstance().getRuntime().getPlatform().nvlInfoMessage("Program message: %s", message)
+    NVLEngine.msg("Program message: %s", message)
   }
 
   static void halt(String message='') {
-    throw new HaltProgramException(message)
+    NVLEngine.halt(message)
   }
 
   static void pause(double duration) {
+    NVLEngine.msg "Pausing for %f s ...", duration
     NVLRuntime.pause duration
   }
 
   static Task task(String id) {
-    NVLEngine.getInstance().getRuntime().getPlatform().getPlatformTask(id)
+    NVLEngine.platform().getPlatformTask(id)
   }
 
   static Task idle() {
@@ -46,7 +46,7 @@ class DSLInstructions implements Debuggable {
   }
   
   static NVLVehicleSet pick (Closure cl) {
-    new VehicleSetBuilder().build(cl)
+    new Picker().build(cl)
   }
   
   static Task until(Closure<Boolean> condition, Task t) {
@@ -67,8 +67,6 @@ class DSLInstructions implements Debuggable {
   static def execute(Task t) {
     NVLEngine.getInstance().run t
   }
-
-
 
 
   private DSLInstructions() {

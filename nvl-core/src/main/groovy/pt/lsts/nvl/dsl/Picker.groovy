@@ -10,12 +10,11 @@ import pt.lsts.nvl.runtime.Position
 import pt.lsts.nvl.runtime.VehicleRequirements
 
 @DSLClass
-final class VehicleSetBuilder
-extends Builder<NVLVehicleSet> {
+final class Picker extends Builder<NVLVehicleSet> {
 
-  VehicleRequirements req = new VehicleRequirements()
-  int count = 1
-  double timeout = 0
+  private VehicleRequirements req = new VehicleRequirements()
+  private int count = 1
+  private double timeout = 0
  
   void count(int n) {
     if (n <= 0) {
@@ -24,7 +23,7 @@ extends Builder<NVLVehicleSet> {
     count = n
   }
   
-  void wait(double t) {
+  void timeout(double t) {
     if (t < 0) {
       DSLInstructions.halt 'Negative timeout in vehicle selection'
     }
@@ -71,9 +70,9 @@ extends Builder<NVLVehicleSet> {
     (1..count).each {
       list << req
     }
-    NVLVehicleSet set = NVLEngine.getInstance().getRuntime().select(list, timeout)
+    NVLVehicleSet set = NVLEngine.runtime().select(list, timeout)
     if (set == NVLVehicleSet.EMPTY) {
-      DSLInstructions.halt "Could not select vehicles!"
+      NVLEngine.halt "Could not find required vehicles!"
     }
     set
   }
