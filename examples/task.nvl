@@ -1,6 +1,6 @@
 
 a = pick {
-    id 'lauv-seacon-1'
+    id 'lauv-seacon-.*'
     type 'UUV'
     timeout 10.seconds
 } 
