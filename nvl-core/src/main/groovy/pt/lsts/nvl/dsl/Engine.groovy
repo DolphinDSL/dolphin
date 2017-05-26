@@ -91,10 +91,11 @@ class Engine implements Debuggable {
       shell.evaluate scriptFile
     }
     catch (Halt e) {
-      println 'Program halted: ' + e.getMessage() 
+      
     }
     catch (Throwable e) {
-      println 'Program terminated with unexpected exception!' 
+      msg 'Unexpected exception ...  %s : %s !', 
+           e.getClass().getName(), e.getMessage()
       e.printStackTrace(System.out)
     }
   }
