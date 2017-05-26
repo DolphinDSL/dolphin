@@ -6,7 +6,6 @@ import groovy.transform.TypeChecked
 
 @CompileStatic
 @TypeChecked
-//@Canonical
 @AnnotationCollector
 @interface DSLClass {}
 

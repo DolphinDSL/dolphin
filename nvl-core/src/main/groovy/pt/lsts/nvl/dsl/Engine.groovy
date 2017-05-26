@@ -4,11 +4,8 @@ package pt.lsts.nvl.dsl
 import java.io.File
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
-import groovy.lang.GroovyShell
-import pt.lsts.nvl.runtime.NVLPlatform
-import pt.lsts.nvl.runtime.NVLRuntime
-import pt.lsts.nvl.runtime.NVLExecutionException
-import pt.lsts.nvl.runtime.tasks.Task
+import pt.lsts.nvl.runtime.*
+import pt.lsts.nvl.runtime.tasks.*
 import pt.lsts.nvl.util.Debuggable
 
 /**

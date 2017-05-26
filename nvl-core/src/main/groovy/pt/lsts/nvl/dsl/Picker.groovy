@@ -1,8 +1,6 @@
 package pt.lsts.nvl.dsl;
 
-
 import pt.lsts.nvl.runtime.*
-
 
 @DSLClass
 final class Picker extends Builder<NVLVehicleSet> {

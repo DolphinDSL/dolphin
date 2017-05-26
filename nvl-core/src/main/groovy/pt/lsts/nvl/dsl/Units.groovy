@@ -1,7 +1,5 @@
 package pt.lsts.nvl.dsl
 
-// Unit conversions for numbers
-
 // Distance 
 Number.metaClass.getMeters = { -> delegate }
 Number.metaClass.getKilometers = { -> delegate * 1000 }
