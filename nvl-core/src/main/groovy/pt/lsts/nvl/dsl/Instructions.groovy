@@ -18,23 +18,23 @@ import pt.lsts.nvl.runtime.tasks.Task
 
 // DSL instructions
 @DSLClass
-class DSLInstructions implements Debuggable {
+class Instructions implements Debuggable {
 
   static void message(String message) {
-    NVLEngine.msg("Program message: %s", message)
+    Engine.msg("Program message: %s", message)
   }
 
   static void halt(String message='') {
-    NVLEngine.halt(message)
+    Engine.halt(message)
   }
 
   static void pause(double duration) {
-    NVLEngine.msg "Pausing for %f s ...", duration
+    Engine.msg "Pausing for %f s ...", duration
     NVLRuntime.pause duration
   }
 
   static Task task(String id) {
-    NVLEngine.platform().getPlatformTask(id)
+    Engine.platform().getPlatformTask(id)
   }
 
   static Task idle() {
@@ -65,11 +65,11 @@ class DSLInstructions implements Debuggable {
 
  
   static def execute(Task t) {
-    NVLEngine.getInstance().run t
+    Engine.getInstance().run t
   }
 
 
-  private DSLInstructions() {
+  private Instructions() {
 
   }
 

@@ -15,18 +15,18 @@ import pt.lsts.nvl.runtime.NVLExecutionException
  * The NVL engine.
  */
 @DSLClass
-class NVLEngine implements Debuggable {
+class Engine implements Debuggable {
   
-  static NVLEngine create(NVLPlatform platform) {
+  static Engine create(NVLPlatform platform) {
     if (instance != null)
       throw new NVLExecutionException('Engine already created!')
       
-    instance = new NVLEngine(platform)
+    instance = new Engine(platform)
     msg 'Engine on !'
     instance
   }
   
-  static NVLEngine getInstance() {
+  static Engine getInstance() {
     if (instance == null)
       throw new NVLExecutionException('Engine has not been created!')
     
@@ -48,12 +48,12 @@ class NVLEngine implements Debuggable {
   
   static void halt(String message='') {
     msg 'Halting program ... \'%s\'', message
-    throw new HaltProgramException(message)
+    throw new Halt(message)
   }
   
-  private static NVLEngine instance
+  private static Engine instance
   
-  private NVLEngine(NVLPlatform platform) {
+  private Engine(NVLPlatform platform) {
     runtime = NVLRuntime.create platform
   }
 
@@ -66,7 +66,7 @@ class NVLEngine implements Debuggable {
       def ic = new ImportCustomizer()
       ic.with {
         addStaticStars 'java.lang.Math'
-        addStaticStars 'pt.lsts.nvl.dsl.DSLInstructions'
+        addStaticStars 'pt.lsts.nvl.dsl.Instructions'
         addStarImports 'pt.lsts.nvl.dsl'
         addStarImports 'pt.lsts.nvl.runtime'
       }
@@ -90,7 +90,7 @@ class NVLEngine implements Debuggable {
     try {
       shell.evaluate scriptFile
     }
-    catch (HaltProgramException e) {
+    catch (Halt e) {
       println 'Program halted: ' + e.getMessage() 
     }
     catch (Throwable e) {

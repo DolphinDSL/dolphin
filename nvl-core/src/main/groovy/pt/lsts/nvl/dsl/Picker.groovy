@@ -18,14 +18,14 @@ final class Picker extends Builder<NVLVehicleSet> {
  
   void count(int n) {
     if (n <= 0) {
-      DSLInstructions.halt 'Number of vehicles must be greater than 0'
+      Instructions.halt 'Number of vehicles must be greater than 0'
     }
     count = n
   }
   
   void timeout(double t) {
     if (t < 0) {
-      DSLInstructions.halt 'Negative timeout in vehicle selection'
+      Instructions.halt 'Negative timeout in vehicle selection'
     }
     timeout = t
   }
@@ -70,9 +70,9 @@ final class Picker extends Builder<NVLVehicleSet> {
     (1..count).each {
       list << req
     }
-    NVLVehicleSet set = NVLEngine.runtime().select(list, timeout)
+    NVLVehicleSet set = Engine.runtime().select(list, timeout)
     if (set == NVLVehicleSet.EMPTY) {
-      NVLEngine.halt "Could not find required vehicles!"
+      Engine.halt "Could not find required vehicles!"
     }
     set
   }
