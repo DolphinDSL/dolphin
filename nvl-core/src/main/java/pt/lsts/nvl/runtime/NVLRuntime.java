@@ -29,11 +29,15 @@ public final class NVLRuntime implements Debuggable {
     return INSTANCE;
   }
 
-  private NVLRuntime(NVLPlatform platform) {
-    this.platform = platform;
+  private final NVLPlatform platform;
+  private final NVLVehicleSet boundVehicles;
+  
+  private NVLRuntime(NVLPlatform p) {
+    platform = p;
+    boundVehicles = new NVLVehicleSet();
   }
 
-  private final NVLPlatform platform;
+
 
   public NVLPlatform getPlatform() {
     return platform;
@@ -66,7 +70,8 @@ public final class NVLRuntime implements Debuggable {
   public NVLVehicleSet select(List<VehicleRequirements> reqList) {
 
     NVLVehicleSet available = platform.getConnectedVehicles();
-
+    available.removeAll(boundVehicles);
+    
     d("Available vehicles: %d", available.size());
 
     for (NVLVehicle v : available) {
@@ -87,6 +92,7 @@ public final class NVLRuntime implements Debuggable {
       d("Requirement met by vehicle %s", ov.get().getId());
       set.add(ov.get());
     }
+    boundVehicles.addAll(set);
     return set;
   }
 
@@ -106,7 +112,11 @@ public final class NVLRuntime implements Debuggable {
     return set;
   }
   
-  public static void pause(double time) {
+  public void release(NVLVehicleSet set) {
+    boundVehicles.removeAll(set);
+  }
+  
+  public void pause(double time) {
     try {
       Thread.sleep(Math.round(time * 1e+03));
     }

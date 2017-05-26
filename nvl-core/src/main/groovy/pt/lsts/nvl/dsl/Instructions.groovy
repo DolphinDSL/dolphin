@@ -19,7 +19,7 @@ class Instructions implements Debuggable {
 
   static void pause(double duration) {
     Engine.msg "Pausing for %f s ...", duration
-    NVLRuntime.pause duration
+    Engine.runtime().pause duration
   }
 
   static Task task(String id) {

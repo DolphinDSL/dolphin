@@ -4,4 +4,8 @@ a = pick {
     type 'UUV'
     timeout 10.seconds
 } 
+b = pick {
+    id 'lauv-seacon-1'
+    type 'UUV'
+} 
 halt 'Bye:)'
