@@ -22,48 +22,35 @@ import pt.lsts.nvl.runtime.tasks.Task
 class DSLInstructions implements Debuggable {
 
   static void message(String message) {
-    NVLEngine.getInstance().getRuntime().getPlatform().nvlInfoMessage(message)
+    NVLEngine.getInstance().getRuntime().getPlatform().nvlInfoMessage("Program message: %s", message)
   }
-  
+
   static void halt(String message='') {
     throw new HaltProgramException(message)
   }
-  
+
   static void pause(double duration) {
     NVLRuntime.pause duration
   }
-  
-  static def select(@DelegatesTo(strategy=Closure.DELEGATE_ONLY, value=Selection) Closure cl) {
-    new Selection().buildAndExecute(cl)
-  }
 
-  static TaskBuilder task(String id) {
-    new TaskBuilder(id)
-  }
-
-  static Task task0(String id) {
+  static Task task(String id) {
     NVLEngine.getInstance().getRuntime().getPlatform().getPlatformTask(id)
   }
+
+  static Task idle() {
+    new IdleTask()
+  }
+
+  static Task during(double duration, Task task) {
+    new TimeConstrainedTask(task, duration)
+  }
   
-  static TaskBuilder idle() {
-    new TaskBuilder(new IdleTask())
+  static NVLVehicleSet pick (Closure cl) {
+    new VehicleSetBuilder().build(cl)
   }
-
-  static TaskBuilder during(double duration, Closure<TaskBuilder> cl) {
-    new TaskBuilder ( new TimeConstrainedTask(cl.call().getTask(), duration) )
-  }
-
-  static def during(double duration) {
-    [execute: {
-        Closure<TaskBuilder> what ->
-        new TaskBuilder(  new TimeConstrainedTask(what.call().getTask(), duration) )
-      }]
-  }
-
-  static TaskBuilder until(Closure<Boolean> condition, Closure<TaskBuilder> tb) {
-    Task t = tb().task
-    new TaskBuilder (
-        new ConstrainedTask(t) {
+  
+  static Task until(Closure<Boolean> condition, Task t) {
+    new ConstrainedTask(t) {
           @Override
           public ConstrainedTaskExecutor getExecutor() {
             return new ConstrainedTaskExecutor(t) {
@@ -73,22 +60,15 @@ class DSLInstructions implements Debuggable {
                   }
                 }
           }
-        })
+        }
   }
 
-  static TaskBuilder using(NVLVehicleSet set, Closure<TaskBuilder> tb) {
-    println set
-    Task t = tb().task
-    new TaskBuilder(new ResourceExplicitTask(t, set))
+ 
+  static def execute(Task t) {
+    NVLEngine.getInstance().run t
   }
 
-  static def execute(TaskBuilder tb) {
-    NVLEngine.getInstance().run tb.getTask()
-  }
 
-  static def execute(Closure<TaskBuilder> cl) {
-    execute cl.call()
-  }
 
 
   private DSLInstructions() {

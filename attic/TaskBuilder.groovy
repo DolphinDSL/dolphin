@@ -15,7 +15,7 @@ import pt.lsts.nvl.util.Debuggable
 import pt.lsts.nvl.runtime.tasks.IdleTask
 
 @DSLClass
-final class TaskBuilder extends Instruction<Void>  {
+final class TaskBuilder extends Builder<Void>  {
   Task task
 
   TaskBuilder(String id) {
@@ -37,7 +37,7 @@ final class TaskBuilder extends Instruction<Void>  {
   }
 
   @Override
-  public Void execute() {
+  public Void build() {
 
   }
 

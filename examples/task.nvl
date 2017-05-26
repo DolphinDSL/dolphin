@@ -1,14 +1,28 @@
 
+def xpto = 'axxx'
+message xpto
+def x = 333
 select {
   time 15
   vehicles a : {
              id 'lauv-seacon-1'
              type 'UUV'
-          },
+          }/*,
           b : {
              type 'UUV'
-          }
+          }*/
   then {
+        println "a=$a"
+    select {
+      time 1
+      vehicles b : { id 'lauv-seacon-1' }
+      then {
+        println "b=$b"
+        println "a=$a"
+      }
+    }
+    println x
+    message xpto
     t = a << { task('x') }
     execute t
   }
@@ -16,10 +30,10 @@ select {
     message 'falhou!'
   }
 }
-t = a << { task('x') }
-    execute t
-message 'fim'
 
+message 'done'
+println a
+println xx
 /*
 println a
 println (a + b)

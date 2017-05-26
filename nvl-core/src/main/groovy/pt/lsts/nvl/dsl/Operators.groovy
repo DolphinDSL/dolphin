@@ -20,9 +20,7 @@ NVLVehicleSet.metaClass.and << {
   NVLVehicleSet other -> NVLVehicleSet.intersection(delegate, other)
 }
 
-NVLVehicleSet.metaClass.leftShift << {
-  Closure<TaskBuilder> ctb -> DSLInstructions.using(delegate, ctb) 
-} 
+
 
 // Task operators
 
