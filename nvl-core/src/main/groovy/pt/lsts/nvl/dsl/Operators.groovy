@@ -1,11 +1,7 @@
 package pt.lsts.nvl.dsl
 
-import pt.lsts.nvl.runtime.NVLVehicleSet
-import pt.lsts.nvl.runtime.tasks.ConcurrentTaskComposition
-import pt.lsts.nvl.runtime.tasks.ResourceExplicitTask
-import pt.lsts.nvl.runtime.tasks.SequentialTaskComposition
-import pt.lsts.nvl.runtime.tasks.Task
-
+import pt.lsts.nvl.runtime.*
+import pt.lsts.nvl.runtime.tasks.*
 
 // Vehicle set operators
 NVLVehicleSet.metaClass.plus << {

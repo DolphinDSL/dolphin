@@ -1,15 +1,15 @@
 package pt.lsts.nvl.dsl
 
 
-import groovy.transform.CompileStatic
-import groovy.transform.TypeChecked
+import java.io.File
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
+import groovy.lang.GroovyShell
 import pt.lsts.nvl.runtime.NVLPlatform
 import pt.lsts.nvl.runtime.NVLRuntime
+import pt.lsts.nvl.runtime.NVLExecutionException
 import pt.lsts.nvl.runtime.tasks.Task
 import pt.lsts.nvl.util.Debuggable
-import pt.lsts.nvl.runtime.NVLExecutionException
 
 /**
  * The NVL engine.

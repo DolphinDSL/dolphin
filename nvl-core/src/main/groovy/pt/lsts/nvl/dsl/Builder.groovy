@@ -1,5 +1,6 @@
 package pt.lsts.nvl.dsl
 
+import groovy.lang.Closure
 import pt.lsts.nvl.util.Debuggable
 
 @DSLClass

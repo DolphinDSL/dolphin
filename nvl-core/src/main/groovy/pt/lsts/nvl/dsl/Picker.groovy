@@ -1,13 +1,8 @@
 package pt.lsts.nvl.dsl;
 
 
-import java.util.concurrent.ConcurrentHashMap.ForEachEntryTask
-import java.util.concurrent.atomic.DoubleAdder
+import pt.lsts.nvl.runtime.*
 
-import pt.lsts.nvl.runtime.NVLVehicleSet
-import pt.lsts.nvl.runtime.PayloadComponent
-import pt.lsts.nvl.runtime.Position
-import pt.lsts.nvl.runtime.VehicleRequirements
 
 @DSLClass
 final class Picker extends Builder<NVLVehicleSet> {
