@@ -7,7 +7,7 @@ import java.util.Optional;
 
 import pt.lsts.nvl.runtime.NVLVehicle;
 import pt.lsts.nvl.runtime.NVLVehicleSet;
-import pt.lsts.nvl.runtime.VehicleRequirements;
+import pt.lsts.nvl.runtime.VehicleFilter;
 
 
 public abstract class PlatformTask implements Task { 
@@ -23,18 +23,18 @@ public abstract class PlatformTask implements Task {
     return id;
   }
   
-  public abstract void getRequirements(List<VehicleRequirements> requirements);
+  public abstract void getRequirements(List<VehicleFilter> requirements);
   
   @Override
   public final boolean allocate(NVLVehicleSet available, Map<Task,List<NVLVehicle>> allocation) {
     LinkedList<NVLVehicle> selection = new LinkedList<>();
-    LinkedList<VehicleRequirements> requirements = new LinkedList<>();
+    LinkedList<VehicleFilter> requirements = new LinkedList<>();
     getRequirements(requirements);
     
     d("Requirements: %s", requirements);
     d("Vehicles: %s", available);
   
-    for (VehicleRequirements r : requirements) {
+    for (VehicleFilter r : requirements) {
       Optional<NVLVehicle> optV = available.stream().filter(v -> r.matchedBy(v)).findFirst();
       if (optV.isPresent()) {
         NVLVehicle v = optV.get();

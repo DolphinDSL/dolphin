@@ -3,7 +3,7 @@ package pt.lsts.nvl.runtime;
 import java.util.List;
 import java.util.function.Function;
 
-public final class VehicleRequirements {
+public final class VehicleFilter {
 
   private String requiredType;
   private String requiredId;
@@ -11,7 +11,7 @@ public final class VehicleRequirements {
   private Position areaCenter;
   private double areaRadius;
 
-  public VehicleRequirements() {
+  public VehicleFilter() {
     requiredId = null;
     requiredPayload = null;
     areaCenter = null;
@@ -19,17 +19,17 @@ public final class VehicleRequirements {
   }
 
 
-  public VehicleRequirements type(String type) {
+  public VehicleFilter type(String type) {
     requiredType = type;
     return this; 
   }
 
-  public VehicleRequirements name(String name) {
+  public VehicleFilter name(String name) {
     requiredId = name;
     return this; 
   }
 
-  public VehicleRequirements payload(List<PayloadComponent> components) {
+  public VehicleFilter payload(List<PayloadComponent> components) {
     requiredPayload = components;
     return this;
   }
@@ -41,7 +41,7 @@ public final class VehicleRequirements {
    * @param radius
    * @return
    */
-  VehicleRequirements area(Position center, double radius) {
+  VehicleFilter area(Position center, double radius) {
     areaCenter = center;
     areaRadius = radius;
     return this;

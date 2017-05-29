@@ -5,7 +5,7 @@ import pt.lsts.nvl.runtime.*
 @DSLClass
 final class Picker extends Builder<NVLVehicleSet> {
 
-  private VehicleRequirements req = new VehicleRequirements()
+  private VehicleFilter req = new VehicleFilter()
   private int count = 1
   private double timeout = 0
  
@@ -59,7 +59,7 @@ final class Picker extends Builder<NVLVehicleSet> {
 
   @Override
   public NVLVehicleSet build() {
-    List<VehicleRequirements> list = []
+    List<VehicleFilter> list = []
     (1..count).each {
       list << req
     }

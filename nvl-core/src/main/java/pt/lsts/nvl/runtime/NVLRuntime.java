@@ -67,7 +67,7 @@ public final class NVLRuntime implements Debuggable {
 
   
 
-  public NVLVehicleSet select(List<VehicleRequirements> reqList) {
+  public NVLVehicleSet select(List<VehicleFilter> reqList) {
 
     NVLVehicleSet available = platform.getConnectedVehicles();
     available.removeAll(boundVehicles);
@@ -79,7 +79,7 @@ public final class NVLRuntime implements Debuggable {
     }
 
     NVLVehicleSet set = new NVLVehicleSet();
-    for (VehicleRequirements req : reqList) {
+    for (VehicleFilter req : reqList) {
       d("Matching requirement: %s", req.toString());
       Optional<NVLVehicle> ov = 
           available.stream()
@@ -96,7 +96,7 @@ public final class NVLRuntime implements Debuggable {
     return set;
   }
 
-  public NVLVehicleSet select(List<VehicleRequirements> reqList, double timeout) {
+  public NVLVehicleSet select(List<VehicleFilter> reqList, double timeout) {
     double startTime = Clock.now();
     d("Performing selection with timeout %f", timeout);
     double delayTime = Math.max(1.0,  timeout * 0.1);
