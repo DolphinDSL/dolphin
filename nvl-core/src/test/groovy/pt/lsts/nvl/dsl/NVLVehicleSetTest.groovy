@@ -3,7 +3,7 @@ package pt.lsts.nvl.dsl
 import pt.lsts.nvl.dsl.Operators
 import pt.lsts.nvl.runtime.NVLVehicleSet
 
-import static pt.lsts.nvl.runtime.NVLVehicleSet.*
+import pt.lsts.nvl.runtime.NVLVehicle
 
 import static org.codehaus.groovy.runtime.DefaultGroovyMethods.asList
 import spock.lang.Specification
@@ -52,7 +52,7 @@ class NVLVehicleSetTest extends Specification {
   
   def 'Singleton' () {
     when:
-       def a = singleton(v1)
+       def a = NVLVehicleSet.singleton(v1)
        
     then:
        ! a.empty
