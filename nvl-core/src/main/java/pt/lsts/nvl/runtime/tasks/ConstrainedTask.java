@@ -9,7 +9,7 @@ import pt.lsts.nvl.runtime.NVLVehicleSet;
 public abstract class ConstrainedTask implements Task {
 
   protected final Task theTask;
-  
+
   public ConstrainedTask(Task t) {
     theTask = t;
   }

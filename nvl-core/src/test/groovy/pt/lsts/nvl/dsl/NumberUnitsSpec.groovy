@@ -1,6 +1,5 @@
 package pt.lsts.nvl.dsl
 
-import java.security.cert.X509Certificate
 
 import spock.lang.Specification
 
