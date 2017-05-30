@@ -1,0 +1,3 @@
+
+
+execute condition { consume x:1 } | action { post x:2 } | action { post x:1 }

@@ -41,17 +41,27 @@ class Instructions implements Debuggable {
   }
   
   static void post(Map signals) {
+    Engine.msg 'Posting \'%s\'', signals
     Engine.getInstance().getSignalSet().post(signals)
   }
   
   static boolean consume(Map signals) {
-    Engine.getInstance().getSignalSet().consume(signals)
+    boolean b = Engine.getInstance().getSignalSet().consume(signals)
+    Engine.msg 'Consumed \'%s\' : %b', signals, b
+    b
   }
   
   static boolean poll(Map conditions) {
     Engine.getInstance().getSignalSet().poll(conditions)
   }
   
+  static ActionTask action(Closure cl) {
+    return new ActionTask(cl)
+  }
+  
+  static ConditionTask condition(Closure<Boolean> cl) {
+    return new ConditionTask(cl)
+  }
   
   static Task until(Closure<Boolean> condition, Task t) {
     new ConstrainedTask(t) {
