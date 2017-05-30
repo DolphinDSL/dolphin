@@ -63,6 +63,14 @@ class Instructions implements Debuggable {
     return new ConditionTask(cl)
   }
   
+  static Position location(double lat, double lon, double height=0) {
+    Position.fromDegrees lat, lon, height
+  }
+  
+  static Area area(Position center, double radius) {
+    new Area(center, radius)
+  }
+  
   static Task until(Closure<Boolean> condition, Task t) {
     new ConstrainedTask(t) {
           @Override
