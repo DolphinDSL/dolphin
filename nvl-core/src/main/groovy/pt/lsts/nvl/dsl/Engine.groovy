@@ -14,6 +14,8 @@ import pt.lsts.nvl.util.Debuggable
 @DSLClass
 class Engine implements Debuggable {
   
+  static final def WILDCARD = '_'
+  
   static Engine create(NVLPlatform platform) {
     if (instance != null)
       throw new NVLExecutionException('Engine already created!')
@@ -44,7 +46,7 @@ class Engine implements Debuggable {
   }
   
   static void halt(String message='') {
-    msg 'Halting program ... \'%s\'', message
+    msg 'Halting program ... %s', message
     throw new Halt(message)
   }
   
@@ -86,6 +88,7 @@ class Engine implements Debuggable {
   SignalSet getSignalSet() {
     return signalSet
   }
+  
   void run(File scriptFile) {
     ensureShellIsCreated()
     msg 'Running script \'%s\'', scriptFile
@@ -105,6 +108,11 @@ class Engine implements Debuggable {
   void bind(String var, Object value) {
     ensureShellIsCreated()
     shell.setVariable var, value
+  }
+  
+  Object bindingFor(String var) {
+    ensureShellIsCreated()
+    shell.getVariable var
   }
   
   void unbind(String var) {

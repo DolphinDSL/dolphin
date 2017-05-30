@@ -90,6 +90,24 @@ class Instructions implements Debuggable {
     Engine.getInstance().run t
   }
 
+  static def execute(Map<String,Task> map) {
+    Task composedTask = idle 0
+    
+    for (def e : map) {
+      Task t = null
+      if (e.key == Engine.WILDCARD) {
+        t = e.value
+      } else {
+        def v = Engine.getInstance().bindingFor e.key
+        if (! (v instanceof NVLVehicleSet)) {
+          halt '\'' + e.key + '\' does not identify a vehicle set'
+        }
+        t = new ResourceExplicitTask (e.value, (NVLVehicleSet) v)
+      }
+      composedTask = new ConcurrentTaskComposition(composedTask, t)
+    }
+    execute composedTask
+  }
 
   private Instructions() {
 
