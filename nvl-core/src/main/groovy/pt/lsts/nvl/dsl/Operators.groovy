@@ -17,8 +17,8 @@ NVLVehicleSet.metaClass.and << {
   NVLVehicleSet other -> NVLVehicleSet.intersection(delegate, other)
 }
 
-NVLVehicle.metaClass.or << {
-  Predicate<NVLVehicle> p -> NVLVehicleSet.subset(p)
+NVLVehicleSet.metaClass.or << {
+  Closure p -> NVLVehicleSet.subset(delegate, (Predicate<NVLVehicle>) p)
 }
 
 // Task operators

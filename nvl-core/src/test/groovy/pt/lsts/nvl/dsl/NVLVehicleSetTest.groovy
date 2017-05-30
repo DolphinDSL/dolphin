@@ -1,11 +1,14 @@
-package pt.lsts.nvl.runtime
+package pt.lsts.nvl.dsl
+
+import pt.lsts.nvl.dsl.Operators
+import pt.lsts.nvl.runtime.NVLVehicleSet
 
 import static pt.lsts.nvl.runtime.NVLVehicleSet.*
+
+import static org.codehaus.groovy.runtime.DefaultGroovyMethods.asList
 import spock.lang.Specification
 
 class NVLVehicleSetTest extends Specification {
-
-
   def v1 = Mock(NVLVehicle) {
     getId() >> 'v1'
     getType() >> 'UAV'
@@ -33,6 +36,10 @@ class NVLVehicleSetTest extends Specification {
   }
 
   
+  def setupSpec() {
+    Operators.main()
+  }
+
   def 'Basic' () {
     when:
        def a = new NVLVehicleSet (v1,v2,v3)
@@ -40,7 +47,17 @@ class NVLVehicleSetTest extends Specification {
     then:
        ! a.empty
        a.size() == 3
-       a.asList() == [v1,v2,v3]
+       asList(a) == [v1,v2,v3]
+  }
+  
+  def 'Singleton' () {
+    when:
+       def a = singleton(v1)
+       
+    then:
+       ! a.empty
+       a.size() == 1
+       asList(a) == [v1]
   }
   
   def 'Operations' () {
@@ -48,11 +65,11 @@ class NVLVehicleSetTest extends Specification {
        def a = new NVLVehicleSet (v1, v2, v3, v4)
        def b = new NVLVehicleSet (v3, v4, v5, v6)
     then:
-       union(a, b).asList() == [v1, v2, v3, v4, v5, v6]
-       difference(a,b).asList() == [v1,v2]
-       intersection(a,b).asList() == [v3,v4]
-       subset(a, { v -> v.getType() == 'UUV' }).asList() == [v2,v4]
-  }
+       asList(a+b) == [v1, v2, v3, v4, v5, v6]
+       asList(a-b) == [v1,v2]
+       asList(a & b) == [v3,v4]
+       asList( a | {  v -> v.getType() == 'UUV' }) == [v2,v4]
+   }
   
   
   
