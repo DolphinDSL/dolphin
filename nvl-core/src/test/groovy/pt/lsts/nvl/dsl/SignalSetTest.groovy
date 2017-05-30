@@ -42,6 +42,11 @@ class SignalSetTest extends Specification {
        theSUT.post('x', 1)
     then:
        theSUT.poll('x')
+       theSUT.poll(x : { it > 0 })
+       theSUT.poll(x : { v -> v > 0 })
+       !theSUT.poll(x : { it != 1 })
+       !theSUT.poll(x : { v -> v != 1 })
+       !theSUT.poll(x : { it <= 0 })
        !theSUT.consume('x', 0) 
        theSUT.consume('x', 1)
        !theSUT.test('x', 1)

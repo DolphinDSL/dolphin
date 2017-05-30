@@ -5,6 +5,8 @@ package pt.lsts.nvl.dsl
 
 import java.util.stream.Nodes.SizedCollectorTask
 
+import javax.xml.datatype.FactoryFinder
+
 /**
  * Signal set.
  */
@@ -78,6 +80,16 @@ final class SignalSet {
   boolean poll(String id) {
     //println 'poll ' + id + ' ' + signals[id]
     return signals[id] != null
+  }
+  
+  boolean poll(Map<String,Closure> map) {
+    for (def e in map) {
+      if (signals[e.key]?.find(e.value) == null) {
+        return false;
+      }
+    }
+    //println 'poll ' + id + ' ' + signals[id]
+    return true
   }
   
   int size() {

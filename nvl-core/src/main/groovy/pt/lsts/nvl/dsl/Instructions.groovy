@@ -1,5 +1,7 @@
 package pt.lsts.nvl.dsl
 
+import java.util.Map
+
 import pt.lsts.nvl.runtime.*
 import pt.lsts.nvl.runtime.tasks.*
 
@@ -37,6 +39,19 @@ class Instructions implements Debuggable {
   static NVLVehicleSet pick (Closure cl) {
     new Picker().build(cl)
   }
+  
+  static void post(Map signals) {
+    Engine.getInstance().getSignalSet().post(signals)
+  }
+  
+  static boolean consume(Map signals) {
+    Engine.getInstance().getSignalSet().consume(signals)
+  }
+  
+  static boolean poll(Map conditions) {
+    Engine.getInstance().getSignalSet().poll(conditions)
+  }
+  
   
   static Task until(Closure<Boolean> condition, Task t) {
     new ConstrainedTask(t) {

@@ -50,13 +50,15 @@ class Engine implements Debuggable {
   
   private static Engine instance
   
-  private Engine(NVLPlatform platform) {
-    runtime = NVLRuntime.create platform
-  }
-
   private NVLRuntime runtime;
   private GroovyShell shell
- 
+  private SignalSet signalSet
+  
+  private Engine(NVLPlatform platform) {
+    runtime = NVLRuntime.create platform
+    signalSet = new SignalSet()
+  }
+  
   private void ensureShellIsCreated() {
     if (shell == null) {
       // Imports
@@ -81,6 +83,9 @@ class Engine implements Debuggable {
     }
   }
   
+  SignalSet getSignalSet() {
+    return signalSet
+  }
   void run(File scriptFile) {
     ensureShellIsCreated()
     msg 'Running script \'%s\'', scriptFile
