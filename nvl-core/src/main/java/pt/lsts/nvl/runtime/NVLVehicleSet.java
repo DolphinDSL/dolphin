@@ -1,9 +1,11 @@
 package pt.lsts.nvl.runtime;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 
@@ -16,6 +18,17 @@ public final class NVLVehicleSet implements Iterable<NVLVehicle> {
   
   public NVLVehicleSet() {
     this(new LinkedHashMap<>());
+  }
+  
+  public NVLVehicleSet(NVLVehicle... vehicles) {
+    this(Arrays.asList(vehicles));
+  }
+  
+  public NVLVehicleSet(Iterable<NVLVehicle> vehicles) {
+    this(new LinkedHashMap<>());
+    for (NVLVehicle v : vehicles) {
+      add(v);
+    }
   }
   
   private NVLVehicleSet(Map<String,NVLVehicle> set) {
@@ -100,11 +113,23 @@ public final class NVLVehicleSet implements Iterable<NVLVehicle> {
     }
     return iSet;
   }
-
+  
+  public static NVLVehicleSet subset(NVLVehicleSet original, Predicate<NVLVehicle> pred) {
+    NVLVehicleSet set = new NVLVehicleSet();
+    for (NVLVehicle v : original) {
+      if (pred.test(v)) {
+        set.add(v);
+      }
+    }
+    return set;
+  }
+  
   public static NVLVehicleSet singleton(NVLVehicle v) {
     NVLVehicleSet set = new NVLVehicleSet();
     set.add(v);
     return set;
   }
+  
+
   
 }

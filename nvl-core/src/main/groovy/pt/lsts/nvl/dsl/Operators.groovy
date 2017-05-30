@@ -1,5 +1,6 @@
 package pt.lsts.nvl.dsl
 
+import java.util.function.Predicate
 import pt.lsts.nvl.runtime.*
 import pt.lsts.nvl.runtime.tasks.*
 
@@ -16,7 +17,9 @@ NVLVehicleSet.metaClass.and << {
   NVLVehicleSet other -> NVLVehicleSet.intersection(delegate, other)
 }
 
-
+NVLVehicle.metaClass.or << {
+  Predicate<NVLVehicle> p -> NVLVehicleSet.subset(p)
+}
 
 // Task operators
 
