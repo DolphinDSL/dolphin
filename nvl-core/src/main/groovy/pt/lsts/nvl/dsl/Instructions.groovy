@@ -47,7 +47,7 @@ class Instructions implements Debuggable {
   
   static boolean consume(Map signals) {
     boolean b = Engine.getInstance().getSignalSet().consume(signals)
-    Engine.msg 'Consumed \'%s\' : %b', signals, b
+    if (b) Engine.msg 'Consumed \'%s\'', signals
     b
   }
   
@@ -90,6 +90,10 @@ class Instructions implements Debuggable {
     Engine.getInstance().run t
   }
 
+  static ChoiceTask choose(Closure cl) {
+    new ChoiceTaskBuilder().build(cl)
+  }
+  
   static def execute(Map<String,Task> map) {
     Task composedTask = idle 0
     
