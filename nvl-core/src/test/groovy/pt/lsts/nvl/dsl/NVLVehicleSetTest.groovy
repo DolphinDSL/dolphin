@@ -67,6 +67,8 @@ class NVLVehicleSetTest extends Specification {
     then:
        asList(a+b) == [v1, v2, v3, v4, v5, v6]
        asList(a-b) == [v1,v2]
+       asList(b-a) == [v5,v6]
+       asList(a-a) == []
        asList(a & b) == [v3,v4]
        asList( a | {  v -> v.getType() == 'UUV' }) == [v2,v4]
    }
