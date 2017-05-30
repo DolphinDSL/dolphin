@@ -28,27 +28,12 @@ public class ActionTask implements Task {
   
   @Override
   public TaskExecutor getExecutor() {
-    return new TaskExecutor(this) {
-
-      @Override
-      protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
-      }
-
-      @Override
-      protected void onStart() {
-      }
-
+    return new SimpleTaskExecutor(this) {
       @Override
       protected CompletionState onStep() {
         action.run();
         return new CompletionState(CompletionState.Type.DONE);
       }
-
-      @Override
-      protected void onCompletion() {
-        
-      }
-      
     };
   }
 

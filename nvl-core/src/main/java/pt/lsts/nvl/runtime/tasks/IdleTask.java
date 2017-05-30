@@ -9,13 +9,15 @@ import pt.lsts.nvl.runtime.NVLVehicleSet;
 
 public class IdleTask implements Task {
   
-  public IdleTask() {
-   
+  private final double duration;
+  
+  public IdleTask(double duration) {
+    this.duration = duration;
   }
   
   @Override
   public String getId() {
-    return "<idle>";
+    return String.format("idle(%f)", duration);
   }
 
   
@@ -26,28 +28,13 @@ public class IdleTask implements Task {
   
   @Override
   public TaskExecutor getExecutor() {
-    return new TaskExecutor(this) {
-
-      @Override
-      protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
-        d("Initialized " + getId());     
-      }
-
-      @Override
-      protected void onStart() {
-        d("Started " + getId());
-      }
-
+    return new SimpleTaskExecutor(this) {
       @Override
       protected CompletionState onStep() {
-        return new CompletionState(CompletionState.Type.IN_PROGRESS);
+        return new CompletionState(timeElapsed() >= duration ? 
+                                       CompletionState.Type.DONE 
+                                     : CompletionState.Type.IN_PROGRESS);
       }
-
-      @Override
-      protected void onCompletion() {
-        d("Completed " + getId());     
-      }
-      
     };
   }
 

@@ -28,22 +28,11 @@ public class ConditionTask implements Task {
   
   @Override
   public TaskExecutor getExecutor() {
-    return new TaskExecutor(this) {
-
-      @Override
-      protected void onInitialize(Map<Task, List<NVLVehicle>> allocation) { }
-
-      @Override
-      protected void onStart() { }
-        
+    return new SimpleTaskExecutor(this) {
       @Override
       protected CompletionState onStep() {
         return new CompletionState(theGuard.get() ? CompletionState.Type.DONE : CompletionState.Type.IN_PROGRESS);
       }
-
-      @Override
-      protected void onCompletion() { }
-      
     };
   }
 }

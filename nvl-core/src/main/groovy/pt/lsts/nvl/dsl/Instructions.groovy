@@ -28,8 +28,8 @@ class Instructions implements Debuggable {
     Engine.platform().getPlatformTask(id)
   }
 
-  static Task idle() {
-    new IdleTask()
+  static Task idle(double duration) {
+    new IdleTask(duration)
   }
 
   static Task during(double duration, Task task) {
