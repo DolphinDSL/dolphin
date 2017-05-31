@@ -16,7 +16,7 @@ public final class Environment implements Debuggable {
 
   public static Environment create(Platform platform) {
     if (INSTANCE != null) {
-      throw new ExecutionException("Runtime has already been created");
+      throw new EnvironmentException("Runtime has already been created");
     } 
     INSTANCE = new Environment(platform);
     return INSTANCE;
@@ -24,7 +24,7 @@ public final class Environment implements Debuggable {
 
   public static Environment getInstance() {
     if (INSTANCE == null) {
-      throw new ExecutionException("Runtime has not been created");
+      throw new EnvironmentException("Runtime has not been created");
     }
     return INSTANCE;
   }
@@ -50,7 +50,7 @@ public final class Environment implements Debuggable {
     Map<Task,List<Node>> allocation = new HashMap<>();
 
     if (task.allocate(available, allocation) == false) {
-      throw new ExecutionException("No vehicles to run task!");
+      throw new EnvironmentException("No vehicles to run task!");
     }
     TaskExecutor executor = task.getExecutor();
     executor.initialize(allocation);
@@ -121,7 +121,7 @@ public final class Environment implements Debuggable {
       Thread.sleep(Math.round(time * 1e+03));
     }
     catch (InterruptedException e) {
-      throw new ExecutionException(e);
+      throw new EnvironmentException(e);
     }
   }
 }

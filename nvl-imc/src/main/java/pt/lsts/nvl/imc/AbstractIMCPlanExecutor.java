@@ -7,7 +7,7 @@ import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanControl;
 import pt.lsts.imc.PlanControlState;
 import pt.lsts.imc.PlanSpecification;
-import pt.lsts.nvl.runtime.ExecutionException;
+import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
@@ -96,11 +96,11 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
                               d("IMC plan completed!");
                               break;
                           default:
-                              throw new ExecutionException();
+                              throw new EnvironmentException();
                       }
                       break;
                   default:
-                      throw new ExecutionException();
+                      throw new EnvironmentException();
               }
           }
       }

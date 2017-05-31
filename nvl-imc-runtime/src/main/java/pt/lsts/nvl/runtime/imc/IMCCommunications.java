@@ -15,7 +15,7 @@ import pt.lsts.imc.IMCDefinition;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.IMCOutputStream;
 import pt.lsts.imc.def.SystemType;
-import pt.lsts.nvl.runtime.ExecutionException;
+import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.NodeSet;
 import pt.lsts.nvl.util.Clock;
 import pt.lsts.nvl.util.Debuggable;
@@ -31,7 +31,7 @@ public class IMCCommunications extends Thread implements Debuggable {
     try {
       ANNOUNCE_MCAST_ADDR = InetAddress.getByName("224.0.75.69");
     } catch (UnknownHostException e) {
-      throw new ExecutionException(e);
+      throw new EnvironmentException(e);
     }
   }
 
@@ -194,7 +194,7 @@ public class IMCCommunications extends Thread implements Debuggable {
       byte[] data = baos.toByteArray();
       link.sendTo(data, 0, data.length, address, port);
     } catch (IOException e) {
-      throw new ExecutionException(e);
+      throw new EnvironmentException(e);
     }
   }
   
@@ -204,7 +204,7 @@ public class IMCCommunications extends Thread implements Debuggable {
       messageLink = new UDPLink();
       messageLink.enable();
     } catch (NetworkLinkException e) {
-      throw new ExecutionException(e);
+      throw new EnvironmentException(e);
     }
     for (int port = FIRST_ANNOUNCE_PORT; announceLink == null && port <= LAST_ANNOUNCE_PORT; port++) {
       try {
@@ -214,12 +214,12 @@ public class IMCCommunications extends Thread implements Debuggable {
       }
       catch (NetworkLinkException e) { 
         if (e.getCause().getClass() != java.net.BindException.class) {
-          throw new ExecutionException(e);
+          throw new EnvironmentException(e);
         }
       }
     }
     if (announceLink == null) {
-      throw new ExecutionException("Could not setup announce link");
+      throw new EnvironmentException("Could not setup announce link");
     }
   }
   
