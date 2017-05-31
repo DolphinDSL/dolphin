@@ -86,6 +86,10 @@ public final class NodeSet implements Iterable<Node> {
     }
  }
   
+  public void clear() {
+    theSet.clear(); 
+  }
+  
   public static NodeSet union(NodeSet a, NodeSet b) {
     NodeSet unionSet = new NodeSet();
     unionSet.addAll(a);
@@ -130,6 +134,8 @@ public final class NodeSet implements Iterable<Node> {
     set.add(v);
     return set;
   }
+
+
   
 
   

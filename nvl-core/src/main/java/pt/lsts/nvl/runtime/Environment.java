@@ -116,6 +116,10 @@ public final class Environment implements Debuggable {
     boundVehicles.removeAll(set);
   }
   
+  public void releaseAll() {
+    boundVehicles.clear();
+  }
+  
   public void pause(double time) {
     try {
       Thread.sleep(Math.round(time * 1e+03));
