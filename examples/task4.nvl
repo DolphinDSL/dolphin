@@ -14,4 +14,16 @@ execute x: idle(10.seconds) >>
            } then action { message 'y' }
         }
 
+execute x: idle(10.seconds) >> 
+           action { post X:1 },
+        y: idle(2.seconds) >> 
+           action { post Y:1 } ,
+        _: allOf {
+           when { 
+              consume X:1 
+           } then action { message 'x' }
+           when { 
+              consume Y:1 
+           } then action { message 'y' }
+        }
 

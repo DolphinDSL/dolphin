@@ -1,7 +1,9 @@
 package pt.lsts.nvl.dsl
 
 import java.util.Map
+import java.util.Collections
 
+import groovy.lang.Closure
 import pt.lsts.nvl.runtime.*
 import pt.lsts.nvl.runtime.tasks.*
 
@@ -63,6 +65,11 @@ class Instructions implements Debuggable {
     return new ConditionTask(cl)
   }
   
+  static def waitFor(Closure<Boolean> test) {
+    [then: { Task task -> new ChoiceTask(Collections.singletonList(new TaskGuard(test,task))) } ]
+  }
+  
+  
   static Position location(double lat, double lon, double height=0) {
     Position.fromDegrees lat, lon, height
   }
@@ -92,6 +99,10 @@ class Instructions implements Debuggable {
 
   static ChoiceTask choose(Closure cl) {
     new ChoiceTaskBuilder().build(cl)
+  }
+  
+  static GuardedTaskSet allOf(Closure cl) {
+    new GuardedTaskSetBuilder().build(cl)
   }
   
   static def execute(Map<String,Task> map) {
