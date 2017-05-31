@@ -9,10 +9,9 @@ import java.util.List;
 import pt.lsts.imc.Announce;
 import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.IMCMessage;
-import pt.lsts.nvl.util.NVLVariable;
+import pt.lsts.nvl.util.Variable;
 import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.Payload;
-import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.util.Clock;
@@ -66,8 +65,8 @@ public final class IMCNode implements Node, Debuggable {
   }
 
   public <T extends IMCMessage>
-  NVLVariable<T> subscribe(Class<T> classOfMessages) {
-    NVLVariable<T> var = new NVLVariable<>();
+  Variable<T> subscribe(Class<T> classOfMessages) {
+    Variable<T> var = new Variable<>();
     subscribe(classOfMessages, msg -> var.set(msg, Clock.now()));
     return var;
   }
@@ -92,10 +91,11 @@ public final class IMCNode implements Node, Debuggable {
   }
 
   public void handleIncomingMessage(IMCMessage message) {
-    // d("IN: %s %s", getId(), message.getAbbrev());
+    //d("IN: %s %s", getId(), message.getClass());
     List<Subscriber<IMCMessage>> obsList = subscriptions.get(message.getClass());
     if (obsList != null) {
       for (Subscriber<IMCMessage> obs : obsList) {
+       // d("Delivering %s", message.getAbbrev());
         obs.consume(message);
       }
     }

@@ -22,11 +22,6 @@ public final class MulticastUDPLink implements NetworkLink {
 	private MulticastSocket   socket;
 
 	/**
-	 * Datagram socket used for sending data (important for filtering purposes).
-	 */
-	private DatagramSocket   sendSocket;
-
-	/**
 	 * Multicast port.
 	 */
 	private final int         port;
@@ -62,17 +57,20 @@ public final class MulticastUDPLink implements NetworkLink {
     socket = null;
   }
 
+
+  public int getPort() {
+    return port;
+  }
+  
   @Override
 	public synchronized void enable() throws NetworkLinkException {
 		if (socket != null)
 			throw new NetworkLinkException("Connection already opened");
 		try {
-			sendSocket = new DatagramSocket();
 			socket = new MulticastSocket(port);
 			socket.joinGroup(address);
 			socket.setLoopbackMode(false);
 			socket.setTimeToLive(5);
-			sendSocket.setBroadcast(true);
 		} catch (Exception e) {
 			throw new NetworkLinkException(e);
 		}
@@ -104,8 +102,6 @@ public final class MulticastUDPLink implements NetworkLink {
 			DatagramPacket packet = new DatagramPacket(buf, off, len);
 			socket.setSoTimeout(timeout);
 			socket.receive(packet);
-			if (packet.getAddress().isLoopbackAddress() && packet.getPort() == sendSocket.getLocalPort())
-				return 0; // filter out 
 			return packet.getLength();
 		} catch (SocketTimeoutException e) {
 			return 0; // timeout
@@ -137,6 +133,7 @@ public final class MulticastUDPLink implements NetworkLink {
 		}
 
 	}
+
 
   
 }

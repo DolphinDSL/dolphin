@@ -12,11 +12,18 @@ public final class Main {
       System.out.println("Please specify the script(s) to run!");
       return;
     }
-    pt.lsts.nvl.util.Debug.enable();
-    Engine engine = Engine.create(new IMCPlatform());
 
-    for (String fileName : args) {
-      engine.run(new File(fileName));
+    IMCCommunications.getInstance().start();
+    try {
+      pt.lsts.nvl.util.Debug.enable();
+      Engine engine = Engine.create(new IMCPlatform());
+
+      for (String fileName : args) {
+        engine.run(new File(fileName));
+      }
+    }
+    finally {
+      IMCCommunications.getInstance().terminate();
     }
   }
 

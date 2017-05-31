@@ -11,7 +11,7 @@ import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
-import pt.lsts.nvl.util.NVLVariable;
+import pt.lsts.nvl.util.Variable;
 
 public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
 
@@ -19,7 +19,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   private static final double PLAN_CONTROL_STATE_TIMEOUT = 5.0;
   private static final AtomicInteger SEQ_ID_GENERATOR = new AtomicInteger(0);
   
-  private NVLVariable<PlanControlState> pcsVar; 
+  private Variable<PlanControlState> pcsVar; 
 
   protected AbstractIMCPlanExecutor(AbstractIMCPlanTask theTask) {
     super(theTask);
@@ -36,7 +36,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
 
   @Override
   protected final void  onStart() {
-    pcsVar = new NVLVariable<>();
+    pcsVar = new Variable<>();
     setup(); // platform specific setup
     
     // Prepare plan control message and send it to vehicle
@@ -64,7 +64,9 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   protected CompletionState onStep() {
       CompletionState completionState =  new CompletionState(CompletionState.Type.IN_PROGRESS);
       if (! pcsVar.hasFreshValue()) {
+          d("%f", pcsVar.age(timeElapsed()));
           if (pcsVar.age(timeElapsed()) >= PLAN_CONTROL_STATE_TIMEOUT) {
+              
               d("PlanControlState timeout!");
               completionState = new CompletionState(CompletionState.Type.ERROR);
           }
@@ -78,6 +80,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
           } else {
               switch (pcs.getState()) {
                   case BLOCKED:
+                      d("ERROR");
                       completionState = new CompletionState(CompletionState.Type.ERROR);
                       break;
                   case EXECUTING:
@@ -110,7 +113,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   @Override
   protected final void onCompletion() {
     //PlanControlState pcs = pcsVar.get();
-    
+    d("ending plan execution");
     teardown();
   }
 

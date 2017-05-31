@@ -26,7 +26,7 @@ import pt.lsts.nvl.util.net.NetworkLinkException;
 import pt.lsts.nvl.util.net.UDPLink;
 
 public class IMCCommunications extends Thread implements Debuggable {
-  
+
   static {
     try {
       ANNOUNCE_MCAST_ADDR = InetAddress.getByName("224.0.75.69");
@@ -41,7 +41,9 @@ public class IMCCommunications extends Thread implements Debuggable {
   private static final double ANNOUNCE_PERIOD = 10;
   private static final double HEARTBEAT_PERIOD = 1;
   private static final double CONNECTION_TIMEOUT = 3 * ANNOUNCE_PERIOD;
-  
+  private static final int FIRST_MSG_PORT = 6000;
+  private static final int LAST_MSG_PORT = 6020;
+
   private final Announce announceMsg = new Announce();
   private final Heartbeat heartbeatMsg = new Heartbeat();
   private final byte[] rcvBuffer = new byte[16384];
@@ -49,42 +51,60 @@ public class IMCCommunications extends Thread implements Debuggable {
 
   private MulticastUDPLink announceLink;
   private UDPLink messageLink;
+
   private boolean active;
   private double timeOfStep;
-  
+
   private static IMCCommunications INSTANCE = null;
-  
+
   public static IMCCommunications getInstance() { 
     if (INSTANCE == null) {
       INSTANCE = new IMCCommunications();
     }
     return INSTANCE;
   }
-  
+
   private IMCCommunications() {
     super("IMC communications");
-    setDaemon(true);
+    //setDaemon(true);
     setupLinks();
     setupIdentification();
     active = true;
   }
-  
+
+
+  @SuppressWarnings("deprecation")
   public void terminate() {
+
+    if (active && isAlive()) {
+      try {
+        join(10);
+      } catch(InterruptedException e) {
+
+      }
+      if (isAlive()) {
+        stop();
+      }
+      teardownLinks();
+    }
     active = false;
-    teardownLinks();
   }
-  
+
   public void run() {
     while (active) {
-      timeOfStep = Clock.now();
-      sendAnnounce();
-      sendHeartbeats();
-      handleIncomingMessages(announceLink);
-      handleIncomingMessages(messageLink);
-      checkForLostConnections();
+      try {
+        timeOfStep = Clock.now();
+        sendAnnounce();
+        sendHeartbeats();
+        handleIncomingMessages(announceLink);
+        handleIncomingMessages(messageLink);
+        checkForLostConnections();
+      } catch(Throwable e) {
+        break;
+      }
     }
   }
-  
+
   private void checkForLostConnections() {
     Iterator<IMCNode> itr = nodes.values().iterator();
     while (itr.hasNext()) {
@@ -94,7 +114,7 @@ public class IMCCommunications extends Thread implements Debuggable {
       }
     }
   }
-  
+
   private void sendAnnounce() {
     if (timeOfStep - announceMsg.getTimestamp() < ANNOUNCE_PERIOD) {
       return;
@@ -102,23 +122,25 @@ public class IMCCommunications extends Thread implements Debuggable {
     announceMsg.setTimestamp(timeOfStep);
     for (int p = FIRST_ANNOUNCE_PORT; p <= LAST_ANNOUNCE_PORT; p++) {
       send(announceLink, announceMsg, ANNOUNCE_MCAST_ADDR, p);
-     // sendMessage(announceMsg, "255.255.255.255", p);
+      // sendMessage(announceMsg, "255.255.255.255", p);
     }
     for (IMCNode p : nodes.values()) {
       send(messageLink, announceMsg, p.address(), p.port());
     }
   }
-  
+
   private void sendHeartbeats() {
     if (timeOfStep - heartbeatMsg.getTimestamp() < HEARTBEAT_PERIOD) {
       return;
     }
     heartbeatMsg.setTimestamp(timeOfStep);
-    for (IMCNode p : nodes.values()) {
-      send(messageLink, heartbeatMsg, p.address(), p.port());
+
+    for (IMCNode n : nodes.values()) {
+      // d("Sending heartbeat to %s", n.getId());
+      send(messageLink, heartbeatMsg, n.address(), n.port());
     }
   }
-  
+
   private void handleIncomingMessages(NetworkLink link) {
     int len;
     try {
@@ -128,9 +150,9 @@ public class IMCCommunications extends Thread implements Debuggable {
       }
       IMCMessage message = IMCDefinition.getInstance().parseMessage(rcvBuffer);
       message.setTimestamp(timeOfStep);
-      
+
       IMCNode node = nodes.get(message.getSrc());
-      
+
       if (node != null) {
         node.handleIncomingMessage(message);
       } 
@@ -138,7 +160,7 @@ public class IMCCommunications extends Thread implements Debuggable {
         handleNewNode((Announce) message);
       } 
       else {
-        d("Ignored message: %d/%s", message.getSrc(), message.getAbbrev());
+        // d("Ignored message: %d/%s", message.getSrc(), message.getAbbrev());
       }
     } 
     catch (IOException e) {
@@ -146,7 +168,7 @@ public class IMCCommunications extends Thread implements Debuggable {
       return;
     }
   }
-  
+
   private void handleNewNode(Announce message) {
 
     switch (message.getSysType()) {
@@ -155,7 +177,7 @@ public class IMCCommunications extends Thread implements Debuggable {
       case MOBILESENSOR:
       case STATICSENSOR:
       case WSN:
-       return;
+        return;
       default:
         break;
     }
@@ -174,7 +196,7 @@ public class IMCCommunications extends Thread implements Debuggable {
           vehicle = new IMCNode(inetAddress, port, message);
           break;
         } catch (UnknownHostException e) {
-          
+
         }
       }
     }
@@ -182,11 +204,11 @@ public class IMCCommunications extends Thread implements Debuggable {
       nodes.put(message.getSrc(), vehicle);
     }
   }
-  
+
   public void send(IMCMessage message, InetAddress address, int port) {
     send(messageLink, message, address, port);
   }
-  
+
   private void send(NetworkLink link, IMCMessage message, InetAddress address, int port) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     try {
@@ -197,15 +219,10 @@ public class IMCCommunications extends Thread implements Debuggable {
       throw new EnvironmentException(e);
     }
   }
-  
-  
+
+
   private void setupLinks() {
-    try {
-      messageLink = new UDPLink();
-      messageLink.enable();
-    } catch (NetworkLinkException e) {
-      throw new EnvironmentException(e);
-    }
+
     for (int port = FIRST_ANNOUNCE_PORT; announceLink == null && port <= LAST_ANNOUNCE_PORT; port++) {
       try {
         MulticastUDPLink link = new MulticastUDPLink(ANNOUNCE_MCAST_ADDR, port);
@@ -221,11 +238,31 @@ public class IMCCommunications extends Thread implements Debuggable {
     if (announceLink == null) {
       throw new EnvironmentException("Could not setup announce link");
     }
+    for (int port = FIRST_MSG_PORT; messageLink == null && port <= LAST_MSG_PORT; port++) {
+      try {
+        UDPLink link = new UDPLink(port);
+        link.enable();
+        messageLink = link;
+      }
+      catch (NetworkLinkException e) { 
+        if (e.getCause().getClass() != java.net.BindException.class) {
+          throw new EnvironmentException(e);
+        }
+      }
+      
+    }
+    if (messageLink == null) {
+      try {
+        announceLink.disable();
+      } catch (NetworkLinkException e) { }
+        
+      throw new EnvironmentException("Could not message link");
+    }
+    d("Links created - multicast %d, message %d", announceLink.getPort(), messageLink.getPort());
   }
-  
+
   private void teardownLinks() {
     try {
-      messageLink.disable();
       announceLink.disable();
     } catch (NetworkLinkException e) {
       e.printStackTrace();
@@ -235,9 +272,11 @@ public class IMCCommunications extends Thread implements Debuggable {
 
   private void setupIdentification() {
     String services = "";
-    for (InetAddress itf : NetworkInterfaces.get(true)) {
+    for (InetAddress itf : NetworkInterfaces.get(false)) {
       services += String.format("imc+udp://%s:%d/;", itf.getHostAddress(), messageLink.getPort());
     }
+    services += String.format("imc+info://0.0.0.0/version/%s",
+        IMCDefinition.getInstance().getVersion());
     if (services.length() > 0)
       services = services.substring(0, services.length() - 1);
     String sysName = String.format("nvl_%s", UUID.randomUUID().toString());
@@ -249,8 +288,9 @@ public class IMCCommunications extends Thread implements Debuggable {
     announceMsg.setTimestampMillis(0);
     heartbeatMsg.setSrc(sysAddress);
     heartbeatMsg.setTimestampMillis(0);
+    d("Announce setup: %s", announceMsg.toString());
   }
-  
+
   public static void main(String[] args) {
     IMCCommunications comm = getInstance();
     comm.start();
@@ -261,5 +301,5 @@ public class IMCCommunications extends Thread implements Debuggable {
     return new NodeSet(nodes.values());
   }
 
-  
+
 }
