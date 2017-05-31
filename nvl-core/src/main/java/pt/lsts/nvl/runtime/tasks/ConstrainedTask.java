@@ -3,8 +3,8 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.NVLVehicleSet;
+import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.NodeSet;
 
 public abstract class ConstrainedTask implements Task {
 
@@ -20,7 +20,7 @@ public abstract class ConstrainedTask implements Task {
   }
 
   @Override
-  public final boolean allocate(NVLVehicleSet available, Map<Task, List<NVLVehicle>> allocation) {
+  public final boolean allocate(NodeSet available, Map<Task, List<Node>> allocation) {
     return theTask.allocate(available, allocation);
   }
   

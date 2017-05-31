@@ -3,7 +3,7 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.Node;
 
 public abstract class ConstrainedTaskExecutor extends TaskExecutor {
 
@@ -23,7 +23,7 @@ public abstract class ConstrainedTaskExecutor extends TaskExecutor {
   }
 
   @Override
-  protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
+  protected void onInitialize(Map<Task,List<Node>> allocation) {
     exec = getTask().getExecutor();
     exec.initialize(allocation);
   }

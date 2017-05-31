@@ -16,9 +16,9 @@ class Engine implements Debuggable {
   
   static final def WILDCARD = '_'
   
-  static Engine create(NVLPlatform platform) {
+  static Engine create(Platform platform) {
     if (instance != null)
-      throw new NVLExecutionException('Engine already created!')
+      throw new ExecutionException('Engine already created!')
       
     instance = new Engine(platform)
     msg 'Engine on !'
@@ -27,7 +27,7 @@ class Engine implements Debuggable {
   
   static Engine getInstance() {
     if (instance == null)
-      throw new NVLExecutionException('Engine has not been created!')
+      throw new ExecutionException('Engine has not been created!')
     
     instance
   }
@@ -36,7 +36,7 @@ class Engine implements Debuggable {
     return instance.runtime
   }
   
-  static NVLPlatform platform() {
+  static Platform platform() {
     return instance.runtime.getPlatform()
   }
   
@@ -52,13 +52,15 @@ class Engine implements Debuggable {
   
   private static Engine instance
   
-  private NVLRuntime runtime;
+  private NVLRuntime runtime
   private GroovyShell shell
   private SignalSet signalSet
+  private boolean runningScript
   
-  private Engine(NVLPlatform platform) {
+  private Engine(Platform platform) {
     runtime = NVLRuntime.create platform
     signalSet = new SignalSet()
+    runningScript = false
   }
   
   private void ensureShellIsCreated() {
@@ -90,6 +92,11 @@ class Engine implements Debuggable {
   }
   
   void run(File scriptFile) {
+    if (runningScript) {
+      msg 'Already running a script! Ignoring order ...'
+      return
+    }
+    runningScript = true
     ensureShellIsCreated()
     msg 'Running script \'%s\'', scriptFile
     try {
@@ -103,6 +110,7 @@ class Engine implements Debuggable {
            e.getClass().getName(), e.getMessage()
       e.printStackTrace(System.out)
     }
+    runningScript = false
   }
   
   void bind(String var, Object value) {

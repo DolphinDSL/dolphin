@@ -7,11 +7,11 @@ import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanControl;
 import pt.lsts.imc.PlanControlState;
 import pt.lsts.imc.PlanSpecification;
-import pt.lsts.nvl.runtime.NVLExecutionException;
-import pt.lsts.nvl.runtime.NVLVariable;
-import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.ExecutionException;
+import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
+import pt.lsts.nvl.util.NVLVariable;
 
 public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
 
@@ -30,7 +30,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   protected abstract void setup();
   protected abstract void teardown();
 
-  protected final NVLVehicle getVehicle() {
+  protected final Node getNode() {
     return getVehicles().get(0);
   }
 
@@ -53,7 +53,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
     sendMessageToVehicle(pc);  
     
     // We're done
-    d("Started %s on %s", getTask().getId(), getVehicle().getId());
+    d("Started %s on %s", getTask().getId(), getNode().getId());
   }
   
   protected final void onStateUpdate(PlanControlState pcs) {
@@ -84,7 +84,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
                   case INITIALIZING:
                       break;
                   case READY:
-                      d("Terminated %s on %s : %s", getTask().getId(), getVehicle().getId(), pcs.getLastOutcome());
+                      d("Terminated %s on %s : %s", getTask().getId(), getNode().getId(), pcs.getLastOutcome());
                       switch (pcs.getLastOutcome()) {
                           case FAILURE:
                           case NONE:
@@ -96,11 +96,11 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
                               d("IMC plan completed!");
                               break;
                           default:
-                              throw new NVLExecutionException();
+                              throw new ExecutionException();
                       }
                       break;
                   default:
-                      throw new NVLExecutionException();
+                      throw new ExecutionException();
               }
           }
       }

@@ -5,20 +5,20 @@ import pt.lsts.nvl.runtime.*
 import pt.lsts.nvl.runtime.tasks.*
 
 // Vehicle set operators
-NVLVehicleSet.metaClass.plus << {
-  NVLVehicleSet other -> NVLVehicleSet.union(delegate, other)
+NodeSet.metaClass.plus << {
+  NodeSet other -> NodeSet.union(delegate, other)
 }
 
-NVLVehicleSet.metaClass.minus << {
-  NVLVehicleSet other -> NVLVehicleSet.difference(delegate, other)
+NodeSet.metaClass.minus << {
+  NodeSet other -> NodeSet.difference(delegate, other)
 }
 
-NVLVehicleSet.metaClass.and << {
-  NVLVehicleSet other -> NVLVehicleSet.intersection(delegate, other)
+NodeSet.metaClass.and << {
+  NodeSet other -> NodeSet.intersection(delegate, other)
 }
 
-NVLVehicleSet.metaClass.or << {
-  Closure p -> NVLVehicleSet.subset(delegate, (Predicate<NVLVehicle>) p)
+NodeSet.metaClass.or << {
+  Closure p -> NodeSet.subset(delegate, (Predicate<Node>) p)
 }
 
 // Task operators
@@ -32,5 +32,5 @@ Task.metaClass.rightShift << {
 }
 
 Task.metaClass.getAt << {
-  NVLVehicleSet set -> new ResourceExplicitTask(delegate, set)
+  NodeSet set -> new ResourceExplicitTask(delegate, set)
 }

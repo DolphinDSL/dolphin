@@ -4,7 +4,7 @@ package pt.lsts.nvl.runtime.imc;
 import java.util.List;
 
 import pt.lsts.nvl.imc.AbstractIMCPlanTask;
-import pt.lsts.nvl.runtime.VehicleFilter;
+import pt.lsts.nvl.runtime.NodeFilter;
 
 public final class IMCPlanTask extends AbstractIMCPlanTask {
 
@@ -13,8 +13,8 @@ public final class IMCPlanTask extends AbstractIMCPlanTask {
   }
 
   @Override
-  public void getRequirements(List<VehicleFilter> requirements) {
-    requirements.add(new VehicleFilter());
+  public void getRequirements(List<NodeFilter> requirements) {
+    requirements.add(new NodeFilter());
   }
   
 

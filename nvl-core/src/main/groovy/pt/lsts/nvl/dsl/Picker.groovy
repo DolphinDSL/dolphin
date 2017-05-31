@@ -3,9 +3,9 @@ package pt.lsts.nvl.dsl;
 import pt.lsts.nvl.runtime.*
 
 @DSLClass
-final class Picker extends Builder<NVLVehicleSet> {
+final class Picker extends Builder<NodeSet> {
 
-  private VehicleFilter req = new VehicleFilter()
+  private NodeFilter req = new NodeFilter()
   private int count = 1
   private double timeout = 0
  
@@ -58,13 +58,13 @@ final class Picker extends Builder<NVLVehicleSet> {
   }
 
   @Override
-  public NVLVehicleSet build() {
-    List<VehicleFilter> list = []
+  public NodeSet build() {
+    List<NodeFilter> list = []
     (1..count).each {
       list << req
     }
-    NVLVehicleSet set = Engine.runtime().select(list, timeout)
-    if (set == NVLVehicleSet.EMPTY) {
+    NodeSet set = Engine.runtime().select(list, timeout)
+    if (set == NodeSet.EMPTY) {
       Engine.halt "Could not find required vehicles!"
     }
     set

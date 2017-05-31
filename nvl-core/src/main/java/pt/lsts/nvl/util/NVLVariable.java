@@ -1,4 +1,4 @@
-package pt.lsts.nvl.runtime;
+package pt.lsts.nvl.util;
 
 public final class NVLVariable<T> {
   private T value;

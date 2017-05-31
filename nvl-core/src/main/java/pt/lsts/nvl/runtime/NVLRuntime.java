@@ -14,9 +14,9 @@ public final class NVLRuntime implements Debuggable {
 
   private static NVLRuntime INSTANCE;
 
-  public static NVLRuntime create(NVLPlatform platform) {
+  public static NVLRuntime create(Platform platform) {
     if (INSTANCE != null) {
-      throw new NVLExecutionException("Runtime has already been created");
+      throw new ExecutionException("Runtime has already been created");
     } 
     INSTANCE = new NVLRuntime(platform);
     return INSTANCE;
@@ -24,33 +24,33 @@ public final class NVLRuntime implements Debuggable {
 
   public static NVLRuntime getInstance() {
     if (INSTANCE == null) {
-      throw new NVLExecutionException("Runtime has not been created");
+      throw new ExecutionException("Runtime has not been created");
     }
     return INSTANCE;
   }
 
-  private final NVLPlatform platform;
-  private final NVLVehicleSet boundVehicles;
+  private final Platform platform;
+  private final NodeSet boundVehicles;
   
-  private NVLRuntime(NVLPlatform p) {
+  private NVLRuntime(Platform p) {
     platform = p;
-    boundVehicles = new NVLVehicleSet();
+    boundVehicles = new NodeSet();
   }
 
 
 
-  public NVLPlatform getPlatform() {
+  public Platform getPlatform() {
     return platform;
   }
 
 
   public void run(Task task) {
-    NVLVehicleSet available = platform.getConnectedVehicles();
+    NodeSet available = platform.getConnectedVehicles();
 
-    Map<Task,List<NVLVehicle>> allocation = new HashMap<>();
+    Map<Task,List<Node>> allocation = new HashMap<>();
 
     if (task.allocate(available, allocation) == false) {
-      throw new NVLExecutionException("No vehicles to run task!");
+      throw new ExecutionException("No vehicles to run task!");
     }
     TaskExecutor executor = task.getExecutor();
     executor.initialize(allocation);
@@ -67,27 +67,27 @@ public final class NVLRuntime implements Debuggable {
 
   
 
-  public NVLVehicleSet select(List<VehicleFilter> reqList) {
+  public NodeSet select(List<NodeFilter> reqList) {
 
-    NVLVehicleSet available = platform.getConnectedVehicles();
+    NodeSet available = platform.getConnectedVehicles();
     available.removeAll(boundVehicles);
     
     d("Available vehicles: %d", available.size());
 
-    for (NVLVehicle v : available) {
+    for (Node v : available) {
       d("  id=%s type=%s", v.getId(), v.getType());
     }
 
-    NVLVehicleSet set = new NVLVehicleSet();
-    for (VehicleFilter req : reqList) {
+    NodeSet set = new NodeSet();
+    for (NodeFilter req : reqList) {
       d("Matching requirement: %s", req.toString());
-      Optional<NVLVehicle> ov = 
+      Optional<Node> ov = 
           available.stream()
           .filter(v -> !set.contains(v) && req.matchedBy(v))
           .findFirst();
       if (! ov.isPresent()) {
         d("Requirement was not met!");
-        return NVLVehicleSet.EMPTY;
+        return NodeSet.EMPTY;
       }
       d("Requirement met by vehicle %s", ov.get().getId());
       set.add(ov.get());
@@ -96,15 +96,15 @@ public final class NVLRuntime implements Debuggable {
     return set;
   }
 
-  public NVLVehicleSet select(List<VehicleFilter> reqList, double timeout) {
+  public NodeSet select(List<NodeFilter> reqList, double timeout) {
     double startTime = Clock.now();
     d("Performing selection with timeout %f", timeout);
     double delayTime = Math.max(1.0,  timeout * 0.1);
-    NVLVehicleSet set = NVLVehicleSet.EMPTY;
+    NodeSet set = NodeSet.EMPTY;
 
     while (true) {
       set = select(reqList);
-      if (set != NVLVehicleSet.EMPTY || Clock.now() - startTime >= timeout) {
+      if (set != NodeSet.EMPTY || Clock.now() - startTime >= timeout) {
         break;
       }
       pause(delayTime);
@@ -112,7 +112,7 @@ public final class NVLRuntime implements Debuggable {
     return set;
   }
   
-  public void release(NVLVehicleSet set) {
+  public void release(NodeSet set) {
     boundVehicles.removeAll(set);
   }
   
@@ -121,7 +121,7 @@ public final class NVLRuntime implements Debuggable {
       Thread.sleep(Math.round(time * 1e+03));
     }
     catch (InterruptedException e) {
-      throw new NVLExecutionException(e);
+      throw new ExecutionException(e);
     }
   }
 }

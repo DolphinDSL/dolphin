@@ -3,8 +3,8 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLExecutionException;
-import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.runtime.ExecutionException;
+import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.util.Clock;
 import pt.lsts.nvl.util.Debuggable;
 
@@ -53,7 +53,7 @@ public abstract class TaskExecutor implements Debuggable {
   }
   
  
-  public boolean initialize(Map<Task,List<NVLVehicle>> allocation) {
+  public boolean initialize(Map<Task,List<Node>> allocation) {
     requireState(State.INITIALIZING);
     onInitialize(allocation);
     state = State.READY;
@@ -82,14 +82,14 @@ public abstract class TaskExecutor implements Debuggable {
     return timeElapsed;
   }
 
-  protected abstract void onInitialize(Map<Task,List<NVLVehicle>> allocation);
+  protected abstract void onInitialize(Map<Task,List<Node>> allocation);
   protected abstract void onStart();
   protected abstract CompletionState onStep();
   protected abstract void onCompletion();
 
   private void requireState(State s) {
     if (getState() != s) {
-      throw new NVLExecutionException("Expected " + s + " state");
+      throw new ExecutionException("Expected " + s + " state");
     }
   }
   

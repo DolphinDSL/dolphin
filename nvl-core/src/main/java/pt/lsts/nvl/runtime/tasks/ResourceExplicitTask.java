@@ -3,16 +3,16 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.NVLVehicleSet;
+import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.NodeSet;
 
 public class ResourceExplicitTask implements Task {
 
   private final Task theTask;
  
-  private final NVLVehicleSet theVehicles;
+  private final NodeSet theVehicles;
   
-  public ResourceExplicitTask(Task task, NVLVehicleSet vs) {
+  public ResourceExplicitTask(Task task, NodeSet vs) {
      theTask = task;
      theVehicles = vs;
   }
@@ -28,8 +28,8 @@ public class ResourceExplicitTask implements Task {
   }
 
   @Override
-  public boolean allocate(NVLVehicleSet available,
-                          Map<Task, List<NVLVehicle>> allocation) {
+  public boolean allocate(NodeSet available,
+                          Map<Task, List<Node>> allocation) {
     return theTask.allocate(theVehicles, allocation);
   }
 

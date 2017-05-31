@@ -9,8 +9,8 @@ import java.util.List;
 import pt.lsts.imc.Announce;
 import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.IMCMessage;
-import pt.lsts.nvl.runtime.NVLVariable;
-import pt.lsts.nvl.runtime.NVLVehicle;
+import pt.lsts.nvl.util.NVLVariable;
+import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
@@ -19,7 +19,7 @@ import pt.lsts.nvl.util.Debuggable;
 
 
 
-public final class IMCVehicle implements NVLVehicle, Debuggable {
+public final class IMCNode implements Node, Debuggable {
 
   public interface Subscriber<T extends IMCMessage> {
     void consume(T message);
@@ -35,7 +35,7 @@ public final class IMCVehicle implements NVLVehicle, Debuggable {
   subscriptions = new IdentityHashMap<>();
   private Task runningTask;
 
-  IMCVehicle(InetAddress address, int port, Announce a) {
+  IMCNode(InetAddress address, int port, Announce a) {
     this.address = address;
     this.port = port;
     consume(a);

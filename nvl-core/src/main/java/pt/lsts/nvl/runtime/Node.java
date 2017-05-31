@@ -4,7 +4,7 @@ import java.util.List;
 
 import pt.lsts.nvl.runtime.tasks.Task;
 
-public interface NVLVehicle {
+public interface Node {
    String getId();
    String getType();
    Position getPosition();

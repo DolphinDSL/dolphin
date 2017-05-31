@@ -38,7 +38,7 @@ class Instructions implements Debuggable {
     new TimeConstrainedTask(task, duration)
   }
   
-  static NVLVehicleSet pick (Closure cl) {
+  static NodeSet pick (Closure cl) {
     new Picker().build(cl)
   }
   
@@ -114,10 +114,10 @@ class Instructions implements Debuggable {
         t = e.value
       } else {
         def v = Engine.getInstance().bindingFor e.key
-        if (! (v instanceof NVLVehicleSet)) {
-          halt '\'' + e.key + '\' does not identify a vehicle set'
+        if (! (v instanceof NodeSet)) {
+          halt '\'' + e.key + '\' does not identify a node set'
         }
-        t = new ResourceExplicitTask (e.value, (NVLVehicleSet) v)
+        t = new ResourceExplicitTask (e.value, (NodeSet) v)
       }
       composedTask = new ConcurrentTaskComposition(composedTask, t)
     }

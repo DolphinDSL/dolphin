@@ -3,8 +3,8 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.NVLVehicleSet;
+import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.NodeSet;
 
 public class ConcurrentTaskComposition implements Task {
 
@@ -22,7 +22,7 @@ public class ConcurrentTaskComposition implements Task {
 
   
   @Override
-  public boolean allocate(NVLVehicleSet available, Map<Task, List<NVLVehicle>> allocation) {
+  public boolean allocate(NodeSet available, Map<Task, List<Node>> allocation) {
     return first.allocate(available, allocation) && second.allocate(available, allocation);
   }
 
@@ -35,7 +35,7 @@ public class ConcurrentTaskComposition implements Task {
               secondTaskCompleted = false;
           
       @Override
-      protected void onInitialize(Map<Task,List<NVLVehicle>> allocation) {
+      protected void onInitialize(Map<Task,List<Node>> allocation) {
         firstTaskExec.initialize(allocation);    
         secondTaskExec.initialize(allocation);
       }

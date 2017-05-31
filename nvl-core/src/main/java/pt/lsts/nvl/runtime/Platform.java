@@ -4,9 +4,9 @@ package pt.lsts.nvl.runtime;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 import pt.lsts.nvl.util.Debuggable;
 
-public interface NVLPlatform extends Debuggable {
+public interface Platform extends Debuggable {
   
-  NVLVehicleSet getConnectedVehicles();
+  NodeSet getConnectedVehicles();
   
   PlatformTask getPlatformTask(String id);
   

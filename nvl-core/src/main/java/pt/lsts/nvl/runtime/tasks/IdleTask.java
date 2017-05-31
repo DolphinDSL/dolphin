@@ -4,8 +4,8 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.NVLVehicleSet;
+import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.NodeSet;
 
 public class IdleTask implements Task {
   
@@ -22,7 +22,7 @@ public class IdleTask implements Task {
 
   
   @Override
-  public boolean allocate(NVLVehicleSet available, Map<Task, List<NVLVehicle>> allocation) {
+  public boolean allocate(NodeSet available, Map<Task, List<Node>> allocation) {
     return true;
   }
   

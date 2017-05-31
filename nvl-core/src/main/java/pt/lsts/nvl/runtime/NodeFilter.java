@@ -3,7 +3,7 @@ package pt.lsts.nvl.runtime;
 import java.util.List;
 import java.util.function.Function;
 
-public final class VehicleFilter {
+public final class NodeFilter {
 
   private String requiredType;
   private String requiredId;
@@ -11,7 +11,7 @@ public final class VehicleFilter {
   private Position areaCenter;
   private double areaRadius;
 
-  public VehicleFilter() {
+  public NodeFilter() {
     requiredId = null;
     requiredPayload = null;
     areaCenter = null;
@@ -19,17 +19,17 @@ public final class VehicleFilter {
   }
 
 
-  public VehicleFilter type(String type) {
+  public NodeFilter type(String type) {
     requiredType = type;
     return this; 
   }
 
-  public VehicleFilter name(String name) {
+  public NodeFilter name(String name) {
     requiredId = name;
     return this; 
   }
 
-  public VehicleFilter payload(List<PayloadComponent> components) {
+  public NodeFilter payload(List<PayloadComponent> components) {
     requiredPayload = components;
     return this;
   }
@@ -41,13 +41,13 @@ public final class VehicleFilter {
    * @param radius
    * @return
    */
-  VehicleFilter area(Position center, double radius) {
+  NodeFilter area(Position center, double radius) {
     areaCenter = center;
     areaRadius = radius;
     return this;
   }
 
-  public boolean matchedBy(NVLVehicle v) {
+  public boolean matchedBy(Node v) {
     return (requiredId == null || v.getId().matches(requiredId))
         && (requiredType == null || v.getType().equals(requiredType))
         && ((requiredPayload == null || v.getPayload().containsAll(requiredPayload)))

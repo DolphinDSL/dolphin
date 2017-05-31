@@ -4,8 +4,8 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.nvl.runtime.NVLVehicle;
-import pt.lsts.nvl.runtime.NVLVehicleSet;
+import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.NodeSet;
 
 public class ChoiceTask implements Task {
 
@@ -27,7 +27,7 @@ public class ChoiceTask implements Task {
       TaskExecutor chosen = null;
 
       @Override
-      protected void onInitialize(Map<Task, List<NVLVehicle>> allocation) {
+      protected void onInitialize(Map<Task, List<Node>> allocation) {
         for (TaskGuard tg : taskGuards) { 
           Task t = tg.getTask();
           TaskExecutor exec = t.getExecutor();
@@ -57,8 +57,8 @@ public class ChoiceTask implements Task {
   }
 
   @Override
-  public boolean allocate(NVLVehicleSet available,
-      Map<Task, List<NVLVehicle>> allocation) {
+  public boolean allocate(NodeSet available,
+      Map<Task, List<Node>> allocation) {
     for (TaskGuard tg : taskGuards) {
       if (!tg.getTask().allocate(available, allocation)) {
         return false;

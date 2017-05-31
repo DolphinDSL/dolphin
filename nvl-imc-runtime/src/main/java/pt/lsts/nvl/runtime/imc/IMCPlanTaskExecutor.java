@@ -3,7 +3,7 @@ package pt.lsts.nvl.runtime.imc;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanControlState;
 import pt.lsts.nvl.imc.AbstractIMCPlanExecutor;
-import pt.lsts.nvl.runtime.imc.IMCVehicle.Subscriber;
+import pt.lsts.nvl.runtime.imc.IMCNode.Subscriber;
 
 public final class IMCPlanTaskExecutor extends AbstractIMCPlanExecutor {
 
@@ -16,18 +16,18 @@ public final class IMCPlanTaskExecutor extends AbstractIMCPlanExecutor {
 
   @Override
   protected void sendMessageToVehicle(IMCMessage msg) {
-     ((IMCVehicle) getVehicle()).send(msg);    
+     ((IMCNode) getNode()).send(msg);    
   }
 
   @Override
   protected void setup() {
-    ((IMCVehicle) getVehicle())
+    ((IMCNode) getNode())
       .subscribe(PlanControlState.class, pcsSub);
   }
 
   @Override
   protected void teardown() {
-    ((IMCVehicle) getVehicle())
+    ((IMCNode) getNode())
       .unsubscribe(PlanControlState.class, pcsSub);
  
   }
