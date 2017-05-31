@@ -91,6 +91,10 @@ class Engine implements Debuggable {
     return signalSet
   }
 
+  boolean isScriptRunning() {
+    runningScript
+  }
+  
   void run(File scriptFile) {
     synchronized (this) {
       if (runningScript) {
