@@ -13,9 +13,9 @@ public final class Main {
       return;
     }
 
+    pt.lsts.nvl.util.Debug.enable();
     IMCCommunications.getInstance().start();
     try {
-      pt.lsts.nvl.util.Debug.enable();
       Engine engine = Engine.create(new IMCPlatform());
 
       for (String fileName : args) {

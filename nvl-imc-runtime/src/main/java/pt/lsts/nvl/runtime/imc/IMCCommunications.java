@@ -152,8 +152,9 @@ public class IMCCommunications extends Thread implements Debuggable {
       message.setTimestamp(timeOfStep);
 
       IMCNode node = nodes.get(message.getSrc());
-
+      d("%d %s %s", message.getSrc(), message.getClass(), node);
       if (node != null) {
+        d("%s -> %s", message.getClass(), node.getId());
         node.handleIncomingMessage(message);
       } 
       else if(message instanceof Announce) {
@@ -256,7 +257,7 @@ public class IMCCommunications extends Thread implements Debuggable {
         announceLink.disable();
       } catch (NetworkLinkException e) { }
         
-      throw new EnvironmentException("Could not message link");
+      throw new EnvironmentException("Could not setup message link");
     }
     d("Links created - multicast %d, message %d", announceLink.getPort(), messageLink.getPort());
   }
