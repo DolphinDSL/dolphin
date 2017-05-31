@@ -18,7 +18,7 @@ class Engine implements Debuggable {
   
   static Engine create(Platform platform) {
     if (instance != null)
-      throw new ExecutionException('Engine already created!')
+      throw new EnvironmentException('Engine already created!')
       
     instance = new Engine(platform)
     msg 'Engine on !'
@@ -27,17 +27,17 @@ class Engine implements Debuggable {
   
   static Engine getInstance() {
     if (instance == null)
-      throw new ExecutionException('Engine has not been created!')
+      throw new EnvironmentException('Engine has not been created!')
     
     instance
   }
   
   static Environment runtime() {
-    return instance.runtime
+    return instance.env
   }
   
   static Platform platform() {
-    return instance.runtime.getPlatform()
+    return instance.env.getPlatform()
   }
   
   static void msg (String fmt, Object... args) {
@@ -52,13 +52,13 @@ class Engine implements Debuggable {
   
   private static Engine instance
   
-  private Environment runtime
+  private Environment env
   private GroovyShell shell
   private SignalSet signalSet
   private boolean runningScript
   
   private Engine(Platform platform) {
-    runtime = Environment.create platform
+    env = Environment.create platform
     signalSet = new SignalSet()
     runningScript = false
   }
@@ -129,7 +129,7 @@ class Engine implements Debuggable {
   }
   
   void run(Task task) {
-    runtime.run task
+    env.run task
   }
   
 }

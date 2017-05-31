@@ -11,6 +11,7 @@ import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.nvl.util.NVLVariable;
 import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.Payload;
 import pt.lsts.nvl.runtime.PayloadComponent;
 import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.Task;
@@ -133,8 +134,8 @@ public final class IMCNode implements Node, Debuggable {
   }
 
   @Override
-  public List<PayloadComponent> getPayload() {
-    return Collections.emptyList();
+  public Payload getPayload() {
+    return new Payload(Collections.emptyList());
   }
   
   @Override

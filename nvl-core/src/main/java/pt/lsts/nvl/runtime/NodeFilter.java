@@ -1,13 +1,36 @@
 package pt.lsts.nvl.runtime;
 
-import java.util.List;
+import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 public final class NodeFilter {
 
+//  public static final class AttributeFilter<A,B> {
+//    private final Function<Node,A> extractor;
+//    private final BiPredicate<A,B> predicate;
+//
+//    private AttributeFilter(Function<Node,A> extractor, BiPredicate<A,B> pred) {
+//      this.extractor = extractor;
+//      this.predicate = pred;
+//    }
+//    
+//    public boolean match(Node node, B expected) {
+//      return predicate.test(extractor.apply(node), expected);
+//    }
+//  }
+//  
+//  private static final AttributeFilter<String,String> 
+//     ID = new AttributeFilter<>(Node::getId, (id,re) -> id.matches(re));
+//  private static final AttributeFilter<String,String> 
+//     TYPE = new AttributeFilter<>(Node::getType, (a,b) -> a.equals(b));
+//  private static final AttributeFilter<Payload,Payload> 
+//     PAYLOAD = new  AttributeFilter<>(Node::getPayload, (a,b) -> a.compatibleWith(b));
+//  private static final AttributeFilter<Position,Area>
+//     AREA = new  AttributeFilter<>(Node::getPosition, (a,b) -> b.contains(a));
+  
   private String requiredType;
   private String requiredId;
-  private List<PayloadComponent> requiredPayload;
+  private Payload requiredPayload;
   private Position areaCenter;
   private double areaRadius;
 
@@ -29,8 +52,8 @@ public final class NodeFilter {
     return this; 
   }
 
-  public NodeFilter payload(List<PayloadComponent> components) {
-    requiredPayload = components;
+  public NodeFilter payload(Payload p) {
+    requiredPayload = p;
     return this;
   }
 
@@ -50,7 +73,7 @@ public final class NodeFilter {
   public boolean matchedBy(Node v) {
     return (requiredId == null || v.getId().matches(requiredId))
         && (requiredType == null || v.getType().equals(requiredType))
-        && ((requiredPayload == null || v.getPayload().containsAll(requiredPayload)))
+        && ((requiredPayload == null || v.getPayload().compatibleWith(requiredPayload)))
         && ((areaCenter == null || v.getPosition().near(areaCenter, areaRadius) ));
   }
 
@@ -79,14 +102,14 @@ public final class NodeFilter {
   /**
    * @return the requiredPayload
    */
-  public List<PayloadComponent> getRequiredPayload() {
+  public Payload getRequiredPayload() {
     return requiredPayload;
   }
 
   /**
    * @param requiredPayload the requiredPayload to set
    */
-  public void setRequiredPayload(List<PayloadComponent> requiredPayload) {
+  public void setRequiredPayload(Payload requiredPayload) {
     this.requiredPayload = requiredPayload;
   }
 

@@ -33,23 +33,10 @@ final class Picker extends Builder<NodeSet> {
 
   void payload(String... payloads) {
     List<PayloadComponent> list = []
-    payloads.each  {
-      list.add new PayloadComponent() {
-            @Override
-            String getName() {
-              return it;
-            }
-            @Override
-            Map<String,String> getParameters(){
-              return Collections.emptyMap();
-            }
-            @Override
-            void setParameter(String key,String value){
-              //TODO
-            }
-          }
+    for (String p : payloads) {
+      list.add new PayloadComponent(p) 
     }
-    req.setRequiredPayload list
+    req.setRequiredPayload new Payload(list)
   }
 
   void near(Position location, double radius) {
