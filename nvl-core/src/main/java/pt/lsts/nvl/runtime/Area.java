@@ -22,4 +22,8 @@ public final class Area {
     return radius;
   }
   
+  @Override
+  public String toString() {
+    return String.format("area(%s <> %f)", center, radius);
+  } 
 }
