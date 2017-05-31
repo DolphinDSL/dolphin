@@ -1,6 +1,6 @@
 package pt.lsts.nvl.runtime;
 
-import java.util.function.BiPredicate;
+
 import java.util.function.Function;
 
 public final class NodeFilter {

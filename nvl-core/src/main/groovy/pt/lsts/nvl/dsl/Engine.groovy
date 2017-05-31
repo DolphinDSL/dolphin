@@ -42,7 +42,7 @@ class Engine implements Debuggable {
   
   static void msg (String fmt, Object... args) {
     getInstance().d fmt, args
-    platform().nvlInfoMessage fmt, args
+    platform().displayMessage fmt, args
   }
   
   static void halt(String message='') {

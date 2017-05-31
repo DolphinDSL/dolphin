@@ -26,7 +26,7 @@ public final class IMCPlatform implements Platform, Debuggable {
   }
 
   @Override
-  public void nvlInfoMessage(String format, Object... args) {
+  public void displayMessage(String format, Object... args) {
      System.out.printf(format, args);
      System.out.println();
     
