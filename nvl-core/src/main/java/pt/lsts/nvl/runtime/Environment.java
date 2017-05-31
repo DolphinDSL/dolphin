@@ -10,19 +10,19 @@ import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 import pt.lsts.nvl.util.Clock;
 import pt.lsts.nvl.util.Debuggable;
 
-public final class NVLRuntime implements Debuggable {
+public final class Environment implements Debuggable {
 
-  private static NVLRuntime INSTANCE;
+  private static Environment INSTANCE;
 
-  public static NVLRuntime create(Platform platform) {
+  public static Environment create(Platform platform) {
     if (INSTANCE != null) {
       throw new ExecutionException("Runtime has already been created");
     } 
-    INSTANCE = new NVLRuntime(platform);
+    INSTANCE = new Environment(platform);
     return INSTANCE;
   }
 
-  public static NVLRuntime getInstance() {
+  public static Environment getInstance() {
     if (INSTANCE == null) {
       throw new ExecutionException("Runtime has not been created");
     }
@@ -32,7 +32,7 @@ public final class NVLRuntime implements Debuggable {
   private final Platform platform;
   private final NodeSet boundVehicles;
   
-  private NVLRuntime(Platform p) {
+  private Environment(Platform p) {
     platform = p;
     boundVehicles = new NodeSet();
   }

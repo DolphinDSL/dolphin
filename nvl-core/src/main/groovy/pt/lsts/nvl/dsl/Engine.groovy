@@ -32,7 +32,7 @@ class Engine implements Debuggable {
     instance
   }
   
-  static NVLRuntime runtime() {
+  static Environment runtime() {
     return instance.runtime
   }
   
@@ -52,13 +52,13 @@ class Engine implements Debuggable {
   
   private static Engine instance
   
-  private NVLRuntime runtime
+  private Environment runtime
   private GroovyShell shell
   private SignalSet signalSet
   private boolean runningScript
   
   private Engine(Platform platform) {
-    runtime = NVLRuntime.create platform
+    runtime = Environment.create platform
     signalSet = new SignalSet()
     runningScript = false
   }
