@@ -18,7 +18,8 @@ class Engine implements Debuggable {
   
   static Engine create(Platform platform) {
     if (instance != null)
-      throw new ExecutionException('Engine already created!')
+      //throw new ExecutionException('Engine already created!')
+		throw new EnvironmentException('Engine already created!')
       
     instance = new Engine(platform)
     msg 'Engine on !'
@@ -27,7 +28,8 @@ class Engine implements Debuggable {
   
   static Engine getInstance() {
     if (instance == null)
-      throw new ExecutionException('Engine has not been created!')
+      //throw new ExecutionException('Engine has not been created!')
+	  throw new EnvironmentException('Engine has not been created!')
     
     instance
   }
