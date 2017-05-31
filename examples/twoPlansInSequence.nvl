@@ -1,0 +1,4 @@
+
+v = pick { type UUV }
+
+execute v: task('test')  >> idle(1.seconds) >> task('test2')

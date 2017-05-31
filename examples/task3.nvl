@@ -1,0 +1,21 @@
+
+uuv1 = pick { type: UUV }
+uuv2 = pick { type: UUV }
+uuv3 = pick { type: UUV }
+uav = pick { type: UAV }
+
+execute
+   uuv1:
+      task('s1') -> post x:1 -> task('rv1')
+   uuv2:
+      task('s2') -> post x:2 -> task('rv1')
+   uav: 
+      idle() -> 
+           (
+             consume x §
+      
+ task('s1') << uuv1,
+        
+      
+ task('s1') << uuv1,
+        
