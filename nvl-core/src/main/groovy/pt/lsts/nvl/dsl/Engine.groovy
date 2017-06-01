@@ -9,7 +9,7 @@ import pt.lsts.nvl.runtime.tasks.*
 import pt.lsts.nvl.util.Debuggable
 
 /**
- * The NVL engine.
+ * The engine.
  */
 @DSLClass
 class Engine implements Debuggable {
