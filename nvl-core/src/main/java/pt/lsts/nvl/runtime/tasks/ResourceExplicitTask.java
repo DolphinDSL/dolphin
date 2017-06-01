@@ -31,12 +31,12 @@ public class ResourceExplicitTask implements Task {
   public boolean allocate(NodeSet available,
                           Map<Task, List<Node>> allocation) {
     NodeSet consider = NodeSet.intersection(available, theVehicles);
-    NodeSet notToConsider = NodeSet.difference(available, consider);
+    NodeSet ignore = NodeSet.difference(available, theVehicles);
     boolean success = theTask.allocate(consider, allocation);
     if (success) {
       available.clear();
-      available.addAll(notToConsider);
-      available.addAll(consider); // Whatever's left
+      available.addAll(ignore); // not used by this task
+      available.addAll(consider); // whatever's left from allocating to this task
     }
     return success;
   }
