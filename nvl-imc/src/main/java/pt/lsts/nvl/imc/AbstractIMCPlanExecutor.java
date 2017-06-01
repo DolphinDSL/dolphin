@@ -7,8 +7,10 @@ import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanControl;
 import pt.lsts.imc.PlanControlState;
 import pt.lsts.imc.PlanSpecification;
+import pt.lsts.nvl.runtime.Environment;
 import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.Platform;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
 import pt.lsts.nvl.util.Variable;
@@ -53,7 +55,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
     sendMessageToVehicle(pc);  
 
     // We're done
-    d("Started %s on %s", getTask().getId(), getNode().getId());
+    msg("Started"); 
   }
 
   protected final void onStateUpdate(PlanControlState pcs) {
@@ -65,16 +67,15 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
     CompletionState completionState =  new CompletionState(CompletionState.Type.IN_PROGRESS);
     if (timeElapsed() > WARMUP_TIME) {
       if (! pcsVar.hasFreshValue()) {
-        d("%f", pcsVar.age(timeElapsed()));
         if (pcsVar.age(timeElapsed()) >= PLAN_CONTROL_STATE_TIMEOUT) {
-          d("PlanControlState timeout!");
+          msg("PlanControlState timeout!");
           completionState = new CompletionState(CompletionState.Type.ERROR);
         }
       } else {
         PlanControlState pcs = pcsVar.get();
         if (!getTask().getId().equals(pcs.getPlanId())) {
           completionState = new CompletionState(CompletionState.Type.ERROR);
-          d("Wrong plan id: %s != %s", pcs.getPlanId(), getTask().getId());
+          msg("Wrong plan id reported: " + pcs.getPlanId());
         } else {
           switch (pcs.getState()) {
             case BLOCKED:
@@ -85,18 +86,18 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
             case INITIALIZING:
               break;
             case READY:
-              d("Terminated %s on %s : %s", getTask().getId(), getNode().getId(), pcs.getLastOutcome());
               switch (pcs.getLastOutcome()) {
                 case FAILURE:
                 case NONE:
                   completionState = new CompletionState(CompletionState.Type.ERROR);
-                  d("Failure!");
+                  msg("Completed in failure!");
                   break;
                 case SUCCESS:
                   completionState = new CompletionState(CompletionState.Type.DONE);
-                  d("IMC plan completed!");
+                  msg("Completed successfully!");
                   break;
                 default:
+                  msg("Unexpected outcome " + pcs.getLastOutcome());
                   throw new EnvironmentException();
               }
               break;
@@ -112,8 +113,12 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   @Override
   protected final void onCompletion() {
     //PlanControlState pcs = pcsVar.get();
-    d("ending plan execution");
+    msg("clean-up after plan execution");
     teardown();
+  }
+  
+  private void msg(String text) {
+    super.msg("%s running %s : %s", getNode().getId(), getTask().getId(), text);
   }
 
 }

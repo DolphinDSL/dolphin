@@ -3,6 +3,7 @@ package pt.lsts.nvl.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
+import pt.lsts.nvl.runtime.Environment;
 import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.util.Clock;
@@ -91,6 +92,10 @@ public abstract class TaskExecutor implements Debuggable {
     if (getState() != s) {
       throw new EnvironmentException("Expected " + s + " state");
     }
+  }
+  
+  protected final void msg(String fmt, Object... args) {
+    Environment.getInstance().getPlatform().displayMessage(fmt, args);
   }
   
   
