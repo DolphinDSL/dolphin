@@ -143,30 +143,31 @@ public class IMCCommunications extends Thread implements Debuggable {
 
   private void handleIncomingMessages(NetworkLink link) {
     int len;
-    try {
-      len = link.recv(rcvBuffer, 0, rcvBuffer.length, 1);
-      if (len == 0) {
+    while (true) {
+      try {
+        len = link.recv(rcvBuffer, 0, rcvBuffer.length, 1);
+        if (len == 0) {
+          break;
+        }
+        IMCMessage message = IMCDefinition.getInstance().parseMessage(rcvBuffer);
+        message.setTimestamp(timeOfStep);
+
+        IMCNode node = nodes.get(message.getSrc());
+        // d("%d %s %s", message.getSrc(), message.getClass(), node);
+        if (node != null) {
+          node.handleIncomingMessage(message);
+        } 
+        else if(message instanceof Announce) {
+          handleNewNode((Announce) message);
+        } 
+        else {
+          // d("Ignored message: %d/%s", message.getSrc(), message.getAbbrev());
+        }
+      } 
+      catch (IOException e) {
+        e.printStackTrace(System.err);
         return;
       }
-      IMCMessage message = IMCDefinition.getInstance().parseMessage(rcvBuffer);
-      message.setTimestamp(timeOfStep);
-
-      IMCNode node = nodes.get(message.getSrc());
-      d("%d %s %s", message.getSrc(), message.getClass(), node);
-      if (node != null) {
-        d("%s -> %s", message.getClass(), node.getId());
-        node.handleIncomingMessage(message);
-      } 
-      else if(message instanceof Announce) {
-        handleNewNode((Announce) message);
-      } 
-      else {
-        // d("Ignored message: %d/%s", message.getSrc(), message.getAbbrev());
-      }
-    } 
-    catch (IOException e) {
-      e.printStackTrace(System.err);
-      return;
     }
   }
 
@@ -250,13 +251,13 @@ public class IMCCommunications extends Thread implements Debuggable {
           throw new EnvironmentException(e);
         }
       }
-      
+
     }
     if (messageLink == null) {
       try {
         announceLink.disable();
       } catch (NetworkLinkException e) { }
-        
+
       throw new EnvironmentException("Could not setup message link");
     }
     d("Links created - multicast %d, message %d", announceLink.getPort(), messageLink.getPort());

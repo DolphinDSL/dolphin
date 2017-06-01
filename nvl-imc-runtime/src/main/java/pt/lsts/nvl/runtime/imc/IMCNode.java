@@ -95,7 +95,7 @@ public final class IMCNode implements Node, Debuggable {
     List<Subscriber<IMCMessage>> obsList = subscriptions.get(message.getClass());
     if (obsList != null) {
       for (Subscriber<IMCMessage> obs : obsList) {
-       // d("Delivering %s", message.getAbbrev());
+        d("Delivering %s", message.getAbbrev());
         obs.consume(message);
       }
     }
