@@ -30,7 +30,15 @@ public class ResourceExplicitTask implements Task {
   @Override
   public boolean allocate(NodeSet available,
                           Map<Task, List<Node>> allocation) {
-    return theTask.allocate(theVehicles, allocation);
+    NodeSet consider = NodeSet.intersection(available, theVehicles);
+    NodeSet notToConsider = NodeSet.difference(available, consider);
+    boolean success = theTask.allocate(consider, allocation);
+    if (success) {
+      available.clear();
+      available.addAll(notToConsider);
+      available.addAll(consider); // Whatever's left
+    }
+    return success;
   }
 
 }
