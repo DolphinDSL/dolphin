@@ -22,7 +22,15 @@ public class SequentialTaskComposition implements Task {
   
   @Override
   public boolean allocate(NodeSet available, Map<Task, List<Node>> allocation) {
-    return first.allocate(available, allocation) && second.allocate(available, allocation);
+    NodeSet set1 = available.clone(), set2 = available.clone();
+    if (!first.allocate(set1, allocation) ||
+        !second.allocate(set2, allocation)) {
+      return false;
+    }
+    available.clear();
+    available.addAll(set1);
+    available.addAll(set2);
+    return true;
   }
 
   @Override
