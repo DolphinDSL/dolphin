@@ -1,4 +1,7 @@
 
-v = pick { type UUV }
+v = pick { 
+  type 'UUV'; 
+  timeout 10.seconds 
+}
 
-execute v: task('test')  >> idle(1.seconds) >> task('test2')
+execute v: task('test')  >>  task('test')
