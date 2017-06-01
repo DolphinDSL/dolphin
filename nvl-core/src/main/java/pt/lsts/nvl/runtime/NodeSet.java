@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 
-public final class NodeSet implements Iterable<Node> {
+public final class NodeSet implements Iterable<Node>, Cloneable {
 
   public static final NodeSet EMPTY = 
       new NodeSet(Collections.unmodifiableMap(Collections.emptyMap()));
@@ -53,6 +53,11 @@ public final class NodeSet implements Iterable<Node> {
     return theSet.containsKey(v.getId());
   }
 
+  @Override
+  public NodeSet clone() {
+    return new NodeSet(theSet);
+  }
+  
   @Override
   public Iterator<Node> iterator() {
     return theSet.values().iterator();
