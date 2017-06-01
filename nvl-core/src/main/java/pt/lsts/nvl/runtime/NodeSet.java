@@ -55,7 +55,9 @@ public final class NodeSet implements Iterable<Node>, Cloneable {
 
   @Override
   public NodeSet clone() {
-    return new NodeSet(theSet);
+    NodeSet copy = new NodeSet();
+    copy.addAll(this);
+    return copy;
   }
   
   @Override
