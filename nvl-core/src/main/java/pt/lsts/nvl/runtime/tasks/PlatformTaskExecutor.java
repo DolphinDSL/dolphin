@@ -7,7 +7,7 @@ import pt.lsts.nvl.runtime.Node;
 
 public abstract class PlatformTaskExecutor extends TaskExecutor {
 
-  private List<Node> vehicles = null;
+  private List<Node> nodes = null;
   
   protected PlatformTaskExecutor(Task theTask) {
     super(theTask);
@@ -15,11 +15,12 @@ public abstract class PlatformTaskExecutor extends TaskExecutor {
   
   @Override
   protected void onInitialize(Map<Task,List<Node>> allocation) {
-    vehicles = allocation.get(getTask());
+    d("allocation: %s %s", getTask(), allocation.get(getTask()));
+    nodes = allocation.get(getTask());
   }
    
   protected final List<Node> getVehicles() {
-    return vehicles;
+    return nodes;
   }
 
 }
