@@ -46,12 +46,14 @@ public final class Environment implements Debuggable {
 
   public void run(Task task) {
     NodeSet available = platform.getConnectedVehicles();
-
+    available.removeAll(boundVehicles);
+    
     Map<Task,List<Node>> allocation = new HashMap<>();
 
     if (task.allocate(available, allocation) == false) {
       throw new EnvironmentException("No vehicles to run task!");
     }
+    
     TaskExecutor executor = task.getExecutor();
     executor.initialize(allocation);
     executor.start();
@@ -72,26 +74,27 @@ public final class Environment implements Debuggable {
     NodeSet available = platform.getConnectedVehicles();
     available.removeAll(boundVehicles);
     
-    d("Available vehicles: %d", available.size());
+    platform.displayMessage("Available nodes: %d", available.size());
 
     for (Node v : available) {
-      d("  id=%s type=%s", v.getId(), v.getType());
+      platform.displayMessage("  id=%s type=%s", v.getId(), v.getType());
     }
 
     NodeSet set = new NodeSet();
     for (NodeFilter req : reqList) {
-      d("Matching requirement: %s", req.toString());
+      platform.displayMessage("Matching requirement: %s", req.toString());
       Optional<Node> ov = 
           available.stream()
           .filter(v -> !set.contains(v) && req.matchedBy(v))
           .findFirst();
       if (! ov.isPresent()) {
-        d("Requirement was not met!");
+        platform.displayMessage("Requirements were not met!");
         return NodeSet.EMPTY;
       }
-      d("Requirement met by vehicle %s", ov.get().getId());
+      platform.displayMessage("Requirement met by node %s", ov.get().getId());
       set.add(ov.get());
     }
+    platform.displayMessage("Selected nodes: %s", set);
     boundVehicles.addAll(set);
     return set;
   }

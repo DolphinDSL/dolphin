@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import pt.lsts.nvl.runtime.Environment;
 import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.NodeSet;
 import pt.lsts.nvl.runtime.NodeFilter;
@@ -48,10 +49,13 @@ public abstract class PlatformTask implements Task {
     }
     boolean success = selection.size() == requirements.size();
     if (success) {
+      for (Node n : selection) {
+        msg("Task %s allocated node %s.",  getId(), n.getId());
+      }
       allocation.put(this, selection); 
     } else {
-      // Undo
-      available.addAll(selection);
+      msg("Task %s could not allocate necessary nodes.", getId());
+      available.addAll(selection); // undo
     }
     return success;
   }

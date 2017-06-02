@@ -2,15 +2,12 @@ package pt.lsts.nvl.imc;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanControl;
 import pt.lsts.imc.PlanControlState;
 import pt.lsts.imc.PlanSpecification;
-import pt.lsts.nvl.runtime.Environment;
 import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.Node;
-import pt.lsts.nvl.runtime.Platform;
 import pt.lsts.nvl.runtime.tasks.CompletionState;
 import pt.lsts.nvl.runtime.tasks.PlatformTaskExecutor;
 import pt.lsts.nvl.util.Variable;
@@ -66,6 +63,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   protected CompletionState onStep() {
     CompletionState completionState =  new CompletionState(CompletionState.Type.IN_PROGRESS);
     if (timeElapsed() > WARMUP_TIME) {
+      d("pcsVar: fresh %b age %f ", pcsVar.hasFreshValue(), pcsVar.age(timeElapsed()));
       if (! pcsVar.hasFreshValue()) {
         if (pcsVar.age(timeElapsed()) >= PLAN_CONTROL_STATE_TIMEOUT) {
           msg("PlanControlState timeout!");
@@ -113,7 +111,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   @Override
   protected final void onCompletion() {
     //PlanControlState pcs = pcsVar.get();
-    msg("clean-up after plan execution");
+    msg("Clean-up after plan execution ...");
     teardown();
   }
   
