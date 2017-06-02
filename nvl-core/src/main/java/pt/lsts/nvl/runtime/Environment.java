@@ -45,12 +45,11 @@ public final class Environment implements Debuggable {
 
 
   public void run(Task task) {
-    NodeSet available = platform.getConnectedVehicles();
-    available.removeAll(boundVehicles);
+    
     
     Map<Task,List<Node>> allocation = new HashMap<>();
 
-    if (task.allocate(available, allocation) == false) {
+    if (task.allocate(boundVehicles, allocation) == false) {
       throw new EnvironmentException("No vehicles to run task!");
     }
     
