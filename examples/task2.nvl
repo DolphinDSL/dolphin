@@ -1,7 +1,0 @@
-
-a = pick {
-    id 'lauv-seacon-1'
-    type 'UUV'
-    timeout 10.seconds
-} 
-halt 'Bye:)'
