@@ -4,6 +4,8 @@ package pt.lsts.nvl.dsl
 import java.io.File
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
+
+import groovy.util.ObservableList.ElementClearedEvent
 import pt.lsts.nvl.runtime.*
 import pt.lsts.nvl.runtime.tasks.*
 import pt.lsts.nvl.util.Debuggable
@@ -105,6 +107,7 @@ class Engine implements Debuggable {
     }
     ensureShellIsCreated()
     msg 'Running script \'%s\'', scriptFile
+    signalSet.clear()
     try {
       shell.evaluate scriptFile
     }
@@ -117,9 +120,11 @@ class Engine implements Debuggable {
       e.printStackTrace(System.out)
     }
     env.releaseAll()
+    msg 'Script \'%s\' completed', scriptFile
     synchronized (this) {
       runningScript = false
     }
+
   }
 
   void bind(String var, Object value) {

@@ -21,7 +21,7 @@ public final class IMCPlatform implements Platform, Debuggable {
   }
 
   @Override
-  public NodeSet getConnectedVehicles() {
+  public NodeSet getConnectedNodes() {
     return comm.getConnectedVehicles();
   }
 

@@ -6,7 +6,7 @@ import pt.lsts.nvl.util.Debuggable;
 
 public interface Platform extends Debuggable {
   
-  NodeSet getConnectedVehicles();
+  NodeSet getConnectedNodes();
   
   PlatformTask getPlatformTask(String id);
   

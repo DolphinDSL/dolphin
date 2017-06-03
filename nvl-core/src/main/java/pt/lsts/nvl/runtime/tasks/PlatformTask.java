@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import pt.lsts.nvl.runtime.Environment;
 import pt.lsts.nvl.runtime.Node;
 import pt.lsts.nvl.runtime.NodeSet;
 import pt.lsts.nvl.runtime.NodeFilter;

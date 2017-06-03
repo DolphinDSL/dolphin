@@ -21,13 +21,17 @@ public class GuardedTaskSet implements Task {
   }
 
   @Override
-  public boolean allocate(NodeSet available,
-      Map<Task, List<Node>> allocation) {
+  public boolean allocate(NodeSet available,Map<Task, List<Node>> allocation) {
+    NodeSet aux = available.clone();
     for (TaskGuard tg : taskGuards) {
-      if (!tg.getTask().allocate(available, allocation)) {
+      NodeSet ns = available.clone();
+      if (!tg.getTask().allocate(ns, allocation)) {
         return false;
       }
+      aux.addAll(NodeSet.intersection(aux, ns));
     }
+    available.clear();
+    available.addAll(aux);
     return true;
   }
   

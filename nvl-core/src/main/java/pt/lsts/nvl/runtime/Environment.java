@@ -70,7 +70,7 @@ public final class Environment implements Debuggable {
 
   public NodeSet select(List<NodeFilter> reqList) {
 
-    NodeSet available = platform.getConnectedVehicles();
+    NodeSet available = platform.getConnectedNodes();
     available.removeAll(boundVehicles);
     
     platform.displayMessage("Available nodes: %d", available.size());
