@@ -82,10 +82,14 @@ class Engine implements Debuggable {
         addCompilationCustomizers ic
         setTargetBytecode CompilerConfiguration.JDK8
       }
+      env.getPlatform().customizeGroovyCompilation(cfg);
 
       // Define the shell
       shell = new GroovyShell(cfg)
       shell.evaluate 'BootScript.main()'
+      for (File script : env.getPlatform().getStartupScripts()) {
+        shell.evaluate script
+      }
     }
   }
 
@@ -98,6 +102,7 @@ class Engine implements Debuggable {
   }
   
   void run(File scriptFile) {
+    ensureShellIsCreated()
     synchronized (this) {
       if (runningScript) {
         msg 'Already running a script! Ignoring order ...'
@@ -105,7 +110,6 @@ class Engine implements Debuggable {
       }
       runningScript = true
     }
-    ensureShellIsCreated()
     msg 'Running script \'%s\'', scriptFile
     signalSet.clear()
     try {

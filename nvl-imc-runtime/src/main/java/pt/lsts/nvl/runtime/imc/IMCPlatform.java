@@ -1,6 +1,15 @@
 package pt.lsts.nvl.runtime.imc;
 
 import pt.lsts.nvl.runtime.Platform;
+
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+
+import org.codehaus.groovy.control.CompilerConfiguration;
+import org.codehaus.groovy.control.customizers.ImportCustomizer;
+
+import pt.lsts.imc.IMCDefinition;
 import pt.lsts.nvl.runtime.NodeSet;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 import pt.lsts.nvl.util.Debuggable;
@@ -32,6 +41,20 @@ public final class IMCPlatform implements Platform, Debuggable {
     
   }
 
+  @Override
+  public void customizeGroovyCompilation(CompilerConfiguration cc) {
+    d("Customizing compilation for IMC runtime ...");
+    ImportCustomizer ic = new ImportCustomizer();
+    ic.addStaticStars("pt.lsts.nvl.dsl.imc.IMCInstructions");
+    for (String msg : IMCDefinition.getInstance().getConcreteMessages()) {
+      ic.addImports("pt.lsts.imc." + msg);
+    }
+    cc.addCompilationCustomizers(ic);
+  }
 
+  @Override
+  public List<File> getStartupScripts() {
+    return Collections.emptyList();
+  }
 
 }
