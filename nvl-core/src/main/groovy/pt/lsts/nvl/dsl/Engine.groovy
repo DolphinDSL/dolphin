@@ -87,7 +87,7 @@ class Engine implements Debuggable {
       // Define the shell
       shell = new GroovyShell(cfg)
       shell.evaluate 'BootScript.main()'
-      for (File script : env.getPlatform().getStartupScripts()) {
+      for (File script : env.getPlatform().getExtensionFiles()) {
         shell.evaluate script
       }
     }

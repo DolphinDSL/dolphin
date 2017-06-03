@@ -4,13 +4,13 @@ import pt.lsts.nvl.dsl.DSLClass
 import pt.lsts.nvl.runtime.imc.IMCPlanTask
 
 @DSLClass
-class IMCInstructions {
+class Instructions {
 
   static IMCPlanTask imcPlan(String id) {
     new IMCPlanTask(id)
   }
   
-  private IMCInstructions() {
+  private Instructions() {
     
   }
 }

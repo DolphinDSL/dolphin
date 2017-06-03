@@ -45,7 +45,7 @@ public final class IMCPlatform implements Platform, Debuggable {
   public void customizeGroovyCompilation(CompilerConfiguration cc) {
     d("Customizing compilation for IMC runtime ...");
     ImportCustomizer ic = new ImportCustomizer();
-    ic.addStaticStars("pt.lsts.nvl.dsl.imc.IMCInstructions");
+    ic.addStaticStars("pt.lsts.nvl.dsl.imc.Instructions");
     for (String msg : IMCDefinition.getInstance().getConcreteMessages()) {
       ic.addImports("pt.lsts.imc." + msg);
     }
@@ -53,7 +53,7 @@ public final class IMCPlatform implements Platform, Debuggable {
   }
 
   @Override
-  public List<File> getStartupScripts() {
+  public List<File> getExtensionFiles() {
     return Collections.emptyList();
   }
 

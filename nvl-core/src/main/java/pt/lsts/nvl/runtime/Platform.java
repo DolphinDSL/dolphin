@@ -19,5 +19,5 @@ public interface Platform extends Debuggable {
   
   void customizeGroovyCompilation(CompilerConfiguration cc);
   
-  List<File> getStartupScripts();
+  List<File> getExtensionFiles();
 }
