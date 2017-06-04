@@ -5,7 +5,6 @@ import java.io.File
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
-import groovy.util.ObservableList.ElementClearedEvent
 import pt.lsts.nvl.runtime.*
 import pt.lsts.nvl.runtime.tasks.*
 import pt.lsts.nvl.util.Debuggable
