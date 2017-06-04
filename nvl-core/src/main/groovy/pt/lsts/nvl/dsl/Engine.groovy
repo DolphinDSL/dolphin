@@ -67,28 +67,44 @@ class Engine implements Debuggable {
 
   private void ensureShellIsCreated() {
     if (shell == null) {
-      // Imports
-      def ic = new ImportCustomizer()
-      ic.with {
-        addStaticStars 'java.lang.Math'
-        addStaticStars 'pt.lsts.nvl.dsl.Instructions'
-        addStarImports 'pt.lsts.nvl.dsl'
-        addStarImports 'pt.lsts.nvl.runtime'
-      }
+      try {
+        // Imports
+        def ic = new ImportCustomizer()
+        ic.with {
+          addStaticStars 'java.lang.Math'
+          addStaticStars 'pt.lsts.nvl.dsl.Instructions'
+          addStarImports 'pt.lsts.nvl.dsl'
+          addStarImports 'pt.lsts.nvl.runtime'
+        }
 
-      // Compiler configuration
-      def cfg = new CompilerConfiguration()
-      cfg.with {
-        addCompilationCustomizers ic
-        setTargetBytecode CompilerConfiguration.JDK8
-      }
-      env.getPlatform().customizeGroovyCompilation(cfg);
+        // Compiler configuration
+        def cfg = new CompilerConfiguration()
+        cfg.with {
+          addCompilationCustomizers ic
+          setTargetBytecode CompilerConfiguration.JDK8
+        }
+        msg('Customising compiler for platform ...');
+        env.getPlatform().customizeGroovyCompilation(cfg);
 
-      // Define the shell
-      shell = new GroovyShell(cfg)
-      shell.evaluate 'BootScript.main()'
-      for (File script : env.getPlatform().getExtensionFiles()) {
-        shell.evaluate script
+        // Define the shell
+        shell = new GroovyShell(cfg)
+
+        for (File script : env.getPlatform().getExtensionFiles()) {
+          //d 'Extension file: %s', script
+          msg("- Parsing extension script '%s'", script)
+          try {
+            shell.evaluate script
+          }
+          catch(Exception e) {
+            msg('- There were errors: %s - %s', e.getClass(), e.getMessage());
+          }
+        }
+        shell.evaluate 'BootScript.main()'
+      }
+      catch (Exception e) {
+        msg('Some errors creating Groovy shell - %s %s',
+            e.getClass().getName(), e.getMessage());
+        e.printStackTrace(System.err);
       }
     }
   }
@@ -100,7 +116,7 @@ class Engine implements Debuggable {
   boolean isScriptRunning() {
     runningScript
   }
-  
+
   void run(File scriptFile) {
     ensureShellIsCreated()
     synchronized (this) {
@@ -131,6 +147,7 @@ class Engine implements Debuggable {
 
   }
 
+
   void bind(String var, Object value) {
     ensureShellIsCreated()
     shell.setVariable var, value
@@ -149,5 +166,7 @@ class Engine implements Debuggable {
   void run(Task task) {
     env.run task
   }
+
+
 
 }
