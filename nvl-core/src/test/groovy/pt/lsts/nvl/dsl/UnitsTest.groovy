@@ -3,7 +3,7 @@ package pt.lsts.nvl.dsl
 
 import spock.lang.Specification
 
-class NumberUnitsSpec extends Specification {
+class UnitsTest extends Specification {
 
   def setupSpec() {
     Units.main()
@@ -47,5 +47,13 @@ class NumberUnitsSpec extends Specification {
     5.hours + 15.minutes == 5.25.hours
     2.days - 48.hours == 0
     2.5.minutes - 150.seconds == 0
+  }
+  
+  def 'Percentage' () {
+    expect:
+    1.percent == 0.01
+    100.percent == 1.0
+    33.percent == 0.33
+    37.5.percent == 0.375
   }
 }

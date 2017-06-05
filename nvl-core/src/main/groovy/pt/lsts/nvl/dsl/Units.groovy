@@ -19,3 +19,6 @@ Number.metaClass.getSeconds = { -> delegate }
 Number.metaClass.getMinutes = { -> delegate * 60 }
 Number.metaClass.getHours = { -> delegate * 3600 }
 Number.metaClass.getDays = { -> delegate * 86400 }
+
+// Percentage
+Number.metaClass.getPercent = { -> delegate * 0.01 }
