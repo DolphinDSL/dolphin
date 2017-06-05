@@ -16,6 +16,6 @@ class GuardedTaskSetBuilder extends Builder<GuardedTaskSet> {
     if (taskGuards.empty) {
       Engine.halt 'No choices were defined!'
     }
-    new GuardedTaskSet(taskGuards)
+    new AllOfTask(taskGuards)
   }
 }

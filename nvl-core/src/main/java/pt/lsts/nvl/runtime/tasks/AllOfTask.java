@@ -6,23 +6,22 @@ import java.util.Map;
 
 import pt.lsts.nvl.runtime.Node;
 
-public class ChoiceTask extends GuardedTaskSet{
+public class AllOfTask extends GuardedTaskSet {
 
-
-  public ChoiceTask(List<TaskGuard> list) {
+  public AllOfTask(List<TaskGuard> list) {
     super(list);
   }
 
   @Override
   public String getId() {
-    return "<choice>";
+    return "<allOf>";
   }
-
+  
   @Override
   public TaskExecutor getExecutor() {
     return new SimpleTaskExecutor(this) { 
       Map<Task,TaskExecutor> executors = new IdentityHashMap<>();
-      TaskExecutor chosen = null;
+      TaskExecutor current = null;
 
       @Override
       protected void onInitialize(Map<Task, List<Node>> allocation) {
@@ -37,22 +36,30 @@ public class ChoiceTask extends GuardedTaskSet{
       @Override
       protected CompletionState onStep() {
         CompletionState cs = new CompletionState(CompletionState.Type.IN_PROGRESS);
-        if (chosen == null) {
+        if (current == null) {
           for (TaskGuard tg : getTaskGuards()) {
-            if (tg.test()) {
-              chosen = executors.get(tg.getTask());
-              chosen.start();
-              cs = chosen.step();
+            if (executors.containsKey(tg.getTask()) && tg.test()) {
+              current = executors.remove(tg.getTask());
+              current.start();
+              cs = current.step();
               break;
             }
           }
         } else {
-          cs = chosen.step();
+          cs = current.step();
+        }
+        
+        if (cs.completed()) {
+          if (!executors.isEmpty()) {
+            cs = new CompletionState(CompletionState.Type.IN_PROGRESS);
+            current = null;
+          }
         }
         return cs;
       }
     };
   }
 
+ 
 
 }

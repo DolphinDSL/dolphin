@@ -40,7 +40,7 @@ public abstract class PlatformTask implements Task {
         Node v = optV.get();
         available.remove(v);
         selection.add(v);
-        d("Selected: %s", v);
+        d("Selected: %s", v.getId());
       } else {
         d("No match for %s", r);
         break;
