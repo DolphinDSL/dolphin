@@ -1,10 +1,8 @@
 package pt.lsts.nvl.util.wgs84
 
-import pt.lsts.nvl.runtime.Platform
 import pt.lsts.nvl.runtime.Position
 import static pt.lsts.nvl.util.wgs84.WGS84.*
 
-import static org.codehaus.groovy.runtime.DefaultGroovyMethods.asList
 import spock.lang.Specification
 
 class WGS84Test extends Specification {
