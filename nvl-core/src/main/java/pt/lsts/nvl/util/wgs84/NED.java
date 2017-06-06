@@ -24,6 +24,11 @@ public strictfp final class NED {
     east = e;
     down = d;
   }
+  
+  @Override
+  public String toString(){
+    return String.format("NED(%f, %f, %f)", north, east, down);
+  }
 }
 
 

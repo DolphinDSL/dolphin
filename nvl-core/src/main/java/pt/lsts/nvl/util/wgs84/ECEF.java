@@ -55,5 +55,10 @@ public strictfp final class ECEF {
     double dz = z - other.z;
     return sqrt(dx * dx + dy * dy + dz * dz);
   }
+  
+  @Override
+  public String toString(){
+    return String.format("ECEF(%f, %f, %f)", x, y, z);
+  }
 }
 

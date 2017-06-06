@@ -38,20 +38,23 @@ public strictfp final class WGS84 {
    * @param other 
    * @return
    */
-  public static NED displacementTo(Position a, Position b) {
+  public static NED displacement(Position a, Position b) {
     ECEF c1 = toECEF(a); 
     ECEF c2 = toECEF(b); 
-
+   
     double dx = c2.x - c1.x;
-    double dy = c2.y - c2.y;
-    double dz = c2.z - c2.z;
+    double dy = c2.y - c1.y;
+    double dz = c2.z - c1.z;
+    
     double slat = sin(a.lat);
     double clat = cos(a.lat);
     double slon = sin(a.lon);
     double clon = cos(a.lon);
+    
     double n = -slat * clon * dx - slat * slon * dy + clat * dz; 
     double e = -slon * dx + clon * dy; 
     double d = -clat * clon * dx - clat * slon * dy - slat * dz;
+    
     return new NED(n, e, d);
   }
 
