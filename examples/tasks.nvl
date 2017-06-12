@@ -1,0 +1,6 @@
+t1 = task 't1' during 2.seconds
+t2 = task 't2' during 1.seconds
+t3 = task 't3' during 5.seconds 
+
+execute ((t1 >> t2) | t3)
+
