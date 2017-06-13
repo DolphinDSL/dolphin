@@ -8,7 +8,6 @@ import java.util.List;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
-import pt.lsts.imc.groovy.dsl.*;
 import pt.lsts.imc.IMCDefinition;
 import pt.lsts.nvl.runtime.NodeSet;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
