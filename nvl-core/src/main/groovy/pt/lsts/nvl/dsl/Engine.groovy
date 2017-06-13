@@ -2,6 +2,8 @@ package pt.lsts.nvl.dsl
 
 
 import java.io.File
+import java.util.regex.Pattern.Start
+
 import org.codehaus.groovy.control.CompilerConfiguration
 import org.codehaus.groovy.control.customizers.ImportCustomizer
 
@@ -57,6 +59,7 @@ class Engine implements Debuggable {
   private GroovyShell shell
   private SignalSet signalSet
   private boolean runningScript
+  private Thread executionThread
 
   private Engine(Platform platform) {
     env = Environment.create platform
@@ -127,25 +130,54 @@ class Engine implements Debuggable {
     }
     msg 'Running script \'%s\'', scriptFile
     signalSet.clear()
-    try {
-      shell.evaluate scriptFile
-    }
-    catch (Halt e) {
+    executionThread = new Thread() {
+          @Override
+          public void run() {
+            try {
+              shell.evaluate scriptFile
+            }
+            catch (Halt e) {
 
-    }
-    catch (Throwable e) {
-      msg 'Unexpected exception ...  %s : %s !',
-          e.getClass().getName(), e.getMessage()
-      e.printStackTrace(System.out)
-    }
-    env.releaseAll()
-    msg 'Script \'%s\' completed', scriptFile
-    synchronized (this) {
-      runningScript = false
-    }
-
+            }
+            catch (Throwable e) {
+              msg 'Unexpected exception ...  %s : %s !',
+                  e.getClass().getName(), e.getMessage()
+              e.printStackTrace(System.out)
+            }
+            env.releaseAll()
+            msg 'Script \'%s\' completed', scriptFile
+            synchronized (this) {
+              runningScript = false
+            }
+          }
+        };
+    executionThread.start();
   }
 
+  void stopExecution() {
+    synchronized (this) {
+      if (! runningScript) {
+        msg 'No script is running!'
+        executionThread = null
+        return
+      }
+      msg 'Stopping script ...'
+      for (int i = 0; i < 10; i++) {
+        if (!executionThread.isAlive()) {
+          break;
+        }
+        executionThread.interrupt();
+        env.pause 0.01
+      }
+      if (executionThread.isAlive()) {
+        executionThread.stop()
+      }
+      env.releaseAll()
+      runningScript = false
+      msg 'Script stopped ...'
+    }
+  }
+  
 
   void bind(String var, Object value) {
     ensureShellIsCreated()
