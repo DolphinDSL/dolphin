@@ -200,6 +200,11 @@ class Engine implements Debuggable {
   void run(Task task) {
     env.run task
   }
+  
+  def ask(String prompt) {
+    String input = env.getPlatform().askForInput prompt
+    shell.evaluate input
+  }
 
 
 

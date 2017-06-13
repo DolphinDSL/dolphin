@@ -20,4 +20,6 @@ public interface Platform extends Debuggable {
   void customizeGroovyCompilation(CompilerConfiguration cc);
   
   List<File> getExtensionFiles();
+  
+  String askForInput(String prompt);
 }

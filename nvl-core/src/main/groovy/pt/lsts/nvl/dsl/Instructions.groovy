@@ -17,6 +17,10 @@ class Instructions implements Debuggable {
     Engine.msg("Program message: %s", message)
   }
 
+  static def ask(String prompt) {
+    Engine.getInstance().ask(prompt)
+  }
+  
   static void halt(String message='') {
     Engine.halt(message)
   }

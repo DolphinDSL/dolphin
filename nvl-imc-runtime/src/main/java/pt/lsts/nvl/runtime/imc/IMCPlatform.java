@@ -5,6 +5,7 @@ import pt.lsts.nvl.runtime.Platform;
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 import org.codehaus.groovy.control.CompilerConfiguration;
 import org.codehaus.groovy.control.customizers.ImportCustomizer;
@@ -55,6 +56,14 @@ public final class IMCPlatform implements Platform, Debuggable {
   @Override
   public List<File> getExtensionFiles() {
     return Collections.emptyList();
+  }
+
+  @Override
+  public String askForInput(String prompt) {
+    System.out.println(prompt);
+    try (Scanner in = new Scanner(System.in)) {
+      return in.nextLine();
+    }
   }
 
 }

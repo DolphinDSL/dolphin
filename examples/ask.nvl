@@ -1,0 +1,4 @@
+
+a = 5
+b = ask 'b?' // Enter some expression dependent on a, ex.:  a * a + 1
+message 'b=' + b  // Should reflect value of a (for a * a + 1 should be 26)
