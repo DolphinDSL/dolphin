@@ -88,6 +88,7 @@ public abstract class TaskExecutor implements Debuggable {
   protected abstract CompletionState onStep();
   protected abstract void onCompletion();
 
+  
   private void requireState(State s) {
     if (getState() != s) {
       throw new EnvironmentException("Expected " + s + " state");

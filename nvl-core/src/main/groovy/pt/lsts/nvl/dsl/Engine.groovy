@@ -142,7 +142,7 @@ class Engine implements Debuggable {
             catch (Throwable e) {
               msg 'Unexpected exception ...  %s : %s !',
                   e.getClass().getName(), e.getMessage()
-              e.printStackTrace(System.out)
+              e.printStackTrace(System.err)
             }
             env.releaseAll()
             msg 'Script \'%s\' completed', scriptFile
@@ -169,7 +169,10 @@ class Engine implements Debuggable {
         executionThread.interrupt();
         env.pause 0.01
       }
-      if (executionThread.isAlive()) {
+      for (int i = 0; i < 10; i++) {
+        if (!executionThread.isAlive()) {
+          break;
+        }
         executionThread.stop()
       }
       env.releaseAll()

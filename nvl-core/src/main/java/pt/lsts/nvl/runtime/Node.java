@@ -10,4 +10,5 @@ public interface Node {
    Payload getPayload();
    Task getRunningTask();
    void setRunningTask(Task task);
+   void release();
 }

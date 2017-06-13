@@ -6,6 +6,7 @@ import java.util.IdentityHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import pt.lsts.imc.Abort;
 import pt.lsts.imc.Announce;
 import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.IMCMessage;
@@ -141,6 +142,12 @@ public final class IMCNode implements Node, Debuggable {
   @Override
   public String toString() {
     return getId();
+  }
+
+  @Override
+  public void release() {
+    // Temporary workaround
+    send(new Abort()); 
   }
 
 }

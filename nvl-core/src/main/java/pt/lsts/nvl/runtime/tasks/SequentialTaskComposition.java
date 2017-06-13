@@ -67,7 +67,7 @@ public class SequentialTaskComposition implements Task {
 
       @Override
       protected void onCompletion() {
-
+        
       }
     };
   }

@@ -46,10 +46,9 @@ public final class Environment implements Debuggable {
 
   public void run(Task task) {
     
-    
     Map<Task,List<Node>> allocation = new HashMap<>();
-
-    if (task.allocate(boundVehicles, allocation) == false) {
+    
+    if (task.allocate(boundVehicles.clone(), allocation) == false) {
       throw new EnvironmentException("No vehicles to run task!");
     }
     
@@ -61,7 +60,7 @@ public final class Environment implements Debuggable {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
-        throw new RuntimeException(e);
+        throw new EnvironmentException(e);
       }
     }
   }
@@ -119,6 +118,11 @@ public final class Environment implements Debuggable {
   }
   
   public void releaseAll() {
+    d("Releasing bound vehicles: %s", boundVehicles);
+    for (Node n : boundVehicles) {
+      d("Releasing %s", n.getId());
+      n.release();
+    }
     boundVehicles.clear();
   }
   
