@@ -205,7 +205,4 @@ class Engine implements Debuggable {
     String input = env.getPlatform().askForInput prompt
     shell.evaluate input
   }
-
-
-
 }
