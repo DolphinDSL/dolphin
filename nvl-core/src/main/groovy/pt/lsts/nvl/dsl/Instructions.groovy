@@ -13,6 +13,10 @@ import pt.lsts.nvl.util.Debuggable
 @DSLClass
 class Instructions implements Debuggable {
 
+  static void message(Object obj) {
+    message obj?.toString() 
+  }
+  
   static void message(String message) {
     Engine.msg("Program message: %s", message)
   }
