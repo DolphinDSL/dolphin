@@ -54,6 +54,12 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
     // We're done
     msg("Started"); 
   }
+  
+  @Override
+  protected final void  onHalt() {
+	  msg("Plan execution interrupted!");
+	    teardown();
+  }
 
   protected final void onStateUpdate(PlanControlState pcs) {
     pcsVar.set(pcs, timeElapsed());

@@ -67,6 +67,12 @@ public abstract class TaskExecutor implements Debuggable {
     startTime = Clock.now();
     state = State.EXECUTING;
   }
+  
+  public final void halt(){
+	  onHalt();
+	  startTime = Clock.now();
+  }
+  
 
   public final CompletionState step() {
     requireState(State.EXECUTING);
