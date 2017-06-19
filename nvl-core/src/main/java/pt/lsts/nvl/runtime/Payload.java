@@ -21,6 +21,10 @@ public final class  Payload implements Iterable<PayloadComponent> {
     return p.components.containsAll(components);
   }
   
+  public List<PayloadComponent> getComponents(){
+	  return components;
+  }
+  
   @Override 
   public boolean equals(Object o) {
     return o == this || 
