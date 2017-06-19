@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import pt.lsts.nvl.dsl.Halt;
 import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.runtime.tasks.TaskExecutor;
 import pt.lsts.nvl.util.Clock;
@@ -61,7 +60,7 @@ public final class Environment implements Debuggable {
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
-        throw new Halt("Program interrupted!");
+        throw new EnvironmentException(e);//Halt("Program interrupted!");
       }
     }
   }
