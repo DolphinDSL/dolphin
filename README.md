@@ -16,9 +16,10 @@ From root dir:
 	
 	./scripts/nvl.sh script_file.nvl
 
-## Build JAR to support Neptus plugin
+## Neptus runtime
 
-From root dir:
+Build JAR to support Neptus plugin From root dir:
 
 	./sync_with_neptus.sh <neptus_dir>
 
+Actual platform definition for Neptus, along with UI interface etc, can be found in kmolima's feature/nvl branch.
