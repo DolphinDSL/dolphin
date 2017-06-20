@@ -43,8 +43,8 @@ final class Picker extends Builder<NodeSet> {
     req.setRegion(a)
   }
   
-  void near(Position location, double radius) {
-    req.setRegion(new Area(location, radius))
+  void region(Position location, double radius) {
+    req.setRegion new Area(location, radius)
   }
 
   @Override
