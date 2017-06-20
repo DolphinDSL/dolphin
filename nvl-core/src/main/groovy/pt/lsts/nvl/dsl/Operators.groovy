@@ -36,6 +36,6 @@ Task.metaClass.getAt << {
 }
 
 // Position & area operators
-Position.metaClasss.xor << { 
+Position.metaClass.xor << { 
   double radius -> new Area(delegate, radius)
 }

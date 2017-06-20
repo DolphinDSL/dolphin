@@ -8,8 +8,8 @@ abstract class Builder<T> implements Debuggable {
   abstract T build()
 
   final T build(Closure cl) {
-    def code = cl.rehydrate(this, this, this)
-    code.resolveStrategy = Closure.DELEGATE_ONLY
+    def code = cl.rehydrate(this, cl.getOwner(), cl.getThisObject())
+    code.resolveStrategy = Closure.DELEGATE_FIRST
     code()
     build()
   }
