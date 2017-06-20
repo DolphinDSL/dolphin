@@ -34,3 +34,8 @@ Task.metaClass.rightShift << {
 Task.metaClass.getAt << {
   NodeSet set -> new ResourceExplicitTask(delegate, set)
 }
+
+// Position & area operators
+Position.metaClasss.xor << { 
+  double radius -> new Area(delegate, radius)
+}
