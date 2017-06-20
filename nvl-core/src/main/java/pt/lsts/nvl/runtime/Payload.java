@@ -18,7 +18,7 @@ public final class  Payload implements Iterable<PayloadComponent> {
   }
   
   public boolean compatibleWith(Payload p) {
-    return p.components.containsAll(components);
+    return components.containsAll(p.components); //Vehicles Available payload contains all required payload p
   }
   
   public List<PayloadComponent> getComponents(){
