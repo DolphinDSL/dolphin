@@ -1,0 +1,9 @@
+pause 12.seconds
+v1 = pick { type 'UAV' }
+v2 = pick { type 'UAV' }
+
+message (v1+v2)
+message (v1+v2-v1)
+message ((v1+v2) & v1)
+message ( (v1+v2) | { v -> v.getId().equals('x8-02') })
+
