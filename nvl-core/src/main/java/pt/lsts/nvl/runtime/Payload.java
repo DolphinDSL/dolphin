@@ -40,4 +40,9 @@ public final class  Payload implements Iterable<PayloadComponent> {
   public Iterator<PayloadComponent> iterator() {
     return components.iterator();
   }
+  
+  @Override
+  public String toString(){
+	  return components.toString();
+  }
 }

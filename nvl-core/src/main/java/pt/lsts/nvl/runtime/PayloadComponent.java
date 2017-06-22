@@ -44,4 +44,9 @@ public final class  PayloadComponent {
   private Object[] toArray() {
     return new Object[] { name, parameters };
   }
+  
+  @Override
+  public String toString(){
+	  return getName();
+  }
 }
