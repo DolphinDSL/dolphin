@@ -1,0 +1,20 @@
+uuv1 = pick { type 'UUV' }
+uuv2 = pick { type 'UUV' }
+uuv3 = pick { type 'UUV' }
+uav  = pick { type 'UAV' }
+
+execute uuv1: 
+          imcPlan('survey1') >> 
+          action { post ready:1 },
+        uuv2: 
+          imcPlan('survey2') >>
+          action { post ready:2 },
+        uuv3: 
+          imcPlan('survey3') >>
+          action { post ready:3 },
+        uav: 
+          allOf { 
+        	  when { consume ready:1 } then imcPlan('rv1')
+        	  when { consume ready:2 } then imcPlan('rv2')
+        	  when { consume ready:3 } then imcPlan('rv3')
+          }
