@@ -1,0 +1,22 @@
+// Pick an UUV
+APDL = location 41.18456, -8.70590
+v = pick { 
+  type 'UUV'
+  region APDL, 2.km
+}
+
+// Execute IMC Plan designed in Neptus
+t1 = imcPlan 'Operator_Plan' 
+execute t1
+
+// IMC plan defined programatically
+t2 = imcPlan {
+    planName 'IMC_DSL_Plan'
+    speed 1.5, Speed.Units.METERS_PS
+    locate Location.APDL
+    move 50,-125
+    goTo()
+    move 0,-50
+    loiter()
+}
+execute t2

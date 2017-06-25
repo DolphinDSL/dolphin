@@ -18,7 +18,7 @@ public final class  Payload implements Iterable<PayloadComponent> {
   }
   
   public boolean compatibleWith(Payload p) {
-    return p.components.containsAll(components);
+    return components.containsAll(p.components); //Vehicles Available payload contains all required payload p
   }
   
   public List<PayloadComponent> getComponents(){
@@ -39,5 +39,10 @@ public final class  Payload implements Iterable<PayloadComponent> {
   @Override
   public Iterator<PayloadComponent> iterator() {
     return components.iterator();
+  }
+  
+  @Override
+  public String toString(){
+	  return components.toString();
   }
 }

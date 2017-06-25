@@ -1,0 +1,19 @@
+
+master = pick { id 'x8\\-02' }
+slave1 = pick { type 'UUV' }
+slave2 = pick { type 'UUV' }
+ 
+execute master : 
+             imcPlan('plan1') >> 
+             action { post x:1 } >>
+             imcPlan('plan2') >> 
+             action { post x:2 },
+        slave1:
+             condition { consume x: 1} >>
+             imcPlan('survey1'),
+        slave2: 
+             condition { consume x: 2} >>
+             imcPlan('survey2')
+
+
+            

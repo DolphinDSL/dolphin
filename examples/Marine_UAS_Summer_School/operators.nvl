@@ -1,0 +1,16 @@
+
+v1 = pick { id 'x8\\-02' }
+v2 = pick { id 'x8\\-03' }
+
+execute  imcPlan('plan1')[v1] >> imcPlan('plan2')[v2]  
+execute  imcPlan('plan1')[v1] | imcPlan('plan2')[v2]  
+ 
+execute v1 : imcPlan('plan1') >> 
+             idle(10.seconds) >>
+             imcPlan('plan2'),
+        v2 : imcPlan('plan2') >> 
+             idle(10.seconds) >>
+             imcPlan('plan1')
+
+
+            
