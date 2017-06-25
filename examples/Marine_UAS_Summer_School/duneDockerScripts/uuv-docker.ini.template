@@ -1,0 +1,10 @@
+[Require lauv-seacon-__ID__.ini]
+
+[Transports.UDP]
+Local Port = 700__ID__
+Static Destinations=10.200.10.1:6001
+
+[Transports.Discovery]
+Ports=3010__ID__
+
+

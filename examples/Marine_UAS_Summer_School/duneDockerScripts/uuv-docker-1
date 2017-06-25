@@ -1,0 +1,6 @@
+[require lauv-seacon-1]
+
+[Transports.UDP]
+Local Port = 7001
+Static Destinations=127.0.0.1:6001
+

@@ -1,0 +1,10 @@
+[Require x8-0__ID__.ini]
+
+[Transports.UDP]
+Local Port = 800__ID__
+Static Destinations=10.200.10.1:6001
+
+[Transports.Discovery]
+Ports=3020__ID__
+
+
