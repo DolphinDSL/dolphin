@@ -52,6 +52,7 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
                   
                   components.add(new PayloadComponent(payload.getName(),params));
                   
+                  
               }
               catch (Exception e) {
                   // TODO Auto-generated catch block
@@ -68,10 +69,12 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
   }
 
   @Override
-  public void getRequirements(List<NodeFilter> requirements) {
+  public List<NodeFilter> getRequirements() {
+	List<NodeFilter> requirements = new ArrayList<>();
 	NodeFilter filter = new NodeFilter();
 	filter.setRequiredPayload(payload);
     requirements.add(filter);
+    return requirements;
   }
   
 

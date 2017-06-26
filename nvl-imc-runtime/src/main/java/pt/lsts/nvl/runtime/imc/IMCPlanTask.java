@@ -18,12 +18,6 @@ public final class IMCPlanTask extends AbstractIMCPlanTask {
   }
 
   @Override
-  public void getRequirements(List<NodeFilter> requirements) {
-    requirements.add(new NodeFilter());
-  }
-  
-
-  @Override
   public IMCPlanTaskExecutor getExecutor() {
     return new IMCPlanTaskExecutor(this);
   }

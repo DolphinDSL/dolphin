@@ -1,5 +1,6 @@
 v = pick {
-id 'lauv-noptilus-1'
+id 'lauv-xplore-2'
+timeout 20.seconds
 }
 p = imcPlan {
     planName "IMCDSL"

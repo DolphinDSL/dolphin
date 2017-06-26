@@ -23,15 +23,15 @@ public abstract class PlatformTask implements Task {
     return id;
   }
   
-  public abstract void getRequirements(List<NodeFilter> requirements);
+  public abstract List<NodeFilter> getRequirements();
   
   @Override
   public final boolean allocate(NodeSet available, Map<Task,List<Node>> allocation) {
     LinkedList<Node> selection = new LinkedList<>();
     LinkedList<NodeFilter> requirements = new LinkedList<>();
-    getRequirements(requirements);
+    //getRequirements(requirements);
     
-    d("Requirements: %s", requirements);
+    d("Requirements: %s", getRequirements());
     d("Vehicles: %s", available);
   
     for (NodeFilter r : requirements) {
