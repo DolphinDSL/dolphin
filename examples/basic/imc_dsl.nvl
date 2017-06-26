@@ -1,13 +1,12 @@
 v = pick {
-id 'lauv-noptilus-1';
-timeout 15.seconds
+id 'lauv-noptilus-1'
 }
 p = imcPlan {
-planName "IMCDSL"
+    planName "IMCDSL"
 	speed 1.5, Speed.Units.METERS_PS
 	locate Location.APDL
 	move 200,0
-	goTo()
+	goTo payload:[[name:'Sidescan',Range: 50]]
 }
 
 execute v: p
