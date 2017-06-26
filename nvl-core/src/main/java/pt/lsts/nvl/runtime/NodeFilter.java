@@ -18,7 +18,7 @@ public final class NodeFilter {
 
 
   public boolean matchedBy(Node v) {
-    return (requiredId == null || v.getId().matches(requiredId))
+    return (requiredId == null || v.getId().equals(requiredId))
         && (requiredType == null || v.getType().equals(requiredType))
         && ((requiredPayload == null || v.getPayload().compatibleWith(requiredPayload)))
         && ((requiredRegion == null || requiredRegion.contains(v.getPosition())));

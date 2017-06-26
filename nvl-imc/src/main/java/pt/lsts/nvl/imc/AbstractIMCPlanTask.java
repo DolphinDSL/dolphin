@@ -10,7 +10,7 @@ import pt.lsts.nvl.runtime.tasks.PlatformTask;
 public abstract class AbstractIMCPlanTask extends PlatformTask {
 
   private final PlanSpecification planSpec;
-  
+  private final Payload payload;
   protected AbstractIMCPlanTask(String id) {
     this(id, null);
   }
@@ -18,6 +18,11 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
   protected AbstractIMCPlanTask(String id, PlanSpecification ps) {
     super(id);
     planSpec = ps;
+    List<PayloadComponent> components = new ArrayList<>();
+    if(ps!=null){
+    	//TODO
+    }
+    payload = new Payload(components);
   }
   
   protected final PlanSpecification getPlanSpecification() {
@@ -26,7 +31,9 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
 
   @Override
   public void getRequirements(List<NodeFilter> requirements) {
-    requirements.add(new NodeFilter());
+	NodeFilter filter = new NodeFilter();
+	filter.setRequiredPayload(payload);
+    requirements.add(filter);
   }
   
 
