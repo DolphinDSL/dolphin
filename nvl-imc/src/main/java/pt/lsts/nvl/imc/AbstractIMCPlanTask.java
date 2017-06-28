@@ -39,7 +39,7 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
     
   private List<PayloadComponent> getPayloadComponents(PlanSpecification ps){
 	  List<PayloadComponent> components = new ArrayList<>();
-  
+	  boolean isActive = false;
       for(PlanManeuver pm: ps.getManeuvers()){
           //pm.getStartActions().get(0).setMessageList(SetEntityParameters, field);
           for(IMCMessage m: pm.getStartActions())
@@ -47,10 +47,13 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
                   SetEntityParameters payload = SetEntityParameters.clone(m);
                   Map<String,String> params = new HashMap<>();
                   for(EntityParameter param:payload.getParams()){
+                	  //System.out.println("Payload "+payload.getName()+" parameter: "+param.getName()+" "+param.getValue());
+                	  if(param.getName().equalsIgnoreCase("Active") && param.getValue().equalsIgnoreCase("true"))
+                		  isActive = true;
                       params.put(param.getName(),param.getValue());
                   }
-                  
-                  components.add(new PayloadComponent(payload.getName(),params));
+                  if(isActive)
+                	  components.add(new PayloadComponent(payload.getName(),params));
                   
                   
               }
@@ -75,6 +78,11 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
 	filter.setRequiredPayload(payload);
     requirements.add(filter);
     return requirements;
+  }
+  
+  @Override
+  public String toString(){
+	  return getId();
   }
   
 
