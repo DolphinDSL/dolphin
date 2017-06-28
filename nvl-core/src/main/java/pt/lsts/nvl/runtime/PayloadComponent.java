@@ -32,8 +32,10 @@ public final class  PayloadComponent {
   @Override 
   public boolean equals(Object o) {
     return o == this || 
-           (o instanceof PayloadComponent && /*this.getName().equals(((PayloadComponent) o).getName()));//*/
-        		   Arrays.equals(toArray(), ((PayloadComponent) o).toArray()));
+           (      o instanceof PayloadComponent 
+               && getName().equals(((PayloadComponent) o).getName())
+           );
+//        		   Arrays.equals(toArray(), ((PayloadComponent) o).toArray()));
   }
   
   @Override 

@@ -27,11 +27,10 @@ public abstract class PlatformTask implements Task {
   
   @Override
   public final boolean allocate(NodeSet available, Map<Task,List<Node>> allocation) {
-    LinkedList<Node> selection = new LinkedList<>();
-    LinkedList<NodeFilter> requirements = new LinkedList<>();
-    //getRequirements(requirements);
-    
-    d("Requirements: %s", getRequirements());
+    List<Node> selection = new LinkedList<>();
+    List<NodeFilter> requirements = getRequirements();
+   
+    d("Requirements: %s", requirements);
     d("Vehicles: %s", available);
   
     for (NodeFilter r : requirements) {

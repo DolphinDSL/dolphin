@@ -1,18 +1,13 @@
 package pt.lsts.nvl.imc;
 
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
 
-import pt.lsts.imc.EntityParameter;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanManeuver;
 import pt.lsts.imc.PlanSpecification;
 import pt.lsts.imc.SetEntityParameters;
-
 import pt.lsts.nvl.runtime.NodeFilter;
 import pt.lsts.nvl.runtime.Payload;
 import pt.lsts.nvl.runtime.PayloadComponent;
@@ -25,69 +20,70 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
   protected AbstractIMCPlanTask(String id) {
     this(id, null);
   }
-  
+
   protected AbstractIMCPlanTask(String id, PlanSpecification ps) {
     super(id);
     planSpec = ps;
-    
+
     if(ps!=null)
-        payload = new Payload(getPayloadComponents(ps));
+      payload = new Payload(getPayloadComponents(ps));
     else
-    	payload = null;
+      payload = null;
 
   }
-    
+
   private List<PayloadComponent> getPayloadComponents(PlanSpecification ps){
-	  List<PayloadComponent> components = new ArrayList<>();
-	  boolean isActive = false;
-      for(PlanManeuver pm: ps.getManeuvers()){
-          //pm.getStartActions().get(0).setMessageList(SetEntityParameters, field);
-          for(IMCMessage m: pm.getStartActions())
-              try {
-                  SetEntityParameters payload = SetEntityParameters.clone(m);
-                  Map<String,String> params = new HashMap<>();
-                  for(EntityParameter param:payload.getParams()){
-                	  //System.out.println("Payload "+payload.getName()+" parameter: "+param.getName()+" "+param.getValue());
-                	  if(param.getName().equalsIgnoreCase("Active") && param.getValue().equalsIgnoreCase("true"))
-                		  isActive = true;
-                      params.put(param.getName(),param.getValue());
-                  }
-                  if(isActive)
-                	  components.add(new PayloadComponent(payload.getName(),params));
-                  
-                  
-              }
-              catch (Exception e) {
-                  // TODO Auto-generated catch block
-                  
-              }
-      }
+    List<PayloadComponent> components = new ArrayList<>();
+
+    d("> plan %s", ps.getPlanId());
+    for(PlanManeuver maneuver: ps.getManeuvers()){
+      for(IMCMessage action: maneuver.getStartActions()) {
+        if ( action instanceof SetEntityParameters) {
+          SetEntityParameters payload = (SetEntityParameters) action;
+          d("  > maneuver %s: Payload %s ", maneuver.getManeuverId(), payload.getName());
       
-      return components;
-  
+          if (! components.contains(payload.getName())) {
+            components.add(new PayloadComponent(payload.getName()));
+          }
+          // TODO: are parameters always the same?
+          // TODO: meaning of Active=true|false 
+//          Map<String,String> params = new HashMap<>();
+//          for(EntityParameter param:payload.getParams()){
+//            d("    > parameter: %s = %s", param.getName(), param.getValue());
+//            params.put(param.getName(),param.getValue());
+//
+//          }
+        }
+      }
+      d("Payload components: %s", components);
+
+    }
+
+    return components;
+
   }
-  
+
   protected final PlanSpecification getPlanSpecification() {
     return planSpec;
   }
 
   @Override
   public List<NodeFilter> getRequirements() {
-	List<NodeFilter> requirements = new ArrayList<>();
-	NodeFilter filter = new NodeFilter();
-	filter.setRequiredPayload(payload);
+    List<NodeFilter> requirements = new ArrayList<>();
+    NodeFilter filter = new NodeFilter();
+    filter.setRequiredPayload(payload);
     requirements.add(filter);
     return requirements;
   }
-  
+
   @Override
   public String toString(){
-	  return getId();
+    return getId();
   }
-  
+
 
   @Override
   public abstract AbstractIMCPlanExecutor getExecutor();
-  
+
 
 }
