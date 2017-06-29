@@ -42,7 +42,7 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
           SetEntityParameters payload = (SetEntityParameters) action;
           d("  > maneuver %s: Payload %s ", maneuver.getManeuverId(), payload.getName());
       
-          if (! components.contains(payload.getName())) {
+          if (! components.contains(payload)) {
             components.add(new PayloadComponent(payload.getName()));
           }
           // TODO: are parameters always the same?
