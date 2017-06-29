@@ -39,7 +39,7 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
     for(PlanManeuver maneuver: ps.getManeuvers()){
       for(IMCMessage action: maneuver.getStartActions()) {
         if ( action instanceof SetEntityParameters) {
-          SetEntityParameters payload = (SetEntityParameters) action;
+          PayloadComponent payload = new PayloadComponent(((SetEntityParameters) action).getName());
           d("  > maneuver %s: Payload %s ", maneuver.getManeuverId(), payload.getName());
       
           if (! components.contains(payload)) {
