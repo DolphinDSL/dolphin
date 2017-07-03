@@ -128,8 +128,11 @@ class Engine implements Debuggable {
       }
       runningScript = true
     }
+    
     msg 'Running script \'%s\'', scriptFile
     signalSet.clear()
+    shell.context.variables.clear()
+    
     executionThread = new Thread() {
           @Override
           public void run() {
