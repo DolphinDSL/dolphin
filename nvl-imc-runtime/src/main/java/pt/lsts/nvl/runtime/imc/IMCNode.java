@@ -11,21 +11,18 @@ import pt.lsts.imc.Announce;
 import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.nvl.util.Variable;
-import pt.lsts.nvl.runtime.Node;
+import pt.lsts.nvl.runtime.AbstractNode;
 import pt.lsts.nvl.runtime.Payload;
 import pt.lsts.nvl.runtime.Position;
-import pt.lsts.nvl.runtime.tasks.Task;
 import pt.lsts.nvl.util.Clock;
 import pt.lsts.nvl.util.Debuggable;
 
-
-
-public final class IMCNode implements Node, Debuggable {
+public final class IMCNode extends AbstractNode implements Debuggable {
 
   public interface Subscriber<T extends IMCMessage> {
     void consume(T message);
   }
-
+  
   private final InetAddress address;
   private final int port;
   private Announce lastAnnounce;
@@ -33,10 +30,10 @@ public final class IMCNode implements Node, Debuggable {
   private double lastMsgTime;
 
   private final IdentityHashMap<Class<? extends IMCMessage>, List<Subscriber<IMCMessage>>> 
-  subscriptions = new IdentityHashMap<>();
-  private Task runningTask;
+    subscriptions = new IdentityHashMap<>();
 
   IMCNode(InetAddress address, int port, Announce a) {
+    super(a.getSysName());
     this.address = address;
     this.port = port;
     consume(a);
@@ -109,20 +106,6 @@ public final class IMCNode implements Node, Debuggable {
     IMCCommunications.getInstance().send(message, address, port);    
   }
   
-  public void setRunningTask(Task t) {
-    runningTask = t;
-  }
-  
-  @Override
-  public Task getRunningTask() {
-    return runningTask;
-  }
-  
-  @Override
-  public String getId() {
-    return lastAnnounce.getSysName();
-  }
-
   @Override
   public String getType() {
     return lastAnnounce.getSysType().toString();

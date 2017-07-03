@@ -15,18 +15,19 @@ import pt.lsts.nvl.util.Variable;
 public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
 
   private static final double WARMUP_TIME = 3.0;
-  private static final double PLAN_CONTROL_STATE_TIMEOUT = 20.0;
   private static final AtomicInteger SEQ_ID_GENERATOR = new AtomicInteger(0);
 
   private Variable<PlanControlState> pcsVar; 
-
+  private double pcsTimeout;
+  
   protected AbstractIMCPlanExecutor(AbstractIMCPlanTask theTask) {
     super(theTask);
-
   }
 
   protected abstract void sendMessageToVehicle(IMCMessage msg);
+  
   protected abstract void setup();
+  
   protected abstract void teardown();
 
   protected final Node getNode() {
@@ -36,6 +37,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   @Override
   protected final void  onStart() {
     pcsVar = new Variable<>();
+    pcsTimeout = getNode().getConnectionTimeout();
     setup(); // platform specific setup
 
     // Prepare plan control message and send it to vehicle
@@ -65,7 +67,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
     if (timeElapsed() > WARMUP_TIME) {
       d("pcsVar: fresh %b age %f ", pcsVar.hasFreshValue(), pcsVar.age(timeElapsed()));
       if (! pcsVar.hasFreshValue()) {
-        if (pcsVar.age(timeElapsed()) >= PLAN_CONTROL_STATE_TIMEOUT) {
+        if (pcsVar.age(timeElapsed()) >= pcsTimeout) {
           msg("PlanControlState timeout!");
           completionState = new CompletionState(CompletionState.Type.ERROR);
         }
@@ -120,7 +122,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   }
   
   private void msg(String text) {
-    super.msg("%s running %s : %s", getNode().getId(), getTask().getId(), text);
+    super.msg("%s -- %s : %s", getNode().getId(), getTask().getId(), text);
   }
 
 }
