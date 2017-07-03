@@ -14,8 +14,8 @@ import pt.lsts.nvl.util.Variable;
 
 public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
 
-  private static final double WARMUP_TIME = 2.0;
-  private static final double PLAN_CONTROL_STATE_TIMEOUT = 5.0;
+  private static final double WARMUP_TIME = 3.0;
+  private static final double PLAN_CONTROL_STATE_TIMEOUT = 20.0;
   private static final AtomicInteger SEQ_ID_GENERATOR = new AtomicInteger(0);
 
   private Variable<PlanControlState> pcsVar; 
