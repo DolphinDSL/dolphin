@@ -6,7 +6,7 @@ import pt.lsts.nvl.runtime.tasks.Task;
 public interface Node {
   
    double MIN_CONNECTION_TIMEOUT = 5.0;
-   double MAX_CONNECTION_TIMEOUT = 300.0;
+   double MAX_CONNECTION_TIMEOUT = 3600.0;
    double INITIAL_CONNECTION_TIMEOUT_SETTING = 20.0;
    
    static void assertValidTimeout(double timeout) {
