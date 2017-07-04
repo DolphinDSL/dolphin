@@ -73,7 +73,11 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
         }
       } else {
         PlanControlState pcs = pcsVar.get();
-        if (!getTask().getId().equals(pcs.getPlanId())) {
+        
+        if (pcs.getPlanId().isEmpty()) {
+          d("discarding PCS - no plan id info"); 
+        }
+        else if (!getTask().getId().equals(pcs.getPlanId())) {
           completionState = new CompletionState(CompletionState.Type.ERROR);
           msg("Wrong plan id reported: " + pcs.getPlanId());
         } else {
