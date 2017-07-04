@@ -14,6 +14,7 @@ public interface Node {
        throw new EnvironmentException("Invalid timeout value: " + timeout);
      }
    }
+   
    String getId();
    String getType();
    Position getPosition();
