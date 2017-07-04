@@ -5,22 +5,7 @@ import pt.lsts.nvl.runtime.tasks.Task;
 
 public abstract class AbstractNode implements Node {
    
-   private static double gDefaultConnectionTimeout = INITIAL_CONNECTION_TIMEOUT_SETTING;
-   
-   public static void setDefaultConnectionTimeout(double timeout) {
-     assertValidTimeout(timeout);
-     gDefaultConnectionTimeout = timeout;
-   }
-   
-   private static void assertValidTimeout(double timeout) {
-     if (timeout < MIN_CONNECTION_TIMEOUT || timeout > MAX_CONNECTION_TIMEOUT) {
-       throw new EnvironmentException("Invalid timeout value: " + timeout);
-     }
-   }
-   
-   public static double getDefaultConnectionTimeout() {
-     return gDefaultConnectionTimeout;
-   }
+
    
    private final String nodeId;
    private Task runningTask;
@@ -29,7 +14,6 @@ public abstract class AbstractNode implements Node {
    protected AbstractNode(String id) {
      System.out.println(id);
      nodeId = id;
-     connectionTimeout = getDefaultConnectionTimeout();
    }
    
    public final String getId() {
@@ -46,7 +30,7 @@ public abstract class AbstractNode implements Node {
      return connectionTimeout;
    }
    public final void setConnectionTimeout(double timeout) {
-     assertValidTimeout(timeout);
+     Node.assertValidTimeout(timeout);
      connectionTimeout = timeout;
    }
    

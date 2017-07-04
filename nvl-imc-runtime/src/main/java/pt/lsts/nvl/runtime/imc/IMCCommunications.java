@@ -41,7 +41,7 @@ public class IMCCommunications extends Thread implements Debuggable {
   private static final double ANNOUNCE_PERIOD = 10;
   private static final double HEARTBEAT_PERIOD = 1;
   private static final double CONNECTION_TIMEOUT = 3 * ANNOUNCE_PERIOD;
-  private static final int FIRST_MSG_PORT = 6000;
+  private static final int FIRST_MSG_PORT = 6001;
   private static final int LAST_MSG_PORT = 6020;
 
   private final Announce announceMsg = new Announce();
@@ -153,7 +153,7 @@ public class IMCCommunications extends Thread implements Debuggable {
         message.setTimestamp(timeOfStep);
 
         IMCNode node = nodes.get(message.getSrc());
-        // d("%d %s %s", message.getSrc(), message.getClass(), node);
+         d("%d %s %s", message.getSrc(), message.getClass(), node);
         if (node != null) {
           node.handleIncomingMessage(message);
         } 

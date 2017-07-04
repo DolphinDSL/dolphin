@@ -15,7 +15,7 @@ class Instructions implements Debuggable {
 
 
   static void setConnectionTimeout(double timeout) {
-    AbstractNode.setDefaultConnectionTimeout timeout
+    Engine.runtime().setDefaultConnectionTimeout timeout
   }
 
   static void setConnectionTimeout(Map<String,Double> map) {

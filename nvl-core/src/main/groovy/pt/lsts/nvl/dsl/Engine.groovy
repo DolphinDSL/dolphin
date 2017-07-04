@@ -139,6 +139,9 @@ class Engine implements Debuggable {
             try {
               shell.evaluate scriptFile
             }
+            catch (InterruptedException  e) {
+              msg 'Script interrupted"!'
+            }
             catch (Halt e) {
 
             }

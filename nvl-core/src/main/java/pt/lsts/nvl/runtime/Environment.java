@@ -44,6 +44,17 @@ public final class Environment implements Debuggable {
   }
 
 
+  private double gDefaultConnectionTimeout = Node.INITIAL_CONNECTION_TIMEOUT_SETTING;
+  
+  public void setDefaultConnectionTimeout(double timeout) {
+    Node.assertValidTimeout(timeout);
+    gDefaultConnectionTimeout = timeout;
+  }
+  
+  
+  public double getDefaultConnectionTimeout() {
+    return gDefaultConnectionTimeout;
+  }
   public void run(Task task) {
     
     Map<Task,List<Node>> allocation = new HashMap<>();
@@ -93,6 +104,9 @@ public final class Environment implements Debuggable {
       set.add(ov.get());
     }
     platform.displayMessage("Selected nodes: %s", set);
+    for (Node n : set) {
+      n.setConnectionTimeout(getDefaultConnectionTimeout());
+    }
     boundVehicles.addAll(set);
     return set;
   }

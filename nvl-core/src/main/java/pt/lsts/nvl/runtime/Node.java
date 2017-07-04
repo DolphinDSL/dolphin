@@ -9,6 +9,11 @@ public interface Node {
    double MAX_CONNECTION_TIMEOUT = 300.0;
    double INITIAL_CONNECTION_TIMEOUT_SETTING = 20.0;
    
+   static void assertValidTimeout(double timeout) {
+     if (timeout < MIN_CONNECTION_TIMEOUT || timeout > MAX_CONNECTION_TIMEOUT) {
+       throw new EnvironmentException("Invalid timeout value: " + timeout);
+     }
+   }
    String getId();
    String getType();
    Position getPosition();

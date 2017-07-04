@@ -68,7 +68,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
       d("pcsVar: fresh %b age %f ", pcsVar.hasFreshValue(), pcsVar.age(timeElapsed()));
       if (! pcsVar.hasFreshValue()) {
         if (pcsVar.age(timeElapsed()) >= pcsTimeout) {
-          msg("PlanControlState timeout!");
+          msg("PlanControlState timeout ... " +  pcsTimeout + " seconds");
           completionState = new CompletionState(CompletionState.Type.ERROR);
         }
       } else {
