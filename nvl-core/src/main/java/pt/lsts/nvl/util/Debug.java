@@ -8,7 +8,7 @@ public class Debug {
   public static void enable() {
     if (!debugOn) {
       debugOn = true;
-      debugLog = new Log("D");
+      debugLog = new Log("Dolphin");
       debugLog.writeTo(System.err);
     }
   }

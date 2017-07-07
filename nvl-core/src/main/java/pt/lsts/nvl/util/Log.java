@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -44,15 +46,13 @@ public final class Log {
     streams.add(out);
   }
 
-  public void message(String fmt, Object... args) {
-    message("", fmt, args);
-  }
+ 
   
-  public void message(String type, String fmt, Object... args) {
-    double t = Clock.wallTime();
+  public void message(String fmt, Object... args) {
+    Date t = new Date(Clock.epochTimeMillis());
     synchronized (this) {
       for (PrintStream out : streams) {
-        out.printf("%s|%.3f|%s|", logId, t, type);
+        out.printf("%s|%s|", logId, t);
         out.printf(fmt, args);
         out.println();
         out.flush();
