@@ -13,7 +13,13 @@ import pt.lsts.nvl.util.Debuggable
 @DSLClass
 class Instructions implements Debuggable {
 
-
+  static Position position(NodeSet ns) {
+    if ( ns.size() != 1 ) {
+      halt 'Set must represent a single vehicle!'
+    }
+    ns.iterator().next().getPosition()
+  }
+  
   static void setConnectionTimeout(double timeout) {
     Engine.runtime().setDefaultConnectionTimeout timeout
   }
