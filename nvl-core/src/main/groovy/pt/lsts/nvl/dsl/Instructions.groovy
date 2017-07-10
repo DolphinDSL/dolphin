@@ -19,7 +19,7 @@ class Instructions implements Debuggable {
     }
     ns.iterator().next().getPosition()
   }
-  
+
   static void setConnectionTimeout(double timeout) {
     Engine.runtime().setDefaultConnectionTimeout timeout
   }
@@ -65,9 +65,7 @@ class Instructions implements Debuggable {
     new IdleTask(duration)
   }
 
-  static Task during(double duration, Task task) {
-    new TimeConstrainedTask(task, duration)
-  }
+ 
 
   static NodeSet pick (Closure cl) {
     new Picker().build(cl)
@@ -109,21 +107,33 @@ class Instructions implements Debuggable {
     new Area(center, radius)
   }
 
-  static Task until(Closure<Boolean> condition, Task t) {
-    new ConstrainedTask(t) {
-          @Override
-          public ConstrainedTaskExecutor getExecutor() {
-            return new ConstrainedTaskExecutor(t) {
-                  @Override
-                  public boolean terminationCondition() {
-                    condition.call()
-                  }
+  static def until(Closure<Boolean> test) {
+    [
+      run: {
+        Task task ->
+          new ConstrainedTask(task) {
+            @Override
+            public ConstrainedTaskExecutor getExecutor() {
+              return new ConstrainedTaskExecutor(task) {
+                @Override
+                public boolean terminationCondition() {
+                  test.call()
                 }
+              }
+            }
           }
         }
+    ]
   }
 
-
+  static def during(Closure<Double> duration) {
+    [
+      run: {
+        Task task -> new TimeConstrainedTask(task, duration.call())
+      }
+    ]
+  }
+  
   static def execute(Task t) {
     Engine.getInstance().run t
   }
