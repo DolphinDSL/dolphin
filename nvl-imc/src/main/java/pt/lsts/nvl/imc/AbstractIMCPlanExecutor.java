@@ -65,7 +65,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   protected CompletionState onStep() {
     CompletionState completionState =  new CompletionState(CompletionState.Type.IN_PROGRESS);
     if (timeElapsed() > WARMUP_TIME) {
-      d("pcsVar: fresh %b age %f ", pcsVar.hasFreshValue(), pcsVar.age(timeElapsed()));
+      //d("pcsVar: fresh %b age %f ", pcsVar.hasFreshValue(), pcsVar.age(timeElapsed()));
       if (! pcsVar.hasFreshValue()) {
         if (pcsVar.age(timeElapsed()) >= pcsTimeout) {
           msg("PlanControlState timeout ... " +  pcsTimeout + " seconds");

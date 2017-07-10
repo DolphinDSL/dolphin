@@ -3,15 +3,19 @@ package pt.lsts.nvl.imc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import pt.lsts.imc.EntityParameter;
+import pt.lsts.imc.Goto;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanManeuver;
 import pt.lsts.imc.PlanSpecification;
 import pt.lsts.imc.SetEntityParameters;
+import pt.lsts.nvl.runtime.EnvironmentException;
 import pt.lsts.nvl.runtime.NodeFilter;
 import pt.lsts.nvl.runtime.Payload;
 import pt.lsts.nvl.runtime.PayloadComponent;
+import pt.lsts.nvl.runtime.Position;
 import pt.lsts.nvl.runtime.tasks.PlatformTask;
 
 public abstract class AbstractIMCPlanTask extends PlatformTask {
@@ -68,6 +72,24 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
 
   protected final PlanSpecification getPlanSpecification() {
     return planSpec;
+  }
+  
+  @Override
+  public final Optional<Position> getReferencePosition() {
+    Optional<PlanManeuver> startManeuver = 
+       planSpec.getManeuvers()
+               .stream()
+               .filter(x -> x.getManeuverId().equals(planSpec.getStartManId()))
+               .findFirst();
+    if (!startManeuver.isPresent()) {
+      throw new EnvironmentException("Plan has no start maneuver!");
+    }
+    IMCMessage actualManeuver = startManeuver.get().getData();
+    if (actualManeuver instanceof Goto) {
+      Goto g = (Goto) actualManeuver;
+      return Optional.of(new Position(g.getLat(), g.getLon(), 0));
+    }
+    return Optional.empty();
   }
 
   @Override
