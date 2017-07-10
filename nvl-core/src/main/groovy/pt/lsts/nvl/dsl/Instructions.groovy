@@ -87,11 +87,11 @@ class Instructions implements Debuggable {
   }
 
   static ActionTask action(Closure cl) {
-    return new ActionTask(cl)
+    new ActionTask(cl)
   }
 
   static ConditionTask condition(Closure<Boolean> cl) {
-    return new ConditionTask(cl)
+    new ConditionTask(cl)
   }
 
   static def waitFor(Closure<Boolean> test) {
