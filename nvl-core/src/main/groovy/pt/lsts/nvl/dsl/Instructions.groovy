@@ -82,8 +82,12 @@ class Instructions implements Debuggable {
     b
   }
 
+  static boolean poll(String id) {
+    Engine.getInstance().getSignalSet().poll id
+  }
+  
   static boolean poll(Map conditions) {
-    Engine.getInstance().getSignalSet().poll(conditions)
+    Engine.getInstance().getSignalSet().poll conditions
   }
 
   static ActionTask action(Closure cl) {
