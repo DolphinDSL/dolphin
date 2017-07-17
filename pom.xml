@@ -1,20 +1,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>pt.lsts.nvl</groupId>
-	<artifactId>nvl</artifactId>
+	<groupId>pt.lsts.dolphin</groupId>
+	<artifactId>dolphin</artifactId>
 	<packaging>pom</packaging>
 	<version>0.1-SNAPSHOT</version>
-	<name>NVL parent project</name>
+	<name>Dolphin parent project</name>
 	<prerequisites>
 		<maven>3.2</maven>
 	</prerequisites>
 	<!-- Modules -->
 	<modules>
-		<module>nvl-core</module>
-		<module>nvl-imc</module>
-		<module>nvl-imc-runtime</module>
-		<module>nvl-neptus</module>
+		<module>dolphin-core</module>
+		<module>dolphin-imc</module>
+		<module>dolphin-imc-runtime</module>
+		<module>dolphin-neptus</module>
 	</modules>
 	<!-- Common dependencies -->
 	<dependencies>

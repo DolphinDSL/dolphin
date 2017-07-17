@@ -1,0 +1,33 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>dolphin</artifactId>
+		<groupId>pt.lsts.dolphin</groupId>
+		<version>0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>dolphin-imc</artifactId>
+	<packaging>jar</packaging>
+	<name>Dolphin -- common support for IMC</name>
+        <prerequisites>
+                <maven>3.2</maven>
+        </prerequisites>
+	<dependencies>
+		<dependency>
+			<groupId>pt.lsts.dolphin</groupId>
+			<artifactId>dolphin-core</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>pt.lsts</groupId>
+			<artifactId>imc</artifactId>
+			<version>LATEST</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/libimc.jar</systemPath>
+		</dependency>
+	</dependencies>
+
+	<build>
+
+	</build>
+</project>
