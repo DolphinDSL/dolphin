@@ -14,9 +14,11 @@ import pt.lsts.dolphin.runtime.tasks.PlatformTask;
 import pt.lsts.imc.EntityParameter;
 import pt.lsts.imc.Goto;
 import pt.lsts.imc.IMCMessage;
+import pt.lsts.imc.Maneuver;
 import pt.lsts.imc.PlanManeuver;
 import pt.lsts.imc.PlanSpecification;
 import pt.lsts.imc.SetEntityParameters;
+import pt.lsts.util.PlanUtilities;
 
 public abstract class AbstractIMCPlanTask extends PlatformTask {
 
@@ -85,9 +87,13 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
       throw new EnvironmentException("Plan has no start maneuver!");
     }
     IMCMessage actualManeuver = startManeuver.get().getData();
-    if (actualManeuver instanceof Goto) {
-      Goto g = (Goto) actualManeuver;
-      return Optional.of(new Position(g.getLat(), g.getLon(), 0));
+    if (actualManeuver instanceof Maneuver) {
+    	Maneuver m = (Maneuver) actualManeuver;
+    	double lat,lon;
+    	lat = PlanUtilities.getStartLocation(m).getLatitude();
+    	lon = PlanUtilities.getStartLocation(m).getLongitude();
+    	Position initialP = Position.fromDegrees(lat, lon, 0);
+      return Optional.of(initialP);
     }
     return Optional.empty();
   }
