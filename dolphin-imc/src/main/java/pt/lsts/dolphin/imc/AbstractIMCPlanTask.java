@@ -12,7 +12,6 @@ import pt.lsts.dolphin.runtime.PayloadComponent;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
 import pt.lsts.imc.EntityParameter;
-import pt.lsts.imc.Goto;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.Maneuver;
 import pt.lsts.imc.PlanManeuver;
