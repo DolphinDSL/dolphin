@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>dolphin-core</artifactId>
 	<packaging>jar</packaging>
-	<name>Core Dolphin library</name>
+	<name>Dolphin -- core library</name>
         <prerequisites>
                 <maven>3.2</maven>
         </prerequisites>
