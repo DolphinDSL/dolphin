@@ -14,6 +14,7 @@ public final class Log {
    * Id.
    */
   private final String logId;
+  private final boolean shortVersion;
 
   /**
    * Output streams.
@@ -29,8 +30,9 @@ public final class Log {
    * @param file
    *          Output file.
    */
-  public Log(String id) {
+  public Log(String id, boolean shortV) {
     logId = id;
+    shortVersion = shortV;
   }
 
   public void writeTo(File file) {
@@ -51,10 +53,17 @@ public final class Log {
     Date t = new Date(Clock.epochTimeMillis());
     synchronized (this) {
       for (PrintStream out : streams) {
-        out.printf("%s|%s|", logId, t);
-        out.printf(fmt, args);
-        out.println();
-        out.flush();
+    	  if(shortVersion){
+    		String message = String.format("%s: "+fmt,logId, args);
+    		out.printf("%s", message);
+  	        out.flush();
+    	  }
+    	  else {
+    		out.printf("%s|%s|", logId, t);
+	        out.printf(fmt, args);
+	        out.println();
+	        out.flush();
+    	  }
       }
     }
   }

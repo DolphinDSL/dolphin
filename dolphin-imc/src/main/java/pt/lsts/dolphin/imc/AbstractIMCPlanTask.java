@@ -42,7 +42,7 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
   private List<PayloadComponent> getPayloadComponents(PlanSpecification ps){
     List<PayloadComponent> components = new ArrayList<>();
 
-    d("> plan %s", ps.getPlanId());
+    //d("> plan %s", ps.getPlanId());
     for(PlanManeuver maneuver: ps.getManeuvers()) {
       for(IMCMessage action: maneuver.getStartActions()) {
         if (! (action instanceof SetEntityParameters))  {
@@ -50,24 +50,24 @@ public abstract class AbstractIMCPlanTask extends PlatformTask {
         }
         SetEntityParameters sep = ((SetEntityParameters) action);
         PayloadComponent payload = new PayloadComponent(sep.getName());
-        d("  > maneuver %s: Payload %s ", maneuver.getManeuverId(), payload.getName());
+        //d("  > maneuver %s: Payload %s ", maneuver.getManeuverId(), payload.getName());
         if (components.contains(payload)) {
           continue;
         }
         boolean isActive = false;
         for (EntityParameter param: sep.getParams()) {
-          d("    > parameter: %s = %s", param.getName(), param.getValue());
+          //d("    > parameter: %s = %s", param.getName(), param.getValue());
           if (param.getName().equalsIgnoreCase("Active") && param.getValue().equalsIgnoreCase("true")){
             isActive = true;
           }
         }
         if (isActive) {
-          d("%s is required!", payload.getName());
+          //d("%s is required!", payload.getName());
           components.add(new PayloadComponent(payload.getName()));
         }
       }
     }
-    d("Payload components: %s", components);
+    //d("Payload components: %s", components);
     return components;
   }
 
