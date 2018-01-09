@@ -8,11 +8,11 @@ public class Debug {
   private static Log debugLog;
   private static boolean shortVersion = false;
 
-  public static void enable(PrintStream ps,boolean time) {
+  public static void enable(PrintStream ps,boolean shortV) {
     if (!debugOn) {
       debugOn = true;
-      shortVersion = time;
-      debugLog = new Log("Dolphin",time);
+      shortVersion = shortV;
+      debugLog = new Log("Dolphin",shortV);
       debugLog.writeTo(ps);
     }
   }
