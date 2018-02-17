@@ -1,15 +1,19 @@
 package pt.lsts.dolphin.util;
 
+import java.io.PrintStream;
+
 public class Debug {
 
   private static boolean debugOn = false;
   private static Log debugLog;
+  private static boolean shortVersion = false;
 
-  public static void enable() {
+  public static void enable(PrintStream ps,boolean shortV) {
     if (!debugOn) {
       debugOn = true;
-      debugLog = new Log("Dolphin");
-      debugLog.writeTo(System.err);
+      shortVersion = shortV;
+      debugLog = new Log("Dolphin",shortV);
+      debugLog.writeTo(ps);
     }
   }
 
@@ -23,12 +27,18 @@ public class Debug {
   public static boolean d(String format, Object... args) {
     if (debugOn) {
       StackTraceElement info = Thread.currentThread().getStackTrace()[3];
-      String fullFmt = 
-          String.format("%-16s %d %-16s %s", 
-                        info.getFileName(), info.getLineNumber(),
-                        info.getMethodName(),
-                        format
-                       );
+      String fullFmt;
+      if(!shortVersion){
+	      fullFmt = 
+	          String.format("%-16s %d %-16s %s", 
+	                        info.getFileName(), info.getLineNumber(),
+	                        info.getMethodName(),
+	                        format
+	                       );
+      }
+      else {
+    	  fullFmt = String.format("%s", format);
+      }
       debugLog.message(fullFmt, args);
     }
     return true;

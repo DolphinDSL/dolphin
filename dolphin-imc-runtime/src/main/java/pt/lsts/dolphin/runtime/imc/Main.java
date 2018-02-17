@@ -13,7 +13,7 @@ public final class Main {
       return;
     }
 
-    pt.lsts.dolphin.util.Debug.enable();
+    pt.lsts.dolphin.util.Debug.enable(System.err,false);
     IMCCommunications.getInstance().start();
     try {
       Engine engine = Engine.create(new IMCPlatform());
