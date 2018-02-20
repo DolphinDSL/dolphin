@@ -24,6 +24,7 @@ public strictfp final class Position {
   public Position(double lat, double lon) {
     this(lat, lon, 0);
   }
+  
   public Position(double lat, double lon, double hae) {
     this.lat = lat;
     this.lon = lon;
