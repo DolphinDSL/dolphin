@@ -36,6 +36,10 @@ class Instructions implements Debuggable {
     }
   }
 
+  static void release(NodeSet ns) {
+    Environment.getInstance().release(ns);
+  }
+  
   static void message(Object obj) {
     message obj?.toString()
   }
