@@ -4,9 +4,7 @@ package pt.lsts.dolphin.runtime;
 import pt.lsts.dolphin.runtime.tasks.Task;
 
 public abstract class AbstractNode implements Node {
-   
-
-   
+  
    private final String nodeId;
    private Task runningTask;
    private double connectionTimeout;
