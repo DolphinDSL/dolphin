@@ -9,6 +9,9 @@
 	<prerequisites>
 		<maven>3.2</maven>
 	</prerequisites>
+        <properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
+        </properties>
 	<!-- Modules -->
 	<modules>
 		<module>dolphin-core</module>
@@ -33,7 +36,7 @@
 		<dependency>
 			<groupId>net.bytebuddy</groupId>
 			<artifactId>byte-buddy</artifactId>
-			<version>1.7.1</version>
+			<version>1.7.10</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
