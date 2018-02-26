@@ -54,8 +54,9 @@ public final class Log {
     synchronized (this) {
       for (PrintStream out : streams) {
     	  if(shortVersion){
-    		String message = String.format("%s: "+fmt,logId, args);
-    		out.printf("%s", message);
+    		String message = String.format("%s: ",logId);
+    		String format = String.format(fmt,args);
+    		out.printf("%s %s", message, format);
   	        out.flush();
     	  }
     	  else {
