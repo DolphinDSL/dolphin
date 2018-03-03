@@ -1,7 +1,0 @@
-
-v = pick { 
-  type 'UUV'; 
-  timeout 10.seconds 
-}
-
-execute v: task('test')  >>  task('test')
