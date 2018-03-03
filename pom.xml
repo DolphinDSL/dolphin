@@ -18,6 +18,7 @@
 		<module>dolphin-imc</module>
 		<module>dolphin-imc-runtime</module>
 		<module>dolphin-neptus</module>
+		<module>dolphin-mavlink</module>
 	</modules>
 	<!-- Common dependencies -->
 	<dependencies>
