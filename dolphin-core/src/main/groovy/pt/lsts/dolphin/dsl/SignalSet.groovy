@@ -3,10 +3,6 @@
  */
 package pt.lsts.dolphin.dsl
 
-import java.util.stream.Nodes.SizedCollectorTask
-
-import javax.xml.datatype.FactoryFinder
-
 /**
  * Signal set.
  */
