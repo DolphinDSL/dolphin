@@ -16,6 +16,7 @@ From root dir:
 
 ## JAR file for Neptus plugin
 
-	./scripts/sync_with_neptus.sh <neptus_dir>
+	./scripts/sync_neptus_plugin.sh <dolphi-neptus-plugin-dir>
 
-Actual `Platform` definition for Neptus, along with UI interface etc, can be found in kmolima's feature/dolphin branch.
+See `dolphin-neptus-plugin` repository.
+Actual `Platform` definition for Neptus, along with UI interface etc, can be found in the dolphin-neptus-plugin 
