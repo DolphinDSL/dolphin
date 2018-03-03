@@ -45,7 +45,7 @@ public final class IMCPlatform implements Platform, Debuggable {
   public void customizeGroovyCompilation(CompilerConfiguration cc) {
     d("Customizing compilation for IMC runtime ...");
     ImportCustomizer ic = new ImportCustomizer();
-    ic.addStaticStars("pt.lsts.nvl.dsl.imc.Instructions");
+    ic.addStaticStars("pt.lsts.dolphin.dsl.imc.Instructions");
     ic.addStarImports("pt.lsts.imc.groovy.dsl");
     for (String msg : IMCDefinition.getInstance().getConcreteMessages()) {
       ic.addImports("pt.lsts.imc." + msg);
