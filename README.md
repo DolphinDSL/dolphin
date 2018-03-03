@@ -12,7 +12,7 @@ From root dir:
 ## Execute IMC standalone runtime
 From root dir:
 	
-	./scripts/dolphin.sh myScript.dolphin
+	./scripts/dolphin-imc.sh myScript.dolphin
 
 ## JAR file for Neptus plugin
 
