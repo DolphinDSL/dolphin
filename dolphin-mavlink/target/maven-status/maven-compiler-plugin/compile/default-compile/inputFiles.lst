@@ -59,6 +59,7 @@
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/MAVLinkPacket.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_set_attitude_target.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_manual_setpoint.java
+/Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/pt/lsts/dolphin/runtime/mavlink/MAVLinkCommunications.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_landing_target.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_encapsulated_data.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_set_gps_global_origin.java
@@ -100,6 +101,7 @@
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_gps_status.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/enums/SERIAL_CONTROL_DEV.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/common/msg_set_position_target_global_int.java
+/Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/pt/lsts/dolphin/runtime/mavlink/MAVLinkNode.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/enums/MAV_BATTERY_TYPE.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/Messages/MAVLinkPayload.java
 /Users/edrdo/development/dolphin/dolphin-mavlink/src/main/java/com/MAVLink/enums/MAV_MISSION_TYPE.java
