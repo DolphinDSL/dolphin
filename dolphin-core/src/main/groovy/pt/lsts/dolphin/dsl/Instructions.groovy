@@ -150,6 +150,10 @@ class Instructions implements Debuggable {
     new ChoiceTaskBuilder().build(cl)
   }
 
+  static ChoiceTask oneOf(Closure cl) {
+    new ChoiceTaskBuilder().build(cl)
+  }
+  
   static GuardedTaskSet allOf(Closure cl) {
     new GuardedTaskSetBuilder().build(cl)
   }
