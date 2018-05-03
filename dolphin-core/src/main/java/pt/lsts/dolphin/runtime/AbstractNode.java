@@ -10,7 +10,6 @@ public abstract class AbstractNode implements Node {
    private double connectionTimeout;
    
    protected AbstractNode(String id) {
-     System.out.println(id);
      nodeId = id;
    }
    

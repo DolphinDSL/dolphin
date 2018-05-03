@@ -41,6 +41,6 @@ public strictfp final class Position {
   
   @Override
   public String toString() {
-    return String.format("(%f,%f,%f)", R2D * lat, R2D * lon, hae);
+    return String.format("(%.6f,%.6f,%.3f)", R2D * lat, R2D * lon, hae);
   }
 }
