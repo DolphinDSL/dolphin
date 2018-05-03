@@ -16,14 +16,16 @@ import com.MAVLink.enums.MAV_TYPE;
 
 import pt.lsts.dolphin.runtime.EnvironmentException;
 import pt.lsts.dolphin.util.Clock;
+import pt.lsts.dolphin.util.Debug;
 import pt.lsts.dolphin.util.Debuggable;
 
 public class MAVLinkCommunications extends Thread implements Debuggable {
 
   public static void main(String[] args) throws IOException {
-
+    MAVLinkCommunications comm = getInstance();
+    Debug.enable(System.out, false);
+    comm.start();
   }
-
 
   public static MAVLinkCommunications getInstance() { 
     if (INSTANCE == null) {
@@ -34,7 +36,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
   private static MAVLinkCommunications INSTANCE = null;
   private static final int GCS_UDP_PORT = 14559;
   private static final int BUFFER_LENGTH = 1024;
-  private static final double HEARTBEAT_PERIOD = 10d;
+  private static final double HEARTBEAT_PERIOD = 1.0;
   private static final int GCS_DOLPHIN_ID = 0xD0;
   private static final byte[] HB_PACKET;
 
@@ -95,7 +97,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
   }
   private double lastHB = 0;
-  
+
   private void handleHeartbeats(double timeNow) {
     if (timeNow - lastHB >= HEARTBEAT_PERIOD) {
       lastHB = timeNow;
@@ -119,43 +121,44 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     Parser parser = new Parser();
     for (byte b : udpPacket.getData()) {
       MAVLinkPacket packet = parser.mavlink_parse_char(b < 0 ? 256 + b:  b);
-      if (packet != null) {
-        d("MSG: %d, %d, %d, %d\n", packet.len, packet.sysid, packet.compid, packet.msgid);
-        if (packet.msgid == msg_heartbeat.MAVLINK_MSG_ID_HEARTBEAT) {
-          msg_heartbeat msg = new msg_heartbeat();
-          try {
-            msg.unpack(packet.payload);
-
-            if (msg.type == MAV_TYPE.MAV_TYPE_FIXED_WING) {
-              MAVLinkNode node = nodes.get(msg.sysid);
-              if (node == null) {
-                node =  new MAVLinkNode(msg.sysid, udpPacket.getSocketAddress());
-                nodes.put(msg.sysid, node);
-              }
-              node.onHeartbeat(msg);
-              d("New MAV %d", msg.sysid);
+      if (packet == null) {
+        continue;
+      }
+      // d("MSG: %d, %d, %d, %d", packet.len, packet.sysid, packet.compid, packet.msgid);
+      MAVLinkNode node = nodes.get(packet.sysid);
+      if (packet.msgid == msg_heartbeat.MAVLINK_MSG_ID_HEARTBEAT) {
+        msg_heartbeat msg = new msg_heartbeat();
+        try {
+          msg.unpack(packet.payload);
+          d("HB from MAV %d", packet.sysid);
+          if (msg.type == MAV_TYPE.MAV_TYPE_FIXED_WING) {
+            if (node == null) {
+              node =  new MAVLinkNode(packet.sysid, udpPacket.getSocketAddress());
+              nodes.put(packet.sysid, node);
+              d("New MAV %d", packet.sysid);
             }
-          }
-          catch (RuntimeException e) {
-            d("Error decoding heartbeat message");
-            e.printStackTrace(System.err);
-          }
-        } else {
-          MAVLinkNode node = nodes.get(packet.sysid);
-          if (node != null) {
-            node.handleIncomingPacket(packet);
+            
+            node.onHeartbeat(msg);
           }
         }
+        catch (RuntimeException e) {
+          d("Error decoding heartbeat message");
+          e.printStackTrace(System.err);
+        }
+      } else if (node != null) {
+        node.handleIncomingPacket(packet);
       }
     }
   }
+
   private void send(MAVLinkMessage msg, MAVLinkNode node) {
     send(msg.pack().encodePacket(), node);
   }
-  
+
   private void send(byte[] data, MAVLinkNode node) {
     try {
-      udpSocket.send(new DatagramPacket(HB_PACKET, 0, HB_PACKET.length, node.getAddress()));
+      d("HB to MAV %s", node.getId());
+      udpSocket.send(new DatagramPacket(data, 0, data.length, node.getAddress()));
     } catch (IOException e) {
       d("Error sending data to node: %s [ %s ]", node.getId(), node.getAddress());
       e.printStackTrace(System.err);

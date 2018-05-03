@@ -53,8 +53,8 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
        case msg_global_position_int.MAVLINK_MSG_ID_GLOBAL_POSITION_INT: {
          msg_global_position_int msg = new msg_global_position_int();
          msg.unpack(packet.payload);
-         position = new Position(msg.lat * 1e-07, msg.lon * 1e-07, msg.relative_alt * 1e-03);
-         
+         position = Position.fromDegrees(msg.lat * 1e-07, msg.lon * 1e-07, msg.relative_alt * 1e-03);
+         d("%s - Position update: %s", getId(), position);
        }
        break;
          
