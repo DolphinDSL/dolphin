@@ -11,11 +11,12 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Request to read the onboard parameter with the param_id string id. Onboard parameters are stored as key[const char*] -> value[float]. This allows to send a parameter to any other component (such as the GCS) without the need of previous knowledge of possible parameter names. Thus the same GCS can store different parameters for different autopilots. See also http://qgroundcontrol.org/parameter_interface for a full documentation of QGroundControl and IMU code.
+* Request to read the onboard parameter with the param_id string id. Onboard parameters are stored as key[const char*] -> value[float]. This allows to send a parameter to any other component (such as the GCS) without the need of previous knowledge of possible parameter names. Thus the same GCS can store different parameters for different autopilots. See also https://mavlink.io/en/protocol/parameter.html for a full documentation of QGroundControl and IMU code.
 */
 public class msg_param_request_read extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_PARAM_REQUEST_READ = 20;
+    public static final int MAVLINK_MSG_ID_PARAM_REQUEST_READ_CRC = 214;
     public static final int MAVLINK_MSG_LENGTH = 20;
     private static final long serialVersionUID = MAVLINK_MSG_ID_PARAM_REQUEST_READ;
 
@@ -51,6 +52,7 @@ public class msg_param_request_read extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_PARAM_REQUEST_READ;
+        packet.crc_extra = MAVLINK_MSG_ID_PARAM_REQUEST_READ_CRC;
               
         packet.payload.putShort(param_index);
               
@@ -105,7 +107,7 @@ public class msg_param_request_read extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_PARAM_REQUEST_READ;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
            

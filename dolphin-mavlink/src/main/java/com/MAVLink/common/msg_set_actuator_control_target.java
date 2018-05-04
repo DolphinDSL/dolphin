@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_set_actuator_control_target extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET = 139;
+    public static final int MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET_CRC = 168;
     public static final int MAVLINK_MSG_LENGTH = 43;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET;
 
@@ -56,6 +57,7 @@ public class msg_set_actuator_control_target extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET;
+        packet.crc_extra = MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -114,7 +116,7 @@ public class msg_set_actuator_control_target extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SET_ACTUATOR_CONTROL_TARGET;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
               

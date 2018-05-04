@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_high_latency extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIGH_LATENCY = 234;
+    public static final int MAVLINK_MSG_ID_HIGH_LATENCY_CRC = 150;
     public static final int MAVLINK_MSG_LENGTH = 40;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIGH_LATENCY;
 
@@ -72,7 +73,7 @@ public class msg_high_latency extends MAVLinkMessage{
     public int wp_distance;
       
     /**
-    * System mode bitfield, see MAV_MODE_FLAG ENUM in mavlink/include/mavlink_types.h
+    * System mode bitfield, as defined by MAV_MODE_FLAG enum.
     */
     public short base_mode;
       
@@ -151,6 +152,7 @@ public class msg_high_latency extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIGH_LATENCY;
+        packet.crc_extra = MAVLINK_MSG_ID_HIGH_LATENCY_CRC;
               
         packet.payload.putUnsignedInt(custom_mode);
               
@@ -277,7 +279,7 @@ public class msg_high_latency extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIGH_LATENCY;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                                     

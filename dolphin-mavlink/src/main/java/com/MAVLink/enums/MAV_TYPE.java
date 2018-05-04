@@ -40,6 +40,9 @@ public class MAV_TYPE {
    public static final int MAV_TYPE_ADSB = 27; /* Onboard ADSB peripheral | */
    public static final int MAV_TYPE_PARAFOIL = 28; /* Steerable, nonrigid airfoil | */
    public static final int MAV_TYPE_DODECAROTOR = 29; /* Dodecarotor | */
-   public static final int MAV_TYPE_ENUM_END = 30; /*  | */
+   public static final int MAV_TYPE_CAMERA = 30; /* Camera | */
+   public static final int MAV_TYPE_CHARGING_STATION = 31; /* Charging station | */
+   public static final int MAV_TYPE_FLARM = 32; /* Onboard FLARM collision avoidance system | */
+   public static final int MAV_TYPE_ENUM_END = 33; /*  | */
 }
             

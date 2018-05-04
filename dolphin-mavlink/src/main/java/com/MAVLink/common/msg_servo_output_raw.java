@@ -16,7 +16,8 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_servo_output_raw extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SERVO_OUTPUT_RAW = 36;
-    public static final int MAVLINK_MSG_LENGTH = 37;
+    public static final int MAVLINK_MSG_ID_SERVO_OUTPUT_RAW_CRC = 222;
+    public static final int MAVLINK_MSG_LENGTH = 21;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SERVO_OUTPUT_RAW;
 
 
@@ -70,46 +71,6 @@ public class msg_servo_output_raw extends MAVLinkMessage{
     * Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows to encode more than 8 servos.
     */
     public short port;
-      
-    /**
-    * Servo output 9 value, in microseconds
-    */
-    public int servo9_raw;
-      
-    /**
-    * Servo output 10 value, in microseconds
-    */
-    public int servo10_raw;
-      
-    /**
-    * Servo output 11 value, in microseconds
-    */
-    public int servo11_raw;
-      
-    /**
-    * Servo output 12 value, in microseconds
-    */
-    public int servo12_raw;
-      
-    /**
-    * Servo output 13 value, in microseconds
-    */
-    public int servo13_raw;
-      
-    /**
-    * Servo output 14 value, in microseconds
-    */
-    public int servo14_raw;
-      
-    /**
-    * Servo output 15 value, in microseconds
-    */
-    public int servo15_raw;
-      
-    /**
-    * Servo output 16 value, in microseconds
-    */
-    public int servo16_raw;
     
 
     /**
@@ -121,6 +82,7 @@ public class msg_servo_output_raw extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SERVO_OUTPUT_RAW;
+        packet.crc_extra = MAVLINK_MSG_ID_SERVO_OUTPUT_RAW_CRC;
               
         packet.payload.putUnsignedInt(time_usec);
               
@@ -141,22 +103,6 @@ public class msg_servo_output_raw extends MAVLinkMessage{
         packet.payload.putUnsignedShort(servo8_raw);
               
         packet.payload.putUnsignedByte(port);
-              
-        packet.payload.putUnsignedShort(servo9_raw);
-              
-        packet.payload.putUnsignedShort(servo10_raw);
-              
-        packet.payload.putUnsignedShort(servo11_raw);
-              
-        packet.payload.putUnsignedShort(servo12_raw);
-              
-        packet.payload.putUnsignedShort(servo13_raw);
-              
-        packet.payload.putUnsignedShort(servo14_raw);
-              
-        packet.payload.putUnsignedShort(servo15_raw);
-              
-        packet.payload.putUnsignedShort(servo16_raw);
         
         return packet;
     }
@@ -188,22 +134,6 @@ public class msg_servo_output_raw extends MAVLinkMessage{
         this.servo8_raw = payload.getUnsignedShort();
               
         this.port = payload.getUnsignedByte();
-              
-        this.servo9_raw = payload.getUnsignedShort();
-              
-        this.servo10_raw = payload.getUnsignedShort();
-              
-        this.servo11_raw = payload.getUnsignedShort();
-              
-        this.servo12_raw = payload.getUnsignedShort();
-              
-        this.servo13_raw = payload.getUnsignedShort();
-              
-        this.servo14_raw = payload.getUnsignedShort();
-              
-        this.servo15_raw = payload.getUnsignedShort();
-              
-        this.servo16_raw = payload.getUnsignedShort();
         
     }
 
@@ -223,15 +153,15 @@ public class msg_servo_output_raw extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SERVO_OUTPUT_RAW;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
-                                        
+                        
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_SERVO_OUTPUT_RAW - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" servo1_raw:"+servo1_raw+" servo2_raw:"+servo2_raw+" servo3_raw:"+servo3_raw+" servo4_raw:"+servo4_raw+" servo5_raw:"+servo5_raw+" servo6_raw:"+servo6_raw+" servo7_raw:"+servo7_raw+" servo8_raw:"+servo8_raw+" port:"+port+" servo9_raw:"+servo9_raw+" servo10_raw:"+servo10_raw+" servo11_raw:"+servo11_raw+" servo12_raw:"+servo12_raw+" servo13_raw:"+servo13_raw+" servo14_raw:"+servo14_raw+" servo15_raw:"+servo15_raw+" servo16_raw:"+servo16_raw+"";
+        return "MAVLINK_MSG_ID_SERVO_OUTPUT_RAW - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" servo1_raw:"+servo1_raw+" servo2_raw:"+servo2_raw+" servo3_raw:"+servo3_raw+" servo4_raw:"+servo4_raw+" servo5_raw:"+servo5_raw+" servo6_raw:"+servo6_raw+" servo7_raw:"+servo7_raw+" servo8_raw:"+servo8_raw+" port:"+port+"";
     }
 }
         

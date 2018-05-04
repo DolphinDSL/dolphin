@@ -12,11 +12,12 @@ import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
 * The global position, as returned by the Global Positioning System (GPS). This is
-                 NOT the global position estimate of the sytem, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. Coordinate frame is right-handed, Z-axis up (GPS frame).
+                 NOT the global position estimate of the sytem, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate.
 */
 public class msg_hil_gps extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIL_GPS = 113;
+    public static final int MAVLINK_MSG_ID_HIL_GPS_CRC = 124;
     public static final int MAVLINK_MSG_LENGTH = 36;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIL_GPS;
 
@@ -97,6 +98,7 @@ public class msg_hil_gps extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIL_GPS;
+        packet.crc_extra = MAVLINK_MSG_ID_HIL_GPS_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -179,7 +181,7 @@ public class msg_hil_gps extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIL_GPS;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                               

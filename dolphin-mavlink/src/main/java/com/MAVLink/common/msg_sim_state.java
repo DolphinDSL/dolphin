@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_sim_state extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SIM_STATE = 108;
+    public static final int MAVLINK_MSG_ID_SIM_STATE_CRC = 32;
     public static final int MAVLINK_MSG_LENGTH = 84;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SIM_STATE;
 
@@ -136,6 +137,7 @@ public class msg_sim_state extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SIM_STATE;
+        packet.crc_extra = MAVLINK_MSG_ID_SIM_STATE_CRC;
               
         packet.payload.putFloat(q1);
               
@@ -250,7 +252,7 @@ public class msg_sim_state extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SIM_STATE;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                               

@@ -16,7 +16,8 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_mission_ack extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MISSION_ACK = 47;
-    public static final int MAVLINK_MSG_LENGTH = 4;
+    public static final int MAVLINK_MSG_ID_MISSION_ACK_CRC = 153;
+    public static final int MAVLINK_MSG_LENGTH = 3;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MISSION_ACK;
 
 
@@ -35,11 +36,6 @@ public class msg_mission_ack extends MAVLinkMessage{
     * See MAV_MISSION_RESULT enum
     */
     public short type;
-      
-    /**
-    * Mission type, see MAV_MISSION_TYPE
-    */
-    public short mission_type;
     
 
     /**
@@ -51,14 +47,13 @@ public class msg_mission_ack extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_MISSION_ACK;
+        packet.crc_extra = MAVLINK_MSG_ID_MISSION_ACK_CRC;
               
         packet.payload.putUnsignedByte(target_system);
               
         packet.payload.putUnsignedByte(target_component);
               
         packet.payload.putUnsignedByte(type);
-              
-        packet.payload.putUnsignedByte(mission_type);
         
         return packet;
     }
@@ -76,8 +71,6 @@ public class msg_mission_ack extends MAVLinkMessage{
         this.target_component = payload.getUnsignedByte();
               
         this.type = payload.getUnsignedByte();
-              
-        this.mission_type = payload.getUnsignedByte();
         
     }
 
@@ -97,15 +90,15 @@ public class msg_mission_ack extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_MISSION_ACK;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
-            
+          
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MISSION_ACK - sysid:"+sysid+" compid:"+compid+" target_system:"+target_system+" target_component:"+target_component+" type:"+type+" mission_type:"+mission_type+"";
+        return "MAVLINK_MSG_ID_MISSION_ACK - sysid:"+sysid+" compid:"+compid+" target_system:"+target_system+" target_component:"+target_component+" type:"+type+"";
     }
 }
         

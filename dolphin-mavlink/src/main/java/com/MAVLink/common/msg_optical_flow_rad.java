@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_optical_flow_rad extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_OPTICAL_FLOW_RAD = 106;
+    public static final int MAVLINK_MSG_ID_OPTICAL_FLOW_RAD_CRC = 138;
     public static final int MAVLINK_MSG_LENGTH = 44;
     private static final long serialVersionUID = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD;
 
@@ -91,6 +92,7 @@ public class msg_optical_flow_rad extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD;
+        packet.crc_extra = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -169,7 +171,7 @@ public class msg_optical_flow_rad extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                             

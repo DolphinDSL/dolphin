@@ -16,13 +16,14 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_heartbeat extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HEARTBEAT = 0;
+    public static final int MAVLINK_MSG_ID_HEARTBEAT_CRC = 50;
     public static final int MAVLINK_MSG_LENGTH = 9;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HEARTBEAT;
 
 
       
     /**
-    * A bitfield for use for autopilot-specific flags.
+    * A bitfield for use for autopilot-specific flags
     */
     public long custom_mode;
       
@@ -37,12 +38,12 @@ public class msg_heartbeat extends MAVLinkMessage{
     public short autopilot;
       
     /**
-    * System mode bitfield, see MAV_MODE_FLAG ENUM in mavlink/include/mavlink_types.h
+    * System mode bitfield, as defined by MAV_MODE_FLAG enum
     */
     public short base_mode;
       
     /**
-    * System status flag, see MAV_STATE ENUM
+    * System status flag, as defined by MAV_STATE enum
     */
     public short system_status;
       
@@ -61,6 +62,7 @@ public class msg_heartbeat extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HEARTBEAT;
+        packet.crc_extra = MAVLINK_MSG_ID_HEARTBEAT_CRC;
               
         packet.payload.putUnsignedInt(custom_mode);
               
@@ -115,7 +117,7 @@ public class msg_heartbeat extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HEARTBEAT;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                 

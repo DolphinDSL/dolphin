@@ -38,6 +38,7 @@ public class MAV_COMPONENT {
    public static final int MAV_COMP_ID_OSD = 157; /* On Screen Display (OSD) devices for video links | */
    public static final int MAV_COMP_ID_PERIPHERAL = 158; /* Generic autopilot peripheral component ID. Meant for devices that do not implement the parameter sub-protocol | */
    public static final int MAV_COMP_ID_QX1_GIMBAL = 159; /*  | */
+   public static final int MAV_COMP_ID_FLARM = 160; /*  | */
    public static final int MAV_COMP_ID_MAPPER = 180; /*  | */
    public static final int MAV_COMP_ID_MISSIONPLANNER = 190; /*  | */
    public static final int MAV_COMP_ID_PATHPLANNER = 195; /*  | */

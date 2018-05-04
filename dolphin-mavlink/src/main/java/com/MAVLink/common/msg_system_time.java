@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_system_time extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SYSTEM_TIME = 2;
+    public static final int MAVLINK_MSG_ID_SYSTEM_TIME_CRC = 137;
     public static final int MAVLINK_MSG_LENGTH = 12;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SYSTEM_TIME;
 
@@ -41,6 +42,7 @@ public class msg_system_time extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SYSTEM_TIME;
+        packet.crc_extra = MAVLINK_MSG_ID_SYSTEM_TIME_CRC;
               
         packet.payload.putUnsignedLong(time_unix_usec);
               
@@ -79,7 +81,7 @@ public class msg_system_time extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SYSTEM_TIME;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
         

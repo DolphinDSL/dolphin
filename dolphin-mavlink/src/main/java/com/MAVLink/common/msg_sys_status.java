@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_sys_status extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SYS_STATUS = 1;
+    public static final int MAVLINK_MSG_ID_SYS_STATUS_CRC = 124;
     public static final int MAVLINK_MSG_LENGTH = 31;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SYS_STATUS;
 
@@ -96,6 +97,7 @@ public class msg_sys_status extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SYS_STATUS;
+        packet.crc_extra = MAVLINK_MSG_ID_SYS_STATUS_CRC;
               
         packet.payload.putUnsignedInt(onboard_control_sensors_present);
               
@@ -178,7 +180,7 @@ public class msg_sys_status extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SYS_STATUS;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                               

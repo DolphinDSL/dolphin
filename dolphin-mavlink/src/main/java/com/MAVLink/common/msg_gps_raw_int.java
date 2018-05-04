@@ -12,12 +12,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
 * The global position, as returned by the Global Positioning System (GPS). This is
-                NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate. Coordinate frame is right-handed, Z-axis up (GPS frame).
+                NOT the global position estimate of the system, but rather a RAW sensor value. See message GLOBAL_POSITION for the global position estimate.
 */
 public class msg_gps_raw_int extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GPS_RAW_INT = 24;
-    public static final int MAVLINK_MSG_LENGTH = 50;
+    public static final int MAVLINK_MSG_ID_GPS_RAW_INT_CRC = 24;
+    public static final int MAVLINK_MSG_LENGTH = 30;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GPS_RAW_INT;
 
 
@@ -71,31 +72,6 @@ public class msg_gps_raw_int extends MAVLinkMessage{
     * Number of satellites visible. If unknown, set to 255
     */
     public short satellites_visible;
-      
-    /**
-    * Altitude (above WGS84, EGM96 ellipsoid), in meters * 1000 (positive for up).
-    */
-    public int alt_ellipsoid;
-      
-    /**
-    * Position uncertainty in meters * 1000 (positive for up).
-    */
-    public long h_acc;
-      
-    /**
-    * Altitude uncertainty in meters * 1000 (positive for up).
-    */
-    public long v_acc;
-      
-    /**
-    * Speed uncertainty in meters * 1000 (positive for up).
-    */
-    public long vel_acc;
-      
-    /**
-    * Heading / track uncertainty in degrees * 1e5.
-    */
-    public long hdg_acc;
     
 
     /**
@@ -107,6 +83,7 @@ public class msg_gps_raw_int extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_GPS_RAW_INT;
+        packet.crc_extra = MAVLINK_MSG_ID_GPS_RAW_INT_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -127,16 +104,6 @@ public class msg_gps_raw_int extends MAVLinkMessage{
         packet.payload.putUnsignedByte(fix_type);
               
         packet.payload.putUnsignedByte(satellites_visible);
-              
-        packet.payload.putInt(alt_ellipsoid);
-              
-        packet.payload.putUnsignedInt(h_acc);
-              
-        packet.payload.putUnsignedInt(v_acc);
-              
-        packet.payload.putUnsignedInt(vel_acc);
-              
-        packet.payload.putUnsignedInt(hdg_acc);
         
         return packet;
     }
@@ -168,16 +135,6 @@ public class msg_gps_raw_int extends MAVLinkMessage{
         this.fix_type = payload.getUnsignedByte();
               
         this.satellites_visible = payload.getUnsignedByte();
-              
-        this.alt_ellipsoid = payload.getInt();
-              
-        this.h_acc = payload.getUnsignedInt();
-              
-        this.v_acc = payload.getUnsignedInt();
-              
-        this.vel_acc = payload.getUnsignedInt();
-              
-        this.hdg_acc = payload.getUnsignedInt();
         
     }
 
@@ -197,15 +154,15 @@ public class msg_gps_raw_int extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_GPS_RAW_INT;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
-                                  
+                        
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_GPS_RAW_INT - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" lat:"+lat+" lon:"+lon+" alt:"+alt+" eph:"+eph+" epv:"+epv+" vel:"+vel+" cog:"+cog+" fix_type:"+fix_type+" satellites_visible:"+satellites_visible+" alt_ellipsoid:"+alt_ellipsoid+" h_acc:"+h_acc+" v_acc:"+v_acc+" vel_acc:"+vel_acc+" hdg_acc:"+hdg_acc+"";
+        return "MAVLINK_MSG_ID_GPS_RAW_INT - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" lat:"+lat+" lon:"+lon+" alt:"+alt+" eph:"+eph+" epv:"+epv+" vel:"+vel+" cog:"+cog+" fix_type:"+fix_type+" satellites_visible:"+satellites_visible+"";
     }
 }
         

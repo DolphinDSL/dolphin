@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_hil_sensor extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIL_SENSOR = 107;
+    public static final int MAVLINK_MSG_ID_HIL_SENSOR_CRC = 108;
     public static final int MAVLINK_MSG_LENGTH = 64;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIL_SENSOR;
 
@@ -106,6 +107,7 @@ public class msg_hil_sensor extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIL_SENSOR;
+        packet.crc_extra = MAVLINK_MSG_ID_HIL_SENSOR_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -196,7 +198,7 @@ public class msg_hil_sensor extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIL_SENSOR;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                   

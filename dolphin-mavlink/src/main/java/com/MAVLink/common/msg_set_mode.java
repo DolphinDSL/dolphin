@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_set_mode extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SET_MODE = 11;
+    public static final int MAVLINK_MSG_ID_SET_MODE_CRC = 89;
     public static final int MAVLINK_MSG_LENGTH = 6;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SET_MODE;
 
@@ -46,6 +47,7 @@ public class msg_set_mode extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SET_MODE;
+        packet.crc_extra = MAVLINK_MSG_ID_SET_MODE_CRC;
               
         packet.payload.putUnsignedInt(custom_mode);
               
@@ -88,7 +90,7 @@ public class msg_set_mode extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SET_MODE;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
           

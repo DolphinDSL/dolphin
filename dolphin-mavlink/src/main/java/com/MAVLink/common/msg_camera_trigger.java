@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_camera_trigger extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_CAMERA_TRIGGER = 112;
+    public static final int MAVLINK_MSG_ID_CAMERA_TRIGGER_CRC = 174;
     public static final int MAVLINK_MSG_LENGTH = 12;
     private static final long serialVersionUID = MAVLINK_MSG_ID_CAMERA_TRIGGER;
 
@@ -41,6 +42,7 @@ public class msg_camera_trigger extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_CAMERA_TRIGGER;
+        packet.crc_extra = MAVLINK_MSG_ID_CAMERA_TRIGGER_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -79,7 +81,7 @@ public class msg_camera_trigger extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_CAMERA_TRIGGER;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
         

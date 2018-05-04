@@ -16,7 +16,8 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_set_home_position extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SET_HOME_POSITION = 243;
-    public static final int MAVLINK_MSG_LENGTH = 61;
+    public static final int MAVLINK_MSG_ID_SET_HOME_POSITION_CRC = 85;
+    public static final int MAVLINK_MSG_LENGTH = 53;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SET_HOME_POSITION;
 
 
@@ -75,11 +76,6 @@ public class msg_set_home_position extends MAVLinkMessage{
     * System ID.
     */
     public short target_system;
-      
-    /**
-    * Timestamp (microseconds since UNIX epoch or microseconds since system boot)
-    */
-    public long time_usec;
     
 
     /**
@@ -91,6 +87,7 @@ public class msg_set_home_position extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SET_HOME_POSITION;
+        packet.crc_extra = MAVLINK_MSG_ID_SET_HOME_POSITION_CRC;
               
         packet.payload.putInt(latitude);
               
@@ -117,8 +114,6 @@ public class msg_set_home_position extends MAVLinkMessage{
         packet.payload.putFloat(approach_z);
               
         packet.payload.putUnsignedByte(target_system);
-              
-        packet.payload.putUnsignedLong(time_usec);
         
         return packet;
     }
@@ -156,8 +151,6 @@ public class msg_set_home_position extends MAVLinkMessage{
         this.approach_z = payload.getFloat();
               
         this.target_system = payload.getUnsignedByte();
-              
-        this.time_usec = payload.getUnsignedLong();
         
     }
 
@@ -177,15 +170,15 @@ public class msg_set_home_position extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SET_HOME_POSITION;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
-                            
+                          
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_SET_HOME_POSITION - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" approach_x:"+approach_x+" approach_y:"+approach_y+" approach_z:"+approach_z+" target_system:"+target_system+" time_usec:"+time_usec+"";
+        return "MAVLINK_MSG_ID_SET_HOME_POSITION - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" approach_x:"+approach_x+" approach_y:"+approach_y+" approach_z:"+approach_z+" target_system:"+target_system+"";
     }
 }
         

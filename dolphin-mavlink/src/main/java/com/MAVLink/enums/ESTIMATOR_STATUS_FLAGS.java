@@ -21,6 +21,7 @@ public class ESTIMATOR_STATUS_FLAGS {
    public static final int ESTIMATOR_PRED_POS_HORIZ_REL = 256; /* True if the EKF has sufficient data to enter a mode that will provide a (relative) position estimate | */
    public static final int ESTIMATOR_PRED_POS_HORIZ_ABS = 512; /* True if the EKF has sufficient data to enter a mode that will provide a (absolute) position estimate | */
    public static final int ESTIMATOR_GPS_GLITCH = 1024; /* True if the EKF has detected a GPS glitch | */
-   public static final int ESTIMATOR_STATUS_FLAGS_ENUM_END = 1025; /*  | */
+   public static final int ESTIMATOR_ACCEL_ERROR = 2048; /* True if the EKF has detected bad accelerometer data | */
+   public static final int ESTIMATOR_STATUS_FLAGS_ENUM_END = 2049; /*  | */
 }
             

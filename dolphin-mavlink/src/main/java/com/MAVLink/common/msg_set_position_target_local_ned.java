@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_set_position_target_local_ned extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED = 84;
+    public static final int MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED_CRC = 143;
     public static final int MAVLINK_MSG_LENGTH = 53;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED;
 
@@ -111,6 +112,7 @@ public class msg_set_position_target_local_ned extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED;
+        packet.crc_extra = MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -205,7 +207,7 @@ public class msg_set_position_target_local_ned extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SET_POSITION_TARGET_LOCAL_NED;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                     

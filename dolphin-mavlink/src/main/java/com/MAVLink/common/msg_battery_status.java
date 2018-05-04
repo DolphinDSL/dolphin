@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_battery_status extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_BATTERY_STATUS = 147;
+    public static final int MAVLINK_MSG_ID_BATTERY_STATUS_CRC = 154;
     public static final int MAVLINK_MSG_LENGTH = 36;
     private static final long serialVersionUID = MAVLINK_MSG_ID_BATTERY_STATUS;
 
@@ -76,6 +77,7 @@ public class msg_battery_status extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_BATTERY_STATUS;
+        packet.crc_extra = MAVLINK_MSG_ID_BATTERY_STATUS_CRC;
               
         packet.payload.putInt(current_consumed);
               
@@ -150,7 +152,7 @@ public class msg_battery_status extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_BATTERY_STATUS;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                       

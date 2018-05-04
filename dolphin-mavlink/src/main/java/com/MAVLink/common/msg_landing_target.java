@@ -16,7 +16,8 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_landing_target extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_LANDING_TARGET = 149;
-    public static final int MAVLINK_MSG_LENGTH = 60;
+    public static final int MAVLINK_MSG_ID_LANDING_TARGET_CRC = 200;
+    public static final int MAVLINK_MSG_LENGTH = 30;
     private static final long serialVersionUID = MAVLINK_MSG_ID_LANDING_TARGET;
 
 
@@ -60,36 +61,6 @@ public class msg_landing_target extends MAVLinkMessage{
     * MAV_FRAME enum specifying the whether the following feilds are earth-frame, body-frame, etc.
     */
     public short frame;
-      
-    /**
-    * X Position of the landing target on MAV_FRAME
-    */
-    public float x;
-      
-    /**
-    * Y Position of the landing target on MAV_FRAME
-    */
-    public float y;
-      
-    /**
-    * Z Position of the landing target on MAV_FRAME
-    */
-    public float z;
-      
-    /**
-    * Quaternion of landing target orientation (w, x, y, z order, zero-rotation is 1, 0, 0, 0)
-    */
-    public float q[] = new float[4];
-      
-    /**
-    * LANDING_TARGET_TYPE enum specifying the type of landing target
-    */
-    public short type;
-      
-    /**
-    * Boolean indicating known position (1) or default unkown position (0), for validation of positioning of the landing target
-    */
-    public short position_valid;
     
 
     /**
@@ -101,6 +72,7 @@ public class msg_landing_target extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_LANDING_TARGET;
+        packet.crc_extra = MAVLINK_MSG_ID_LANDING_TARGET_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -117,22 +89,6 @@ public class msg_landing_target extends MAVLinkMessage{
         packet.payload.putUnsignedByte(target_num);
               
         packet.payload.putUnsignedByte(frame);
-              
-        packet.payload.putFloat(x);
-              
-        packet.payload.putFloat(y);
-              
-        packet.payload.putFloat(z);
-              
-        
-        for (int i = 0; i < q.length; i++) {
-            packet.payload.putFloat(q[i]);
-        }
-                    
-              
-        packet.payload.putUnsignedByte(type);
-              
-        packet.payload.putUnsignedByte(position_valid);
         
         return packet;
     }
@@ -160,22 +116,6 @@ public class msg_landing_target extends MAVLinkMessage{
         this.target_num = payload.getUnsignedByte();
               
         this.frame = payload.getUnsignedByte();
-              
-        this.x = payload.getFloat();
-              
-        this.y = payload.getFloat();
-              
-        this.z = payload.getFloat();
-              
-         
-        for (int i = 0; i < this.q.length; i++) {
-            this.q[i] = payload.getFloat();
-        }
-                
-              
-        this.type = payload.getUnsignedByte();
-              
-        this.position_valid = payload.getUnsignedByte();
         
     }
 
@@ -195,15 +135,15 @@ public class msg_landing_target extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_LANDING_TARGET;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
-                                
+                    
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_LANDING_TARGET - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" angle_x:"+angle_x+" angle_y:"+angle_y+" distance:"+distance+" size_x:"+size_x+" size_y:"+size_y+" target_num:"+target_num+" frame:"+frame+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" type:"+type+" position_valid:"+position_valid+"";
+        return "MAVLINK_MSG_ID_LANDING_TARGET - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" angle_x:"+angle_x+" angle_y:"+angle_y+" distance:"+distance+" size_x:"+size_x+" size_y:"+size_y+" target_num:"+target_num+" frame:"+frame+"";
     }
 }
         

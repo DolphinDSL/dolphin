@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_highres_imu extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIGHRES_IMU = 105;
+    public static final int MAVLINK_MSG_ID_HIGHRES_IMU_CRC = 93;
     public static final int MAVLINK_MSG_LENGTH = 62;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIGHRES_IMU;
 
@@ -106,6 +107,7 @@ public class msg_highres_imu extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIGHRES_IMU;
+        packet.crc_extra = MAVLINK_MSG_ID_HIGHRES_IMU_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -196,7 +198,7 @@ public class msg_highres_imu extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIGHRES_IMU;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                   

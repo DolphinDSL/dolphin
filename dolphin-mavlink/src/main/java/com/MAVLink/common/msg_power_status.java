@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_power_status extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_POWER_STATUS = 125;
+    public static final int MAVLINK_MSG_ID_POWER_STATUS_CRC = 203;
     public static final int MAVLINK_MSG_LENGTH = 6;
     private static final long serialVersionUID = MAVLINK_MSG_ID_POWER_STATUS;
 
@@ -46,6 +47,7 @@ public class msg_power_status extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_POWER_STATUS;
+        packet.crc_extra = MAVLINK_MSG_ID_POWER_STATUS_CRC;
               
         packet.payload.putUnsignedShort(Vcc);
               
@@ -88,7 +90,7 @@ public class msg_power_status extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_POWER_STATUS;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
           

@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_rc_channels extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_RC_CHANNELS = 65;
+    public static final int MAVLINK_MSG_ID_RC_CHANNELS_CRC = 118;
     public static final int MAVLINK_MSG_LENGTH = 42;
     private static final long serialVersionUID = MAVLINK_MSG_ID_RC_CHANNELS;
 
@@ -136,6 +137,7 @@ public class msg_rc_channels extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_RC_CHANNELS;
+        packet.crc_extra = MAVLINK_MSG_ID_RC_CHANNELS_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -250,7 +252,7 @@ public class msg_rc_channels extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_RC_CHANNELS;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                               

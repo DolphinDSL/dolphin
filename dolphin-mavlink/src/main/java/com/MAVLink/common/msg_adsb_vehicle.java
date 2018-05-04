@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_adsb_vehicle extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_ADSB_VEHICLE = 246;
+    public static final int MAVLINK_MSG_ID_ADSB_VEHICLE_CRC = 184;
     public static final int MAVLINK_MSG_LENGTH = 38;
     private static final long serialVersionUID = MAVLINK_MSG_ID_ADSB_VEHICLE;
 
@@ -96,6 +97,7 @@ public class msg_adsb_vehicle extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_ADSB_VEHICLE;
+        packet.crc_extra = MAVLINK_MSG_ID_ADSB_VEHICLE_CRC;
               
         packet.payload.putUnsignedInt(ICAO_address);
               
@@ -186,7 +188,7 @@ public class msg_adsb_vehicle extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_ADSB_VEHICLE;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                          

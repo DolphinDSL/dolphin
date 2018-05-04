@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_command_int extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_COMMAND_INT = 75;
+    public static final int MAVLINK_MSG_ID_COMMAND_INT_CRC = 158;
     public static final int MAVLINK_MSG_LENGTH = 35;
     private static final long serialVersionUID = MAVLINK_MSG_ID_COMMAND_INT;
 
@@ -57,7 +58,7 @@ public class msg_command_int extends MAVLinkMessage{
     public float z;
       
     /**
-    * The scheduled action for the mission item. see MAV_CMD in common.xml MAVLink specs
+    * The scheduled action for the mission item, as defined by MAV_CMD enum
     */
     public int command;
       
@@ -72,7 +73,7 @@ public class msg_command_int extends MAVLinkMessage{
     public short target_component;
       
     /**
-    * The coordinate system of the COMMAND. see MAV_FRAME in mavlink_types.h
+    * The coordinate system of the COMMAND, as defined by MAV_FRAME enum
     */
     public short frame;
       
@@ -96,6 +97,7 @@ public class msg_command_int extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_COMMAND_INT;
+        packet.crc_extra = MAVLINK_MSG_ID_COMMAND_INT_CRC;
               
         packet.payload.putFloat(param1);
               
@@ -178,7 +180,7 @@ public class msg_command_int extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_COMMAND_INT;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                               

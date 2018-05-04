@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_param_set extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_PARAM_SET = 23;
+    public static final int MAVLINK_MSG_ID_PARAM_SET_CRC = 168;
     public static final int MAVLINK_MSG_LENGTH = 23;
     private static final long serialVersionUID = MAVLINK_MSG_ID_PARAM_SET;
 
@@ -56,6 +57,7 @@ public class msg_param_set extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_PARAM_SET;
+        packet.crc_extra = MAVLINK_MSG_ID_PARAM_SET_CRC;
               
         packet.payload.putFloat(param_value);
               
@@ -114,7 +116,7 @@ public class msg_param_set extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_PARAM_SET;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
            

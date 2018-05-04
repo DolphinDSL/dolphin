@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_att_pos_mocap extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_ATT_POS_MOCAP = 138;
+    public static final int MAVLINK_MSG_ID_ATT_POS_MOCAP_CRC = 109;
     public static final int MAVLINK_MSG_LENGTH = 36;
     private static final long serialVersionUID = MAVLINK_MSG_ID_ATT_POS_MOCAP;
 
@@ -56,6 +57,7 @@ public class msg_att_pos_mocap extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_ATT_POS_MOCAP;
+        packet.crc_extra = MAVLINK_MSG_ID_ATT_POS_MOCAP_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -114,7 +116,7 @@ public class msg_att_pos_mocap extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_ATT_POS_MOCAP;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
               

@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_hil_optical_flow extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIL_OPTICAL_FLOW = 114;
+    public static final int MAVLINK_MSG_ID_HIL_OPTICAL_FLOW_CRC = 237;
     public static final int MAVLINK_MSG_LENGTH = 44;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIL_OPTICAL_FLOW;
 
@@ -91,6 +92,7 @@ public class msg_hil_optical_flow extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIL_OPTICAL_FLOW;
+        packet.crc_extra = MAVLINK_MSG_ID_HIL_OPTICAL_FLOW_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -169,7 +171,7 @@ public class msg_hil_optical_flow extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIL_OPTICAL_FLOW;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                             

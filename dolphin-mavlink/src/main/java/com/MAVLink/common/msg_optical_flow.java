@@ -16,7 +16,8 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_optical_flow extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_OPTICAL_FLOW = 100;
-    public static final int MAVLINK_MSG_LENGTH = 34;
+    public static final int MAVLINK_MSG_ID_OPTICAL_FLOW_CRC = 175;
+    public static final int MAVLINK_MSG_LENGTH = 26;
     private static final long serialVersionUID = MAVLINK_MSG_ID_OPTICAL_FLOW;
 
 
@@ -60,16 +61,6 @@ public class msg_optical_flow extends MAVLinkMessage{
     * Optical flow quality / confidence. 0: bad, 255: maximum quality
     */
     public short quality;
-      
-    /**
-    * Flow rate in radians/second about X axis
-    */
-    public float flow_rate_x;
-      
-    /**
-    * Flow rate in radians/second about Y axis
-    */
-    public float flow_rate_y;
     
 
     /**
@@ -81,6 +72,7 @@ public class msg_optical_flow extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_OPTICAL_FLOW;
+        packet.crc_extra = MAVLINK_MSG_ID_OPTICAL_FLOW_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -97,10 +89,6 @@ public class msg_optical_flow extends MAVLinkMessage{
         packet.payload.putUnsignedByte(sensor_id);
               
         packet.payload.putUnsignedByte(quality);
-              
-        packet.payload.putFloat(flow_rate_x);
-              
-        packet.payload.putFloat(flow_rate_y);
         
         return packet;
     }
@@ -128,10 +116,6 @@ public class msg_optical_flow extends MAVLinkMessage{
         this.sensor_id = payload.getUnsignedByte();
               
         this.quality = payload.getUnsignedByte();
-              
-        this.flow_rate_x = payload.getFloat();
-              
-        this.flow_rate_y = payload.getFloat();
         
     }
 
@@ -151,15 +135,15 @@ public class msg_optical_flow extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_OPTICAL_FLOW;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
-                        
+                    
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_OPTICAL_FLOW - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" flow_comp_m_x:"+flow_comp_m_x+" flow_comp_m_y:"+flow_comp_m_y+" ground_distance:"+ground_distance+" flow_x:"+flow_x+" flow_y:"+flow_y+" sensor_id:"+sensor_id+" quality:"+quality+" flow_rate_x:"+flow_rate_x+" flow_rate_y:"+flow_rate_y+"";
+        return "MAVLINK_MSG_ID_OPTICAL_FLOW - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" flow_comp_m_x:"+flow_comp_m_x+" flow_comp_m_y:"+flow_comp_m_y+" ground_distance:"+ground_distance+" flow_x:"+flow_x+" flow_y:"+flow_y+" sensor_id:"+sensor_id+" quality:"+quality+"";
     }
 }
         

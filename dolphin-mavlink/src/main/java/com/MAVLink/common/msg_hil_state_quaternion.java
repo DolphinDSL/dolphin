@@ -16,6 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_hil_state_quaternion extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIL_STATE_QUATERNION = 115;
+    public static final int MAVLINK_MSG_ID_HIL_STATE_QUATERNION_CRC = 4;
     public static final int MAVLINK_MSG_LENGTH = 64;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIL_STATE_QUATERNION;
 
@@ -111,6 +112,7 @@ public class msg_hil_state_quaternion extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIL_STATE_QUATERNION;
+        packet.crc_extra = MAVLINK_MSG_ID_HIL_STATE_QUATERNION_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -213,7 +215,7 @@ public class msg_hil_state_quaternion extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIL_STATE_QUATERNION;
-        unpack(mavLinkPacket.payload);        
+        unpack(mavLinkPacket.payload);
     }
 
                                     
