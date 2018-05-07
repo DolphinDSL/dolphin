@@ -5,10 +5,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
+import java.util.function.BiConsumer;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Parser;
 import com.MAVLink.Messages.MAVLinkMessage;
+import com.MAVLink.common.msg_global_position_int;
 import com.MAVLink.common.msg_heartbeat;
 import com.MAVLink.enums.MAV_AUTOPILOT;
 import com.MAVLink.enums.MAV_STATE;
@@ -33,6 +36,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
     return INSTANCE;
   }
+  
   private static MAVLinkCommunications INSTANCE = null;
   private static final int GCS_UDP_PORT = 14559;
   private static final int BUFFER_LENGTH = 1024;
@@ -52,12 +56,16 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     HB_PACKET = hb.pack().encodePacket();
   }
 
+  private interface Handler<T extends MAVLinkMessage> {
+    void consume(MAVLinkNode node, T message);
+  }
+  
   private boolean active;
   private final HashMap<Integer,MAVLinkNode> nodes = new HashMap<>();
-
+  private final IdentityHashMap<Class<? extends MAVLinkMessage>,Handler<? extends MAVLinkMessage>> handlers = new IdentityHashMap<>();
   private final DatagramSocket udpSocket;
-  private final DatagramPacket udpPacket 
-  = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
+  private final DatagramPacket udpPacket = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
+  
   private MAVLinkCommunications() {
     super("MAVLink communications");
 
@@ -70,7 +78,15 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     catch (IOException e) {
       throw new EnvironmentException(e);
     }
+    
+    setupHandler(msg_heartbeat.class, MAVLinkNode::onHeartbeatMessage);
+    setupHandler(msg_global_position_int.class, MAVLinkNode::onGlobalPositionMessage);
   }
+  
+  private <T extends MAVLinkMessage> void setupHandler(Class<T> clazz, Handler<T> handler) {
+    handlers.put(clazz, handler);
+  }
+
 
   @SuppressWarnings("deprecation")
   public void terminate() {
@@ -122,8 +138,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       return;
     } 
     catch (IOException e) {
-      d("Unexpected IO/expection: %s", e.getMessage());
-      return;
+      throw new RuntimeException(e);
     }
     Parser parser = new Parser();
     for (byte b : udpPacket.getData()) {
@@ -131,7 +146,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       if (packet == null) {
         continue;
       }
-      d("PKT: %d, %d, %d, %d", packet.len, packet.sysid, packet.compid, packet.msgid);
+      //d("PKT: %d, %d, %d, %d", packet.len, packet.sysid, packet.compid, packet.msgid);
       MAVLinkMessage msg = packet.unpack();
       MAVLinkNode node = nodes.get(packet.sysid);
       if (msg.msgid == msg_heartbeat.MAVLINK_MSG_ID_HEARTBEAT) {
@@ -143,10 +158,14 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
               nodes.put(hbMsg.sysid, node);
               d("New MAV %d", hbMsg.sysid);
             }
-            node.onHeartbeat(hbMsg);
           }
-      } else if (node != null) {
-        node.handleIncomingPacket(packet);
+      } 
+      if (node != null) {
+        @SuppressWarnings("unchecked")
+        Handler<MAVLinkMessage> h = (Handler<MAVLinkMessage>) handlers.get(msg.getClass());
+        if (h != null) {
+          h.consume(node, msg);
+        }
       }
     }
   }

@@ -48,21 +48,13 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
     return sockAddr;
   }
 
-  void handleIncomingPacket(MAVLinkPacket packet) {
-     switch (packet.msgid) {
-       case msg_global_position_int.MAVLINK_MSG_ID_GLOBAL_POSITION_INT: {
-         msg_global_position_int msg = new msg_global_position_int();
-         msg.unpack(packet.payload);
-         position = Position.fromDegrees(msg.lat * 1e-07, msg.lon * 1e-07, msg.relative_alt * 1e-03);
-         d("%s - Position update: %s", getId(), position);
-       }
-       break;
-         
-         
-     }
-  }
 
-  void onHeartbeat(msg_heartbeat msg) {
+  void onGlobalPositionMessage(msg_global_position_int msg) {
+    position = Position.fromDegrees(msg.lat * 1e-07, msg.lon * 1e-07, msg.relative_alt * 1e-03);
+    d("%s - Position update: %s", getId(), position);
+  }
+ 
+  void onHeartbeatMessage(msg_heartbeat msg) {
     lastHB = msg;
   }
   
