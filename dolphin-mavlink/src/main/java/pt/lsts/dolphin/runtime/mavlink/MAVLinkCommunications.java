@@ -5,7 +5,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
-import java.util.IdentityHashMap;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Parser;
@@ -54,10 +53,6 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     hb.custom_mode = 0;
     hb.system_status = MAV_STATE.MAV_STATE_ACTIVE;
     HB_PACKET = hb.pack().encodePacket();
-  }
-
-  private interface Handler<T extends MAVLinkMessage> {
-    void consume(MAVLinkNode node, T message);
   }
   
   private boolean active;
@@ -164,7 +159,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
   }
 
-  private void send(MAVLinkMessage msg, MAVLinkNode node) {
+  public void send(MAVLinkMessage msg, MAVLinkNode node) {
     send(msg.pack().encodePacket(), node);
   }
 
