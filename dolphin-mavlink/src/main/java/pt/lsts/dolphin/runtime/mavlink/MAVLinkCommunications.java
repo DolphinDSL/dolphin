@@ -135,8 +135,9 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       return;
     } 
     catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new EnvironmentException(e);
     }
+    
     Parser parser = new Parser();
     for (byte b : udpPacket.getData()) {
       MAVLinkPacket packet = parser.mavlink_parse_char(b < 0 ? 256 + b:  b);
