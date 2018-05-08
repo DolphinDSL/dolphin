@@ -23,7 +23,6 @@ public final class IMCNode extends AbstractNode implements Debuggable {
   private final int port;
   private Announce lastAnnounce;
   private Position position;
-  private double lastMsgTime;
 
   IMCNode(InetAddress address, int port, Announce a) {
     super(a.getSysName());
@@ -42,7 +41,7 @@ public final class IMCNode extends AbstractNode implements Debuggable {
   }
 
   public double timeOfLastMessage() {
-    return lastMsgTime;
+    return lastAnnounce.getTimestamp();
   }
 
   public InetAddress address() {
