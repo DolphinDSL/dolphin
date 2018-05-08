@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import pt.lsts.dolphin.runtime.EnvironmentException;
+import pt.lsts.dolphin.runtime.MessageHandler;
 import pt.lsts.dolphin.runtime.NodeSet;
 import pt.lsts.dolphin.util.Clock;
 import pt.lsts.dolphin.util.Debuggable;
@@ -19,6 +20,7 @@ import pt.lsts.dolphin.util.net.NetworkLink;
 import pt.lsts.dolphin.util.net.NetworkLinkException;
 import pt.lsts.dolphin.util.net.UDPLink;
 import pt.lsts.imc.Announce;
+import pt.lsts.imc.EstimatedState;
 import pt.lsts.imc.Heartbeat;
 import pt.lsts.imc.IMCDefinition;
 import pt.lsts.imc.IMCMessage;
@@ -48,7 +50,7 @@ public class IMCCommunications extends Thread implements Debuggable {
   private final Heartbeat heartbeatMsg = new Heartbeat();
   private final byte[] rcvBuffer = new byte[16384];
   private final Map<Integer,IMCNode> nodes = new HashMap<>();
-
+  private final MessageHandler<IMCNode,IMCMessage> mh = new MessageHandler<>();
   private MulticastUDPLink announceLink;
   private UDPLink messageLink;
 
@@ -69,6 +71,8 @@ public class IMCCommunications extends Thread implements Debuggable {
     //setDaemon(true);
     setupLinks();
     setupIdentification();
+    mh.bind(Announce.class, IMCNode::consume);
+    mh.bind(EstimatedState.class, IMCNode::consume);
     active = true;
   }
 
@@ -155,7 +159,7 @@ public class IMCCommunications extends Thread implements Debuggable {
         IMCNode node = nodes.get(message.getSrc());
          d("%d %s %s", message.getSrc(), message.getClass(), node);
         if (node != null) {
-          node.handleIncomingMessage(message);
+          mh.process(node, message);
         } 
         else if(message instanceof Announce) {
           handleNewNode((Announce) message);
@@ -301,6 +305,10 @@ public class IMCCommunications extends Thread implements Debuggable {
 
   public NodeSet getConnectedVehicles() {
     return new NodeSet(nodes.values());
+  }
+
+  public MessageHandler<IMCNode,IMCMessage> getMessageHandler() {
+    return mh;
   }
 
 

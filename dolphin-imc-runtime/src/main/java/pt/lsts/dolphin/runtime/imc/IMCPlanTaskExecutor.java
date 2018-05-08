@@ -1,14 +1,10 @@
 package pt.lsts.dolphin.runtime.imc;
 
 import pt.lsts.dolphin.imc.AbstractIMCPlanExecutor;
-import pt.lsts.dolphin.runtime.imc.IMCNode.Subscriber;
 import pt.lsts.imc.IMCMessage;
 import pt.lsts.imc.PlanControlState;
 
 public final class IMCPlanTaskExecutor extends AbstractIMCPlanExecutor {
-
-  private final Subscriber<PlanControlState> 
-    pcsSub = this::onStateUpdate;
  
   public IMCPlanTaskExecutor(IMCPlanTask theTask) {
     super(theTask);
@@ -21,15 +17,16 @@ public final class IMCPlanTaskExecutor extends AbstractIMCPlanExecutor {
 
   @Override
   protected void setup() {
-    ((IMCNode) getNode())
-      .subscribe(PlanControlState.class, pcsSub);
+    IMCCommunications.getInstance()
+                     .getMessageHandler()
+                     .bind(PlanControlState.class, (n,m) -> { this.onStateUpdate(m); });
   }
 
   @Override
   protected void teardown() {
-    ((IMCNode) getNode())
-      .unsubscribe(PlanControlState.class, pcsSub);
- 
+    IMCCommunications.getInstance()
+                     .getMessageHandler()
+                     .unbind(PlanControlState.class);
   }
 
 }

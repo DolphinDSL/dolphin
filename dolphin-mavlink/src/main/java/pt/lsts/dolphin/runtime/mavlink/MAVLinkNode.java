@@ -3,7 +3,6 @@ package pt.lsts.dolphin.runtime.mavlink;
 import java.net.SocketAddress;
 import java.util.Collections;
 
-import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.common.msg_global_position_int;
 import com.MAVLink.common.msg_heartbeat;
 import com.MAVLink.enums.MAV_MODE;
@@ -49,12 +48,12 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
   }
 
 
-  void onGlobalPositionMessage(msg_global_position_int msg) {
+  void consume(msg_global_position_int msg) {
     position = Position.fromDegrees(msg.lat * 1e-07, msg.lon * 1e-07, msg.relative_alt * 1e-03);
     d("%s - Position update: %s", getId(), position);
   }
  
-  void onHeartbeatMessage(msg_heartbeat msg) {
+  void consume(msg_heartbeat msg) {
     lastHB = msg;
   }
   

@@ -6,7 +6,6 @@ import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.function.BiConsumer;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Parser;
@@ -18,6 +17,7 @@ import com.MAVLink.enums.MAV_STATE;
 import com.MAVLink.enums.MAV_TYPE;
 
 import pt.lsts.dolphin.runtime.EnvironmentException;
+import pt.lsts.dolphin.runtime.MessageHandler;
 import pt.lsts.dolphin.util.Clock;
 import pt.lsts.dolphin.util.Debug;
 import pt.lsts.dolphin.util.Debuggable;
@@ -62,7 +62,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
   
   private boolean active;
   private final HashMap<Integer,MAVLinkNode> nodes = new HashMap<>();
-  private final IdentityHashMap<Class<? extends MAVLinkMessage>,Handler<? extends MAVLinkMessage>> handlers = new IdentityHashMap<>();
+  private final MessageHandler<MAVLinkNode,MAVLinkMessage> mh = new MessageHandler<>();
   private final DatagramSocket udpSocket;
   private final DatagramPacket udpPacket = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
   
@@ -79,13 +79,10 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       throw new EnvironmentException(e);
     }
     
-    setupHandler(msg_heartbeat.class, MAVLinkNode::onHeartbeatMessage);
-    setupHandler(msg_global_position_int.class, MAVLinkNode::onGlobalPositionMessage);
+    mh.bind(msg_heartbeat.class, MAVLinkNode::consume);
+    mh.bind(msg_global_position_int.class, MAVLinkNode::consume);
   }
-  
-  private <T extends MAVLinkMessage> void setupHandler(Class<T> clazz, Handler<T> handler) {
-    handlers.put(clazz, handler);
-  }
+ 
 
 
   @SuppressWarnings("deprecation")
@@ -147,10 +144,10 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
         continue;
       }
       //d("PKT: %d, %d, %d, %d", packet.len, packet.sysid, packet.compid, packet.msgid);
-      MAVLinkMessage msg = packet.unpack();
+      MAVLinkMessage message = packet.unpack();
       MAVLinkNode node = nodes.get(packet.sysid);
-      if (msg.msgid == msg_heartbeat.MAVLINK_MSG_ID_HEARTBEAT) {
-          msg_heartbeat hbMsg = (msg_heartbeat) msg;
+      if (message.msgid == msg_heartbeat.MAVLINK_MSG_ID_HEARTBEAT) {
+          msg_heartbeat hbMsg = (msg_heartbeat) message;
           d("HB from node %d (%s)", hbMsg.sysid, hbMsg.type);
           if (hbMsg.type == MAV_TYPE.MAV_TYPE_FIXED_WING) {
             if (node == null) {
@@ -161,11 +158,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
           }
       } 
       if (node != null) {
-        @SuppressWarnings("unchecked")
-        Handler<MAVLinkMessage> h = (Handler<MAVLinkMessage>) handlers.get(msg.getClass());
-        if (h != null) {
-          h.consume(node, msg);
-        }
+        mh.process(node, message);
       }
     }
   }

@@ -19,34 +19,25 @@ import pt.lsts.imc.IMCMessage;
 
 public final class IMCNode extends AbstractNode implements Debuggable {
 
-  public interface Subscriber<T extends IMCMessage> {
-    void consume(T message);
-  }
-  
   private final InetAddress address;
   private final int port;
   private Announce lastAnnounce;
   private Position position;
   private double lastMsgTime;
 
-  private final IdentityHashMap<Class<? extends IMCMessage>, List<Subscriber<IMCMessage>>> 
-    subscriptions = new IdentityHashMap<>();
-
   IMCNode(InetAddress address, int port, Announce a) {
     super(a.getSysName());
     this.address = address;
     this.port = port;
     consume(a);
-    subscribe(Announce.class, this::consume);
-    subscribe(EstimatedState.class, this::consume);
   }
 
-  private void consume(Announce message) {
+  void consume(Announce message) {
     lastAnnounce = message;
     position = new Position(message.getLat(), message.getLon(), message.getHeight());
   }
   
-  private void consume(EstimatedState message) {
+  void consume(EstimatedState message) {
     position = new Position(message.getLat(), message.getLon(), message.getHeight());
   }
 
@@ -61,45 +52,6 @@ public final class IMCNode extends AbstractNode implements Debuggable {
   public int port() {
     return port;
   }
-
-  public <T extends IMCMessage>
-  Variable<T> subscribe(Class<T> classOfMessages) {
-    Variable<T> var = new Variable<>();
-    subscribe(classOfMessages, msg -> var.set(msg, Clock.now()));
-    return var;
-  }
-  
-  @SuppressWarnings("unchecked")
-  public <T extends IMCMessage>
-  void subscribe(Class<T> classOfMessages, Subscriber<T> subscriber) {
-    List<Subscriber<IMCMessage>> list = subscriptions.get(classOfMessages);
-    if (list == null) { 
-      list = new LinkedList<>();
-      subscriptions.put(classOfMessages, list);
-    }
-    list.add((Subscriber<IMCMessage>) subscriber);
-  }
-
-  public <T extends IMCMessage>
-  void unsubscribe(Class<T> classOfMessages, Subscriber<T> subscriber) {
-    List<Subscriber<IMCMessage>> list = subscriptions.get(classOfMessages);
-    if (list != null) {
-      list.remove(subscriber);
-    }
-  }
-
-  public void handleIncomingMessage(IMCMessage message) {
-    //d("IN: %s %s", getId(), message.getClass());
-    List<Subscriber<IMCMessage>> obsList = subscriptions.get(message.getClass());
-    if (obsList != null) {
-      for (Subscriber<IMCMessage> obs : obsList) {
-       // d("Delivering %s", message.getAbbrev());
-        obs.consume(message);
-      }
-    }
-    lastMsgTime = message.getTimestamp();
-  }
-
 
   public void send(IMCMessage message) {
     d("OUT: %s %s", getId(), message.getAbbrev());
