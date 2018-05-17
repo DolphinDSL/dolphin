@@ -8,6 +8,9 @@ public final class MessageHandler<NodeType extends Node, MessageType> {
     void consume(N node, M message);
   }
   
+  public interface PlainConsumer<M> {
+    void consume(M message);
+  }
   private final IdentityHashMap<Class<? extends MessageType>,
                                 Consumer<NodeType,? extends MessageType>> 
     handlers = new IdentityHashMap<>();
@@ -15,6 +18,11 @@ public final class MessageHandler<NodeType extends Node, MessageType> {
   public <T extends MessageType> void bind(Class<T> clazz, Consumer<NodeType,T> consumer) {
     handlers.put(clazz, consumer);
   }
+  
+//  public <T extends MessageType> void bind(Class<T> clazz, PlainConsumer<T> consumer) {
+//    Consumer<NodeType,T> c = (n,m) -> consumer.consume(m);
+//    handlers.put(clazz, c);
+//  }
   
   public <T extends MessageType> void unbind(Class<T> clazz) {
     handlers.remove(clazz);

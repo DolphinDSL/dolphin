@@ -4,13 +4,19 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
-import java.util.HashMap;
+import java.util.Map;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Parser;
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_global_position_int;
 import com.MAVLink.common.msg_heartbeat;
+import com.MAVLink.common.msg_mission_ack;
+import com.MAVLink.common.msg_mission_count;
+import com.MAVLink.common.msg_mission_item;
+import com.MAVLink.common.msg_mission_request;
 import com.MAVLink.enums.MAV_AUTOPILOT;
 import com.MAVLink.enums.MAV_STATE;
 import com.MAVLink.enums.MAV_TYPE;
@@ -27,6 +33,19 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     MAVLinkCommunications comm = getInstance();
     Debug.enable(System.out, false);
     comm.start();
+
+    while(true) {
+      for (MAVLinkNode n : comm.nodes.values()) {
+        n.getDownloadProtocol().start();
+      }
+      try { 
+        Thread.sleep(10000);
+      } 
+      catch (InterruptedException e) {
+        
+      }
+    }
+
   }
 
   public static MAVLinkCommunications getInstance() { 
@@ -35,32 +54,32 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
     return INSTANCE;
   }
-  
+
   private static MAVLinkCommunications INSTANCE = null;
   private static final int GCS_UDP_PORT = 14559;
   private static final int BUFFER_LENGTH = 1024;
   private static final double HEARTBEAT_PERIOD = 1.0;
   private static final int GCS_DOLPHIN_ID = 0xD0;
-  private static final byte[] HB_PACKET;
+  private static final MAVLinkPacket HB_PACKET;
 
   static {
-    // Build GGS heartbeat message
+    // Build GGS heartbeat packet
     msg_heartbeat hb = new msg_heartbeat();
-    hb.sysid = GCS_DOLPHIN_ID;
-    hb.compid = 1;
     hb.type = MAV_TYPE.MAV_TYPE_GCS;
     hb.autopilot = MAV_AUTOPILOT.MAV_AUTOPILOT_INVALID;
     hb.custom_mode = 0;
     hb.system_status = MAV_STATE.MAV_STATE_ACTIVE;
-    HB_PACKET = hb.pack().encodePacket();
+    HB_PACKET = hb.pack();
+    HB_PACKET.sysid = GCS_DOLPHIN_ID;
+    HB_PACKET.compid = 0;
   }
-  
+
   private boolean active;
-  private final HashMap<Integer,MAVLinkNode> nodes = new HashMap<>();
+  private final Map<Integer,MAVLinkNode> nodes = new ConcurrentHashMap<>();
   private final MessageHandler<MAVLinkNode,MAVLinkMessage> mh = new MessageHandler<>();
   private final DatagramSocket udpSocket;
   private final DatagramPacket udpPacket = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
-  
+
   private MAVLinkCommunications() {
     super("MAVLink communications");
 
@@ -73,11 +92,15 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     catch (IOException e) {
       throw new EnvironmentException(e);
     }
-    
+
     mh.bind(msg_heartbeat.class, MAVLinkNode::consume);
     mh.bind(msg_global_position_int.class, MAVLinkNode::consume);
+    mh.bind(msg_mission_ack.class, MAVLinkNode::consume);
+    mh.bind(msg_mission_request.class, MAVLinkNode::consume);
+    mh.bind(msg_mission_count.class, MAVLinkNode::consume);
+    mh.bind(msg_mission_item.class, MAVLinkNode::consume);
   }
- 
+
 
 
   @SuppressWarnings("deprecation")
@@ -132,7 +155,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     catch (IOException e) {
       throw new EnvironmentException(e);
     }
-    
+
     Parser parser = new Parser();
     for (byte b : udpPacket.getData()) {
       MAVLinkPacket packet = parser.mavlink_parse_char(b < 0 ? 256 + b:  b);
@@ -143,15 +166,15 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       MAVLinkMessage message = packet.unpack();
       MAVLinkNode node = nodes.get(packet.sysid);
       if (message.msgid == msg_heartbeat.MAVLINK_MSG_ID_HEARTBEAT) {
-          msg_heartbeat hbMsg = (msg_heartbeat) message;
-          d("HB from node %d (%s)", hbMsg.sysid, hbMsg.type);
-          if (hbMsg.type == MAV_TYPE.MAV_TYPE_FIXED_WING) {
-            if (node == null) {
-              node =  new MAVLinkNode(hbMsg.sysid, udpPacket.getSocketAddress());
-              nodes.put(hbMsg.sysid, node);
-              d("New MAV %d", hbMsg.sysid);
-            }
+        msg_heartbeat hbMsg = (msg_heartbeat) message;
+        d("HB from node %d (%s)", hbMsg.sysid, hbMsg.type);
+        if (hbMsg.type == MAV_TYPE.MAV_TYPE_FIXED_WING) {
+          if (node == null) {
+            node =  new MAVLinkNode(hbMsg.sysid, udpPacket.getSocketAddress());
+            nodes.put(hbMsg.sysid, node);
+            d("New MAV %d", hbMsg.sysid);
           }
+        }
       } 
       if (node != null) {
         mh.process(node, message);
@@ -160,11 +183,16 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
   }
 
   public void send(MAVLinkMessage msg, MAVLinkNode node) {
-    send(msg.pack().encodePacket(), node);
+    d("OUT %s >> MAV %s", msg.getClass().getSimpleName(), node.getId());
+    MAVLinkPacket packet = msg.pack();
+    packet.sysid = GCS_DOLPHIN_ID;
+    packet.compid = 1;
+    send(packet, node);
   }
 
-  private void send(byte[] data, MAVLinkNode node) {
+  public void send(MAVLinkPacket packet, MAVLinkNode node) {
     try {
+      byte[] data = packet.encodePacket();
       udpSocket.send(new DatagramPacket(data, 0, data.length, node.getAddress()));
     } catch (IOException e) {
       d("Error sending data to node: %s [ %s ]", node.getId(), node.getAddress());
