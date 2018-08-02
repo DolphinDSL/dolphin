@@ -7,9 +7,9 @@ import pt.lsts.dolphin.runtime.Node;
 
 public final class WatcherTaskExecutor extends TaskExecutor {
 
-	protected WatcherTaskExecutor(Task theTask) {
-		super(theTask);
-		// TODO Auto-generated constructor stub
+	protected WatcherTaskExecutor(WatcherTask task) {
+		super(task.getTheTask());
+		
 	}
 
 	@Override
@@ -26,7 +26,7 @@ public final class WatcherTaskExecutor extends TaskExecutor {
 
 	@Override
 	protected CompletionState onStep() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 

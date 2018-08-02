@@ -52,7 +52,7 @@ class Engine implements Debuggable {
     msg 'Halting program ... %s', message
     throw new Halt(message)
   }
-  
+
   private static Engine instance
 
   private Environment env
@@ -143,33 +143,12 @@ class Engine implements Debuggable {
               msg 'Script interrupted!'
             }
             catch (Halt e) {
-				switch(env.getFlag()){
-					case Environment.FLAG.HALT:
-					case Environment.FLAG.PROPAGATE:
-						halt e
-						break
-					case Environment.FLAG.IGNORE:
-					msg 'Ignoring runtime error: %s',e.getMessage()
-						break
-					default:
-						break
-	            }
+
             }
             catch (Throwable e) {
-				
-				switch(env.getFlag()){
-					case Environment.FLAG.HALT:
-						halt e
-					case Environment.FLAG.IGNORE:
-						msg 'Ignoring runtime error: %s',e.getMessage()
-						break
-					case Environment.FLAG.PROPAGATE:
-					default:
-						msg 'Unexpected exception ...  %s : %s !',
-						e.getClass().getName(), e.getMessage()
-						e.printStackTrace(System.err)
-						break
-				}
+              msg 'Unexpected exception ...  %s : %s !',
+                  e.getClass().getName(), e.getMessage()
+              e.printStackTrace(System.err)
             }
             env.releaseAll()
             msg 'Script \'%s\' completed', scriptFile

@@ -3,19 +3,31 @@ package pt.lsts.dolphin.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import groovy.lang.Closure;
+import pt.lsts.dolphin.runtime.Environment.FLAG;
 import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.NodeSet;
 
 public  class WatcherTask implements Task {
 	
 	  private final Task theTask;
-	  private final Object error;
-	 
-	  public WatcherTask (Task t,Closure onError){
-		  error = onError.call();
+
+	  private final FLAG flag;
+
+	  public WatcherTask (Task t,FLAG f){
+		  flag = f;
 		  theTask = t;
 	  }
+	  public FLAG getFlag() {
+		  return this.flag;
+	  }
+	  
+	  /**
+	   * @return the theTask
+	   */
+	  public Task getTheTask() {
+		  return theTask;
+	  }
+
 	  
 	  @Override
 	  public String getId() {
@@ -24,13 +36,12 @@ public  class WatcherTask implements Task {
 
 	  @Override
 	  public TaskExecutor getExecutor() {
-	    return theTask.getExecutor();
+	    return new WatcherTaskExecutor(this);
 	  }
 
 	@Override
 	public boolean allocate(NodeSet available, Map<Task, List<Node>> allocation) {
-		// TODO Auto-generated method stub
-		return false;
+		return theTask.allocate(available, allocation);
 	}
 	
 }

@@ -1,18 +1,32 @@
 package pt.lsts.dolphin.dsl
 
-import pt.lsts.dolphin.runtime.tasks.*
+import pt.lsts.dolphin.runtime.Environment.FLAG
+import pt.lsts.dolphin.runtime.tasks.Task
+import pt.lsts.dolphin.runtime.tasks.WatcherTask
 
-@DSLClass
-class WatcherTaskBuilder extends Builder<GuardedTaskSet> {
-
-  
-  def onError(Closure<Exception> err) {
-	  
-  }
-  
-  @Override
-  public WatcherTask build() {
+class WatcherTaskBuilder extends Builder<WatcherTask>{
 	
-	new WatcherTask()
-  }
+	Task t
+	FLAG flag
+	
+	public WatcherTaskBuilder(Task theTask,Closure e){
+		t = theTask
+		flag = FLAG.PROPAGATE //default value
+		e.call()
+	}
+	
+	def ignore (){
+		flag = FLAG.IGNORE
+	}
+	
+	def propagate () {
+		flag = FLAG.PROPAGATE
+	}
+	
+
+	@Override
+	public WatcherTask build() {
+		return new WatcherTask(t,flag)
+	}
+
 }

@@ -28,9 +28,8 @@ public FLAG getFlag() {
 
 public static enum FLAG {
 	  IGNORE,
-	  PROPAGATE,
-	  HALT
-  }
+	  PROPAGATE
+	  }
 
 
   public static Environment create(Platform platform) {
@@ -38,7 +37,7 @@ public static enum FLAG {
       throw new EnvironmentException("Runtime has already been created");
     } 
     INSTANCE = new Environment(platform);
-    flag = FLAG.PROPAGATE;
+    flag = FLAG.IGNORE; //'feature'
     return INSTANCE;
   }
 
