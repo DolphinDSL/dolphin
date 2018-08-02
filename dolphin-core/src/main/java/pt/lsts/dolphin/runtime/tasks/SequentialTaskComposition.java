@@ -54,7 +54,7 @@ public class SequentialTaskComposition implements Task {
         CompletionState cs;
         if (!firstTaskDone) {
           cs = firstTaskExec.step();;
-          if (cs.completed()) {
+          if (cs.finished()) {
             firstTaskDone = true;
             secondTaskExec.start();
             cs = secondTaskExec.step();

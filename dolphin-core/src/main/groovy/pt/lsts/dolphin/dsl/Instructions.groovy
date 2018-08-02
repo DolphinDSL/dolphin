@@ -142,6 +142,11 @@ class Instructions implements Debuggable {
     ]
   }
   
+  static def watch(Closure cl) {
+        [onError: {Task c -> new WatcherTask(c) }]
+}
+	  
+  
   static def execute(Task t) {
     Engine.getInstance().run t
   }

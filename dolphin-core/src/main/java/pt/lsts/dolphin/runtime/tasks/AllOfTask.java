@@ -49,7 +49,7 @@ public class AllOfTask extends GuardedTaskSet {
           cs = current.step();
         }
         
-        if (cs.completed()) {
+        if (cs.finished()) {
           if (!executors.isEmpty()) {
             cs = new CompletionState(CompletionState.Type.IN_PROGRESS);
             current = null;

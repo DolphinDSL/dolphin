@@ -49,10 +49,10 @@ public class ConcurrentTaskComposition implements Task {
       @Override
       protected CompletionState onStep() {
         if (!firstTaskCompleted) {
-          firstTaskCompleted = firstTaskExec.step().completed();
+          firstTaskCompleted = firstTaskExec.step().finished();
         }
         if (!secondTaskCompleted) {
-          secondTaskCompleted = secondTaskExec.step().completed();
+          secondTaskCompleted = secondTaskExec.step().finished();
         }
         return firstTaskCompleted && secondTaskCompleted ?
               new CompletionState(CompletionState.Type.DONE)

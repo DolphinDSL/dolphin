@@ -72,7 +72,7 @@ public abstract class TaskExecutor implements Debuggable {
     requireState(State.EXECUTING);
     timeElapsed = Clock.now() - startTime;
     completionState = onStep();
-    if (completionState.completed()) {
+    if (completionState.finished()) {
       state = State.COMPLETED;
       onCompletion();
     }

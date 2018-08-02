@@ -37,7 +37,7 @@ public final class CompletionState {
     return type == Type.ERROR;
   }
 
-  public boolean completed() {
+  public boolean finished() {
     return done() || error();
   }
 }

@@ -13,12 +13,32 @@ import pt.lsts.dolphin.util.Debuggable;
 public final class Environment implements Debuggable {
 
   private static Environment INSTANCE;
+private static FLAG flag;
+  
+  /**
+ * @param flag the flag to set
+ */
+public void setFlag(FLAG flag) {
+	getInstance().flag = flag;
+}
+
+public FLAG getFlag() {
+	return getInstance().flag;
+}
+
+public static enum FLAG {
+	  IGNORE,
+	  PROPAGATE,
+	  HALT
+  }
+
 
   public static Environment create(Platform platform) {
     if (INSTANCE != null) {
       throw new EnvironmentException("Runtime has already been created");
     } 
     INSTANCE = new Environment(platform);
+    flag = FLAG.PROPAGATE;
     return INSTANCE;
   }
 
