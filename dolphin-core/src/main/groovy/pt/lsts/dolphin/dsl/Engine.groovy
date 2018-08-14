@@ -143,14 +143,15 @@ class Engine implements Debuggable {
               msg 'Script interrupted!'
             }
             catch (Halt e) {
-
+			  halt e.getMessage()
             }
             catch (Throwable e) {
-              msg 'Unexpected exception ...  %s : %s !',
-                  e.getClass().getName(), e.getMessage()
-              e.printStackTrace(System.err)
+				msg 'Unexpected exception ...  %s : %s !',
+				e.getClass().getName(), e.getMessage()
+			    //e.printStackTrace(System.err)
             }
             env.releaseAll()
+			env.setErrorMode(Environment.errorMode.IGNORE) //reset error flag
             msg 'Script \'%s\' completed', scriptFile
             synchronized (this) {
               runningScript = false
@@ -173,7 +174,8 @@ class Engine implements Debuggable {
           break;
         }
         executionThread.interrupt();
-        env.pause 0.01
+		double time = 0.01
+        env.pause time
       }
       for (int i = 0; i < 10; i++) {
         if (!executionThread.isAlive()) {
@@ -182,6 +184,7 @@ class Engine implements Debuggable {
         executionThread.stop()
       }
       env.releaseAll()
+	  env.setErrorMode(Environment.errorMode.IGNORE) //reset error flag
       runningScript = false
       msg 'Script stopped ...'
     }

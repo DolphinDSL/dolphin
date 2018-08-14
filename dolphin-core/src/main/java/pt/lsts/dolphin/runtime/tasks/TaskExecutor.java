@@ -79,7 +79,7 @@ public abstract class TaskExecutor implements Debuggable {
     return completionState;
   }
 
-  public final double timeElapsed() {
+public final double timeElapsed() {
     return timeElapsed;
   }
 
@@ -91,7 +91,7 @@ public abstract class TaskExecutor implements Debuggable {
   
   private void requireState(State s) {
     if (getState() != s) {
-      throw new EnvironmentException("Expected " + s + " state");
+      throw new EnvironmentException("Expected " + s + " state"+" got "+getState());
     }
   }
   

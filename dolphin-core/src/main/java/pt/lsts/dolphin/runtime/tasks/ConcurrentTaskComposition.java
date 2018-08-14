@@ -48,16 +48,32 @@ public class ConcurrentTaskComposition implements Task {
 
       @Override
       protected CompletionState onStep() {
+    	CompletionState state1 = firstTaskExec.getCompletionState(),state2 = secondTaskExec.getCompletionState();
         if (!firstTaskCompleted) {
-          firstTaskCompleted = firstTaskExec.step().finished();
+        	state1 = firstTaskExec.step();
+        	firstTaskCompleted = state1.done();
         }
         if (!secondTaskCompleted) {
-          secondTaskCompleted = secondTaskExec.step().finished();
+        	state2 = secondTaskExec.step();
+        	secondTaskCompleted = state2.done();
         }
         return firstTaskCompleted && secondTaskCompleted ?
               new CompletionState(CompletionState.Type.DONE)
-            :  new CompletionState(CompletionState.Type.IN_PROGRESS);
+            :  calculateState(state1,state2);
       }
+
+	/**
+	 * @param s2 
+	 * @param s1 
+	 * @return
+	 */
+	public CompletionState calculateState(CompletionState s1, CompletionState s2) {
+		if(s1.error() && s2.error())
+			return new CompletionState(CompletionState.Type.ERROR);
+		if((s1.inProgress() || s2.inProgress()))
+			return new CompletionState(CompletionState.Type.IN_PROGRESS);
+		return new CompletionState(CompletionState.Type.UNDEFINED);
+	}
 
       @Override
       protected void onCompletion() {

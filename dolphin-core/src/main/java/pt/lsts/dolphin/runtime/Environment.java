@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import pt.lsts.dolphin.dsl.Engine;
+import pt.lsts.dolphin.runtime.tasks.TaskExecutor.State;
 import pt.lsts.dolphin.runtime.tasks.Task;
 import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 import pt.lsts.dolphin.util.Clock;
@@ -13,23 +15,19 @@ import pt.lsts.dolphin.util.Debuggable;
 public final class Environment implements Debuggable {
 
   private static Environment INSTANCE;
-private static FLAG flag;
+  private static ERRORMODE errorMode;
   
   /**
  * @param flag the flag to set
  */
-public void setFlag(FLAG flag) {
-	getInstance().flag = flag;
+public void setErrorMode(ERRORMODE flag) {
+	getInstance().errorMode = flag;
 }
 
-public FLAG getFlag() {
-	return getInstance().flag;
+public static enum ERRORMODE {
+	IGNORE,
+	PROPAGATE
 }
-
-public static enum FLAG {
-	  IGNORE,
-	  PROPAGATE
-	  }
 
 
   public static Environment create(Platform platform) {
@@ -37,7 +35,7 @@ public static enum FLAG {
       throw new EnvironmentException("Runtime has already been created");
     } 
     INSTANCE = new Environment(platform);
-    flag = FLAG.IGNORE; //'feature'
+    errorMode = ERRORMODE.IGNORE; //'feature'
     return INSTANCE;
   }
 
@@ -85,12 +83,21 @@ public static enum FLAG {
     TaskExecutor executor = task.getExecutor();
     executor.initialize(allocation);
     executor.start();
-    while (executor.getState() != TaskExecutor.State.COMPLETED) {
+    while (executor.getState() != State.COMPLETED) {
       executor.step();
+      if(executor.getCompletionState().error()){
+    	  String errorMsg = executor.getCompletionState().data.toString();
+      	if(errorMode.equals(ERRORMODE.PROPAGATE))
+      		throw new EnvironmentException(errorMsg);
+      	else if (errorMode.equals(ERRORMODE.IGNORE)){
+      		Engine.msg("Ignoring runtime exception: %s",errorMsg);
+      	}
+      }
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
-        throw new EnvironmentException(e);//Halt("Program interrupted!");
+    	  Engine.msg("Exeception Caught on Environment:\n %s",e.getStackTrace());
+        //throw new EnvironmentException(e);//Halt("Program interrupted!");
       }
     }
   }

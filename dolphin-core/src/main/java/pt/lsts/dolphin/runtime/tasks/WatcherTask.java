@@ -3,7 +3,7 @@ package pt.lsts.dolphin.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import pt.lsts.dolphin.runtime.Environment.FLAG;
+import groovy.lang.Closure;
 import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.NodeSet;
 
@@ -11,14 +11,14 @@ public  class WatcherTask implements Task {
 	
 	  private final Task theTask;
 
-	  private final FLAG flag;
+	  private final Closure<Exception> code;
 
-	  public WatcherTask (Task t,FLAG f){
-		  flag = f;
+	  public WatcherTask (Task t,Closure<Exception> cl){
 		  theTask = t;
+		  code = cl;
 	  }
-	  public FLAG getFlag() {
-		  return this.flag;
+	  public Closure<Exception> getClosure() {
+		  return this.code;
 	  }
 	  
 	  /**
@@ -36,7 +36,7 @@ public  class WatcherTask implements Task {
 
 	  @Override
 	  public TaskExecutor getExecutor() {
-	    return new WatcherTaskExecutor(this);
+	    return theTask.getExecutor();
 	  }
 
 	@Override
