@@ -15,27 +15,28 @@ import pt.lsts.dolphin.util.Debuggable;
 public final class Environment implements Debuggable {
 
   private static Environment INSTANCE;
-  private static ERRORMODE errorMode;
+  private static ErrorMode errorMode;
   
   /**
  * @param flag the flag to set
  */
-public void setErrorMode(ERRORMODE flag) {
-	getInstance().errorMode = flag;
+public static void setErrorMode(ErrorMode em) {
+	errorMode = em;
 }
 
-public static enum ERRORMODE {
-	IGNORE,
-	PROPAGATE
+  /**
+ * @return the errorMode
+ */
+public static ErrorMode getErrorMode() {
+	return errorMode;
 }
 
-
-  public static Environment create(Platform platform) {
+public static Environment create(Platform platform) {
     if (INSTANCE != null) {
       throw new EnvironmentException("Runtime has already been created");
     } 
     INSTANCE = new Environment(platform);
-    errorMode = ERRORMODE.IGNORE; //'feature'
+    errorMode = new ErrorMode(ErrorMode.Type.IGNORE); //'feature'
     return INSTANCE;
   }
 
@@ -87,9 +88,10 @@ public static enum ERRORMODE {
       executor.step();
       if(executor.getCompletionState().error()){
     	  String errorMsg = executor.getCompletionState().data.toString();
-      	if(errorMode.equals(ERRORMODE.PROPAGATE))
+    	  errorMode.runClosure(errorMsg);
+      	if(errorMode.getMode().equals(ErrorMode.Type.PROPAGATE))
       		throw new EnvironmentException(errorMsg);
-      	else if (errorMode.equals(ERRORMODE.IGNORE)){
+      	else if (errorMode.getMode().equals(ErrorMode.Type.IGNORE)){
       		Engine.msg("Ignoring runtime exception: %s",errorMsg);
       	}
       }

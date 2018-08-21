@@ -3,7 +3,6 @@ package pt.lsts.dolphin.runtime.tasks;
 import java.util.List;
 import java.util.Map;
 
-import groovy.lang.Closure;
 import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.NodeSet;
 
@@ -11,14 +10,9 @@ public  class WatcherTask implements Task {
 	
 	  private final Task theTask;
 
-	  private final Closure<Exception> code;
 
-	  public WatcherTask (Task t,Closure<Exception> cl){
+	  public WatcherTask (Task t){
 		  theTask = t;
-		  code = cl;
-	  }
-	  public Closure<Exception> getClosure() {
-		  return this.code;
 	  }
 	  
 	  /**

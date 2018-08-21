@@ -142,13 +142,13 @@ class Instructions implements Debuggable {
     ]
   }
   
-  static def watch(Task t) {
-        [
+	static def watch(Task t) {
+		[
 			onError: {
-			Closure<Exception> err -> new WatcherTaskBuilder(t,err).build()
+				Closure code -> new WatcherTaskBuilder(t,code).build()
 			}
 		]
-}
+	}
 	  
   
   static def execute(Task t) {
