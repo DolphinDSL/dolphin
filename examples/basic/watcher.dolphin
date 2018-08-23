@@ -1,0 +1,9 @@
+v = pick { type 'UUV' 
+           count 2
+           }
+
+t1 = task 'plan1'
+t2 = task 'plan2'
+t3 = watch (t1) onError { message 'Error!' ; halt 'Runtime error'}
+
+execute t3 | t2
