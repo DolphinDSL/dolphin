@@ -31,8 +31,8 @@ public class ConcurrentTaskComposition implements Task {
     final TaskExecutor firstTaskExec = first.getExecutor();
     final TaskExecutor secondTaskExec = second.getExecutor();
     return new TaskExecutor(this) {
-      boolean firstTaskCompleted = false,
-              secondTaskCompleted = false;
+      boolean firstTaskDone = false,
+              secondTaskDone = false;
           
       @Override
       protected void onInitialize(Map<Task,List<Node>> allocation) {
@@ -48,31 +48,29 @@ public class ConcurrentTaskComposition implements Task {
 
       @Override
       protected CompletionState onStep() {
-    	CompletionState state1 = firstTaskExec.getCompletionState(),state2 = secondTaskExec.getCompletionState();
-        if (!firstTaskCompleted) {
-        	state1 = firstTaskExec.step();
-        	firstTaskCompleted = state1.done();
+      	CompletionState state1=firstTaskExec.getCompletionState(), state2=secondTaskExec.getCompletionState();
+        if (!state1.finished()) {
+          state1 = firstTaskExec.step();
+          firstTaskDone = state1.done();
         }
-        if (!secondTaskCompleted) {
-        	state2 = secondTaskExec.step();
-        	secondTaskCompleted = state2.done();
+        if (!state2.finished()) {
+          state2 = secondTaskExec.step();
+          secondTaskDone = state2.done();
         }
-        return firstTaskCompleted && secondTaskCompleted ?
+        return firstTaskDone && secondTaskDone ?
               new CompletionState(CompletionState.Type.DONE)
-            :  calculateState(state1,state2);
+            :  state1.error() && state2.error()? reportError(state1,state2) 
+            		: new CompletionState(CompletionState.Type.IN_PROGRESS);
       }
 
 	/**
-	 * @param s2 
-	 * @param s1 
+	 * @param state2 
+	 * @param state1 
 	 * @return
 	 */
-	public CompletionState calculateState(CompletionState s1, CompletionState s2) {
-		if(s1.error() && s2.error())
-			return new CompletionState(CompletionState.Type.ERROR);
-		if((s1.inProgress() || s2.inProgress()))
-			return new CompletionState(CompletionState.Type.IN_PROGRESS);
-		return new CompletionState(CompletionState.Type.UNDEFINED);
+	public CompletionState reportError(CompletionState state1, CompletionState state2) {
+		String errorMsg = state1.data.toString()+"\n"+state2.data.toString();
+		return new CompletionState(CompletionState.Type.ERROR,errorMsg);
 	}
 
       @Override
