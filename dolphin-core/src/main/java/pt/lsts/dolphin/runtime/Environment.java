@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import pt.lsts.dolphin.dsl.Engine;
-import pt.lsts.dolphin.runtime.tasks.TaskExecutor.State;
 import pt.lsts.dolphin.runtime.tasks.Task;
 import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 import pt.lsts.dolphin.util.Clock;
@@ -15,28 +13,12 @@ import pt.lsts.dolphin.util.Debuggable;
 public final class Environment implements Debuggable {
 
   private static Environment INSTANCE;
-  private static ErrorMode errorMode;
-  
-  /**
- * @param flag the flag to set
- */
-public static void setErrorMode(ErrorMode em) {
-	errorMode = em;
-}
 
-  /**
- * @return the errorMode
- */
-public static ErrorMode getErrorMode() {
-	return errorMode;
-}
-
-public static Environment create(Platform platform) {
+  public static Environment create(Platform platform) {
     if (INSTANCE != null) {
       throw new EnvironmentException("Runtime has already been created");
     } 
     INSTANCE = new Environment(platform);
-    errorMode = new ErrorMode(ErrorMode.Type.IGNORE); //'feature'
     return INSTANCE;
   }
 
@@ -84,22 +66,12 @@ public static Environment create(Platform platform) {
     TaskExecutor executor = task.getExecutor();
     executor.initialize(allocation);
     executor.start();
-    while (executor.getState() != State.COMPLETED) {
+    while (executor.getState() != TaskExecutor.State.COMPLETED) {
       executor.step();
-      if(executor.getCompletionState().error()){
-    	  String errorMsg = executor.getCompletionState().data.toString();
-    	  errorMode.runClosure(errorMsg);
-      	if(errorMode.getMode().equals(ErrorMode.Type.PROPAGATE))
-      		throw new EnvironmentException(errorMsg);
-      	else if (errorMode.getMode().equals(ErrorMode.Type.IGNORE)){
-      		Engine.msg("Ignoring runtime exception: %s",errorMsg);
-      	}
-      }
       try {
         Thread.sleep(100);
       } catch (InterruptedException e) {
-    	  Engine.msg("Exeception Caught on Environment:\n %s",e.getStackTrace());
-        //throw new EnvironmentException(e);//Halt("Program interrupted!");
+        throw new EnvironmentException(e);//Halt("Program interrupted!");
       }
     }
   }

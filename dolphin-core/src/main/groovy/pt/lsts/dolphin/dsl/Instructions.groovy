@@ -145,7 +145,7 @@ class Instructions implements Debuggable {
 	static def watch(Task t) {
 		[
 			onError: {
-				Closure code -> new WatcherTaskBuilder(t,code).build()
+				Closure cl -> new ErrorHandlerCode(t,cl).build()
 			}
 		]
 	}

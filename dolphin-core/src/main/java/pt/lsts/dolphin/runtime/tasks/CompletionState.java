@@ -21,7 +21,18 @@ public final class CompletionState {
     this.data = data;
   }
   
-  public boolean inProgress() {
+  /**
+ * @return the data
+ */
+public String getErrorMesssage() {
+	if(data instanceof Exception) {
+		Exception e  =  (Exception) data;
+		return e.getMessage();
+	}
+	return data.toString();
+}
+
+public boolean inProgress() {
     return type == Type.IN_PROGRESS;
   }
   
