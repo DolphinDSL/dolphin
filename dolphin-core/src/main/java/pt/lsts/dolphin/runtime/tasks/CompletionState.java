@@ -10,26 +10,22 @@ public final class CompletionState {
   }
 
   public final Type type;
-  public final Object data;
+  protected final String errorMessage;
   
   public CompletionState(Type type) {
     this(type, null);
   }
   
-  public CompletionState(Type type, Object data) {
+  public CompletionState(Type type, String info) {
     this.type = type;
-    this.data = data;
+    this.errorMessage = info;
   }
   
   /**
  * @return the data
  */
 public String getErrorMesssage() {
-	if(data instanceof Exception) {
-		Exception e  =  (Exception) data;
-		return e.getMessage();
-	}
-	return data.toString();
+	return errorMessage;
 }
 
 public boolean inProgress() {

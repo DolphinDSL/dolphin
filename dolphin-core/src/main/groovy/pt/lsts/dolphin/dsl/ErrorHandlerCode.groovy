@@ -38,12 +38,6 @@ class ErrorHandlerCode extends Builder<WatcherTask> implements ErrorHandler{
 		csToReturn
 	}
 	
-	def onError(Closure cl) {
-		def eCode = cl.rehydrate(this, cl.getOwner(), cl.getThisObject())
-		eCode.resolveStrategy = Closure.DELEGATE_FIRST
-		errorCode = eCode
-	}
-
 	@Override
 	public WatcherTask build() {
 		return new WatcherTask(t,this)

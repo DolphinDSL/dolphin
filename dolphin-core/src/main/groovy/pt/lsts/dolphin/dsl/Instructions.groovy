@@ -181,7 +181,7 @@ class Instructions implements Debuggable {
         }
         t = new ResourceExplicitTask (e.value, (NodeSet) v)
       }
-      composedTask = new ConcurrentTaskComposition(composedTask, t)
+      composedTask = new ConcurrentTask(composedTask, t)
     }
     execute composedTask
   }

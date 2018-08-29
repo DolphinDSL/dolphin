@@ -117,10 +117,10 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   @Override
   protected final void onCompletion() {
     //PlanControlState pcs = pcsVar.get();
-    PlanControl pc = new PlanControl();
-    pc.setPlanId(getTask().getId());
-    pc.setType(PlanControl.TYPE.REQUEST);
-    pc.setOp(PlanControl.OP.STOP);
+//    PlanControl pc = new PlanControl();
+//    pc.setPlanId(getTask().getId());
+//    pc.setType(PlanControl.TYPE.REQUEST);
+//    pc.setOp(PlanControl.OP.STOP);
     msg("Clean-up after plan execution ...");
     teardown();
   }

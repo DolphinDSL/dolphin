@@ -8,7 +8,7 @@ import pt.lsts.dolphin.runtime.Node;
 
 public class WatcherTaskExecutor extends TaskExecutor {
 	
-	private  TaskExecutor exec;
+	private  final TaskExecutor exec;
     private ErrorHandler errHandler;
 
 	protected WatcherTaskExecutor(Task theTask,ErrorHandler errH) {
@@ -33,16 +33,13 @@ public class WatcherTaskExecutor extends TaskExecutor {
 	protected CompletionState onStep() {
 		CompletionState state = exec.step();
 		if(state.error()){
-			String msg = exec.getCompletionState().getErrorMesssage();
-			return errHandler.handleError(msg);
+		    return errHandler.handleError(state.getErrorMesssage());
 		}
 		return state;
 	}
 
 	@Override
 	protected void onCompletion() {
-		exec.onCompletion();
-
 	}
 
 }
