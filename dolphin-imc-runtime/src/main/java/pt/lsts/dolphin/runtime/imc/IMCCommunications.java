@@ -285,7 +285,7 @@ public class IMCCommunications extends Thread implements Debuggable {
         IMCDefinition.getInstance().getVersion());
     if (services.length() > 0)
       services = services.substring(0, services.length() - 1);
-    String sysName = String.format("nvl_%s", UUID.randomUUID().toString());
+    String sysName = String.format("dolphin_%s", UUID.randomUUID().toString());
     int sysAddress = (0b111_00000 << 8) | (sysName.hashCode() & 0x1FFF); 
     announceMsg.setSysType(SystemType.CCU);
     announceMsg.setSysName(sysName);

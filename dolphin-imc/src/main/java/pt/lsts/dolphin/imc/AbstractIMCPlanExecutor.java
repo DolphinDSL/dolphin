@@ -69,7 +69,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
       if (! pcsVar.hasFreshValue()) {
         if (pcsVar.age(timeElapsed()) >= pcsTimeout) {
           msg("PlanControlState timeout ... " +  pcsTimeout + " seconds");
-          completionState = new CompletionState(CompletionState.Type.ERROR);
+          completionState = new CompletionState(CompletionState.Type.ERROR,"PlanControlState timeout ... " +  pcsTimeout + " seconds");
         }
       } else {
         PlanControlState pcs = pcsVar.get();
@@ -78,13 +78,13 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
           d("discarding PCS - no plan id info"); 
         }
         else if (!getTask().getId().equals(pcs.getPlanId())) {
-          completionState = new CompletionState(CompletionState.Type.ERROR);
+          completionState = new CompletionState(CompletionState.Type.ERROR,"Wrong plan id reported: " + pcs.getPlanId());
           msg("Wrong plan id reported: " + pcs.getPlanId());
         } else {
           switch (pcs.getState()) {
             case BLOCKED:
               d("ERROR");
-              completionState = new CompletionState(CompletionState.Type.ERROR);
+              completionState = new CompletionState(CompletionState.Type.ERROR,"PlanControlState BLOCKED state reported.");
               break;
             case EXECUTING:
             case INITIALIZING:
@@ -93,7 +93,7 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
               switch (pcs.getLastOutcome()) {
                 case FAILURE:
                 case NONE:
-                  completionState = new CompletionState(CompletionState.Type.ERROR);
+                  completionState = new CompletionState(CompletionState.Type.ERROR,"Completed "+pcs.getPlanId()+" in failure!");
                   msg("Completed in failure!");
                   break;
                 case SUCCESS:
@@ -117,10 +117,10 @@ public abstract class AbstractIMCPlanExecutor extends PlatformTaskExecutor {
   @Override
   protected final void onCompletion() {
     //PlanControlState pcs = pcsVar.get();
-    PlanControl pc = new PlanControl();
-    pc.setPlanId(getTask().getId());
-    pc.setType(PlanControl.TYPE.REQUEST);
-    pc.setOp(PlanControl.OP.STOP);
+//    PlanControl pc = new PlanControl();
+//    pc.setPlanId(getTask().getId());
+//    pc.setType(PlanControl.TYPE.REQUEST);
+//    pc.setOp(PlanControl.OP.STOP);
     msg("Clean-up after plan execution ...");
     teardown();
   }

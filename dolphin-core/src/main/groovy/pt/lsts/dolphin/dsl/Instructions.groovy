@@ -142,6 +142,15 @@ class Instructions implements Debuggable {
     ]
   }
   
+	static def watch(Task t) {
+		[
+			onError: {
+				Closure cl -> new ErrorHandlerCode(t,cl).build()
+			}
+		]
+	}
+	  
+  
   static def execute(Task t) {
     Engine.getInstance().run t
   }
@@ -172,7 +181,7 @@ class Instructions implements Debuggable {
         }
         t = new ResourceExplicitTask (e.value, (NodeSet) v)
       }
-      composedTask = new ConcurrentTaskComposition(composedTask, t)
+      composedTask = new ConcurrentTask(composedTask, t)
     }
     execute composedTask
   }

@@ -173,7 +173,8 @@ class Engine implements Debuggable {
           break;
         }
         executionThread.interrupt();
-        env.pause 0.01
+		double time = 0.01
+        env.pause time
       }
       for (int i = 0; i < 10; i++) {
         if (!executionThread.isAlive()) {

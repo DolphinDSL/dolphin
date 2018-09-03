@@ -49,14 +49,26 @@ public class AllOfTask extends GuardedTaskSet {
           cs = current.step();
         }
         
-        if (cs.completed()) {
+        if (cs.done()) {
           if (!executors.isEmpty()) {
             cs = new CompletionState(CompletionState.Type.IN_PROGRESS);
             current = null;
           }
         }
+        else if(cs.error()){ //same behavior as ConcurentTaskExecutor
+            return cs;
+        }
         return cs;
       }
+      @Override
+        protected void onCompletion() {
+          if(current!=null)
+              current.stop();
+          for(TaskExecutor taskExec: executors.values()){
+              taskExec.stop();
+          }
+          executors.clear();
+        }
     };
   }
 

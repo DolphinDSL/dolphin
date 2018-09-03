@@ -24,11 +24,11 @@ NodeSet.metaClass.or << {
 // Task operators
 
 Task.metaClass.or << {
-  Task t -> new ConcurrentTaskComposition(delegate, t)
+  Task t -> new ConcurrentTask(delegate, t)
 }
 
 Task.metaClass.rightShift << {
-  Task t -> new SequentialTaskComposition(delegate, t)
+  Task t -> new SequentialTask(delegate, t)
 }
 
 Task.metaClass.getAt << {
