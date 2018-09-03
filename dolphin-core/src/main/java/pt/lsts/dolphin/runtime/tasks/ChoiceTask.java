@@ -51,6 +51,18 @@ public class ChoiceTask extends GuardedTaskSet{
         }
         return cs;
       }
+      @Override
+      protected void onCompletion() {
+          if(chosen!=null)
+              chosen.stop();
+          else {// stop taskGuards 
+              for (TaskGuard tg : getTaskGuards()) {
+                  if (tg.test()) {
+                      executors.get(tg.getTask()).stop();
+                  }
+              }
+          }
+      }
     };
   }
 

@@ -35,7 +35,7 @@ public  class WatcherTask implements Task {
 	  
 	  @Override
 	  public String getId() {
-	    return theTask.getId();
+	    return "watcher<"+theTask.getId()+">";
 	  }
 
 	  @Override

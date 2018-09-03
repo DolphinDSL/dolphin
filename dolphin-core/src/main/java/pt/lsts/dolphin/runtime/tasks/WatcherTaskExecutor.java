@@ -40,8 +40,6 @@ public class WatcherTaskExecutor extends TaskExecutor {
 
 	@Override
 	protected void onCompletion() {
-	    if(exec.getState()!=State.COMPLETED)
-	        exec.onCompletion();
+	    exec.stop();
 	}
-
 }

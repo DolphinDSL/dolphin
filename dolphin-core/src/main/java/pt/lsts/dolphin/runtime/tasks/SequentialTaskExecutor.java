@@ -38,7 +38,7 @@ public final class SequentialTaskExecutor extends TaskExecutor {
 	        cs = secondTaskExec.step();
 	      }
 	      else if(cs.error()) {
-	          secondTaskExec.onCompletion();
+	          secondTaskExec.stop();
 	          return cs;
 	      }
 	    } else {

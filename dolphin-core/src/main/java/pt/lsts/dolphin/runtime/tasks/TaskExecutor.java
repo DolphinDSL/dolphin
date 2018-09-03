@@ -6,6 +6,7 @@ import java.util.Map;
 import pt.lsts.dolphin.runtime.Environment;
 import pt.lsts.dolphin.runtime.EnvironmentException;
 import pt.lsts.dolphin.runtime.Node;
+import pt.lsts.dolphin.runtime.tasks.CompletionState.Type;
 import pt.lsts.dolphin.util.Clock;
 import pt.lsts.dolphin.util.Debuggable;
 
@@ -77,6 +78,13 @@ public abstract class TaskExecutor implements Debuggable {
             onCompletion();
         }
         return completionState;
+    }
+
+    public final void stop() {
+        if(!completionState.finished()) {
+            completionState = new CompletionState(Type.UNDEFINED);
+            onCompletion();
+        }
     }
 
     public final double timeElapsed() {

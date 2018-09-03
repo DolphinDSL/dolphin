@@ -44,13 +44,9 @@ public class ConcurrentTaskExecutor extends TaskExecutor {
              return new CompletionState(CompletionState.Type.DONE);
         }
         if (firstTaskCS.error()) {
-            if(!secondTaskCS.finished())
-                secondTaskExec.onCompletion();
             return firstTaskCS;
         } 
         if (secondTaskCS.error()) {
-            if(!firstTaskCS.finished())
-                firstTaskExec.onCompletion();
             return secondTaskCS;
         } 
         return  new CompletionState(CompletionState.Type.IN_PROGRESS);
@@ -58,5 +54,7 @@ public class ConcurrentTaskExecutor extends TaskExecutor {
 
     @Override
     protected void onCompletion() {
+        firstTaskExec.stop();
+        secondTaskExec.stop();
     }
 }

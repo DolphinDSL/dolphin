@@ -56,14 +56,19 @@ public class AllOfTask extends GuardedTaskSet {
           }
         }
         else if(cs.error()){ //same behavior as ConcurentTaskExecutor
-            for(TaskExecutor taskExec: executors.values()){
-                taskExec.onCompletion();
-            }
-            executors.clear();
             return cs;
         }
         return cs;
       }
+      @Override
+        protected void onCompletion() {
+          if(current!=null)
+              current.stop();
+          for(TaskExecutor taskExec: executors.values()){
+              taskExec.stop();
+          }
+          executors.clear();
+        }
     };
   }
 
