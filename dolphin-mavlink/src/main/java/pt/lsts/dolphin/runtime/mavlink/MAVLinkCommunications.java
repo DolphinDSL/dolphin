@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
+import java.util.Collection;
 import java.util.Map;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,32 +30,8 @@ import pt.lsts.dolphin.util.Debuggable;
 
 public class MAVLinkCommunications extends Thread implements Debuggable {
 
-  public static void main(String[] args) throws IOException {
-    MAVLinkCommunications comm = getInstance();
-    Debug.enable(System.out, false);
-    comm.start();
-
-    while(true) {
-      for (MAVLinkNode n : comm.nodes.values()) {
-        n.getDownloadProtocol().start();
-      }
-      try { 
-        Thread.sleep(10000);
-      } 
-      catch (InterruptedException e) {
-        
-      }
-    }
-
-  }
-
-  public static MAVLinkCommunications getInstance() { 
-    if (INSTANCE == null) {
-      INSTANCE = new MAVLinkCommunications();
-    }
-    return INSTANCE;
-  }
-
+  
+  private static final Object CREATION_LOCK = new Object();
   private static MAVLinkCommunications INSTANCE = null;
   private static final int GCS_UDP_PORT = 14559;
   private static final int BUFFER_LENGTH = 1024;
@@ -74,17 +51,26 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     HB_PACKET.compid = 0;
   }
 
+  public static MAVLinkCommunications getInstance() { 
+    synchronized(CREATION_LOCK) {
+      if (INSTANCE == null) {
+        INSTANCE = new MAVLinkCommunications();
+      }
+      return INSTANCE;
+    }
+  }
+
   private boolean active;
   private final Map<Integer,MAVLinkNode> nodes = new ConcurrentHashMap<>();
-  private final MessageHandler<MAVLinkNode,MAVLinkMessage> mh = new MessageHandler<>();
+  private final MessageHandler<MAVLinkNode,MAVLinkMessage> msgHandler = new MessageHandler<>();
   private final DatagramSocket udpSocket;
   private final DatagramPacket udpPacket = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
+  private double lastHBSent = 0;
 
   private MAVLinkCommunications() {
     super("MAVLink communications");
-
     try {
-      //setDaemon(true);
+      setDaemon(true);
       udpSocket = new DatagramSocket(GCS_UDP_PORT);
       udpSocket.setSoTimeout(1);
       active = false;
@@ -93,15 +79,51 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       throw new EnvironmentException(e);
     }
 
-    mh.bind(msg_heartbeat.class, MAVLinkNode::consume);
-    mh.bind(msg_global_position_int.class, MAVLinkNode::consume);
-    mh.bind(msg_mission_ack.class, MAVLinkNode::consume);
-    mh.bind(msg_mission_request.class, MAVLinkNode::consume);
-    mh.bind(msg_mission_count.class, MAVLinkNode::consume);
-    mh.bind(msg_mission_item.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_heartbeat.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_global_position_int.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_mission_ack.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_mission_request.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_mission_count.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_mission_item.class, MAVLinkNode::consume);
   }
 
+  @Override
+  public void run() {
+    active = true;
+    while (active) {
+      try {
+        double timeNow = Clock.now();
+        handleOutgoingHeartbeats(timeNow);
+        handleIncomingMessages();
+      }
+      catch(RuntimeException e) {
+        d("Unexpected exception: %s", e.toString());
+        e.printStackTrace(System.err);
+      }
+    }
+  }
+  
+  public void send(MAVLinkMessage msg, MAVLinkNode node) {
+    d("OUT %s >> MAV %s", msg.getClass().getSimpleName(), node.getId());
+    MAVLinkPacket packet = msg.pack();
+    packet.sysid = GCS_DOLPHIN_ID;
+    packet.compid = 1;
+    send(packet, node);
+  }
 
+  public void send(MAVLinkPacket packet, MAVLinkNode node) {
+    try {
+      byte[] data = packet.encodePacket();
+      udpSocket.send(new DatagramPacket(data, 0, data.length, node.getAddress()));
+    } catch (IOException e) {
+      d("Error sending data to node: %s [ %s ]", node.getId(), node.getAddress());
+      e.printStackTrace(System.err);
+    }
+  }
+  
+  public Collection<MAVLinkNode> getNodes() {
+    return nodes.values();
+  }
 
   @SuppressWarnings("deprecation")
   public void terminate() {
@@ -118,26 +140,9 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     active = false;
   }
 
-  @Override
-  public void run() {
-    active = true;
-    while (active) {
-      try {
-        double timeNow = Clock.now();
-        handleHeartbeats(timeNow);
-        handleIncomingMessages();
-      }
-      catch(RuntimeException e) {
-        d("Unexpected exception: %s", e.toString());
-        e.printStackTrace(System.err);
-      }
-    }
-  }
-  private double lastHB = 0;
-
-  private void handleHeartbeats(double timeNow) {
-    if (timeNow - lastHB >= HEARTBEAT_PERIOD) {
-      lastHB = timeNow;
+  private void handleOutgoingHeartbeats(double timeNow) {
+    if (timeNow - lastHBSent >= HEARTBEAT_PERIOD) {
+      lastHBSent = timeNow;
       for (MAVLinkNode node : nodes.values()) {
         d("HB to MAV %s", node.getId());
         send(HB_PACKET, node);
@@ -177,26 +182,8 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
         }
       } 
       if (node != null) {
-        mh.process(node, message);
+        msgHandler.process(node, message);
       }
-    }
-  }
-
-  public void send(MAVLinkMessage msg, MAVLinkNode node) {
-    d("OUT %s >> MAV %s", msg.getClass().getSimpleName(), node.getId());
-    MAVLinkPacket packet = msg.pack();
-    packet.sysid = GCS_DOLPHIN_ID;
-    packet.compid = 1;
-    send(packet, node);
-  }
-
-  public void send(MAVLinkPacket packet, MAVLinkNode node) {
-    try {
-      byte[] data = packet.encodePacket();
-      udpSocket.send(new DatagramPacket(data, 0, data.length, node.getAddress()));
-    } catch (IOException e) {
-      d("Error sending data to node: %s [ %s ]", node.getId(), node.getAddress());
-      e.printStackTrace(System.err);
     }
   }
 }
