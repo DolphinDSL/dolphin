@@ -297,11 +297,6 @@ public class IMCCommunications extends Thread implements Debuggable {
     d("Announce setup: %s", announceMsg.toString());
   }
 
-  public static void main(String[] args) {
-    IMCCommunications comm = getInstance();
-    comm.start();
-  }
-
 
   public NodeSet getConnectedVehicles() {
     return new NodeSet(nodes.values());
