@@ -59,7 +59,7 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
     
   }
 
-  SocketAddress getAddress() {
+  public SocketAddress getAddress() {
     return sockAddr;
   }
 
@@ -89,16 +89,16 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
     mdp.consume(mc);
   }
   
-  void send(MAVLinkMessage message) {
+  public void send(MAVLinkMessage message) {
     MAVLinkCommunications.getInstance().send(message, this);
   }
 
-  boolean available() {
+  public boolean available() {
     return lastHB != null && lastHB.autopilot == MAV_MODE.MAV_MODE_AUTO_ARMED;
   }
 
 
-  MissionDownloadProtocol getDownloadProtocol() {
+  public MissionDownloadProtocol getDownloadProtocol() {
     return mdp;
   }
 

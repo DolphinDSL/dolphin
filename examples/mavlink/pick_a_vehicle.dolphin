@@ -1,0 +1,7 @@
+
+v = pick {
+  type 'UAV'
+  timeout 10.seconds
+} 
+
+message 'Obtained vehicle ' + v
