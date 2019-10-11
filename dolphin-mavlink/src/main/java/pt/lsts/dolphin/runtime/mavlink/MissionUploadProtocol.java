@@ -93,6 +93,7 @@ final class MissionUploadProtocol {
     m.count = numberOfWaypoints();
     m.target_system = (short) node.getMAVLinkId();
     m.target_component = 0;
+    node.send(m);
     currentItem = 0;
     state = State.IN_PROGRESS;
   }
