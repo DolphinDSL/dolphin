@@ -4,8 +4,16 @@ import java.io.File;
 
 import pt.lsts.dolphin.dsl.Engine;
 
+/**
+ * Program to interpret Dolphin files with the MAVLink runtime.
+ *
+ */
 public final class Main {
 
+  /**
+   * Main method.
+   * @param args Program arguments.
+   */
   public static void main(String[] args) {
 
     if (args.length == 0) {
@@ -17,7 +25,6 @@ public final class Main {
     MAVLinkCommunications.getInstance().start();
     try {
       Engine engine = Engine.create(new MAVLinkPlatform());
-
       for (String fileName : args) {
         engine.run(new File(fileName));
       }
@@ -27,6 +34,9 @@ public final class Main {
     }
   }
 
+  /**
+   * Prevent instantiation.
+   */
   private Main() {
 
   }

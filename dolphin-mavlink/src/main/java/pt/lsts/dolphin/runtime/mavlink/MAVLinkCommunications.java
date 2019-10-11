@@ -19,38 +19,56 @@ import com.MAVLink.common.msg_mission_count;
 import com.MAVLink.common.msg_mission_item;
 import com.MAVLink.common.msg_mission_request;
 import com.MAVLink.enums.MAV_AUTOPILOT;
+import com.MAVLink.enums.MAV_COMPONENT;
 import com.MAVLink.enums.MAV_STATE;
 import com.MAVLink.enums.MAV_TYPE;
 
 import pt.lsts.dolphin.runtime.EnvironmentException;
 import pt.lsts.dolphin.runtime.MessageHandler;
 import pt.lsts.dolphin.util.Clock;
-import pt.lsts.dolphin.util.Debug;
 import pt.lsts.dolphin.util.Debuggable;
 
+/**
+ * MAVLink communications manager.
+ *
+ * Note: singleton pattern is employed (only one instance) at least for now.
+ */
 public class MAVLinkCommunications extends Thread implements Debuggable {
-
   
+  /**
+   * Instance creation lock.
+   */
   private static final Object CREATION_LOCK = new Object();
+  
+  /**
+   * Singleton instance.
+   */
   private static MAVLinkCommunications INSTANCE = null;
+  
+  /**
+   * Listening port (fixed for now).
+   */
   private static final int GCS_UDP_PORT = 14559;
+  
+  /**
+   * Length of buffer for serialization.
+   */
   private static final int BUFFER_LENGTH = 1024;
+  
+  /**
+   * Heartbeat period. 
+   */
   private static final double HEARTBEAT_PERIOD = 1.0;
+  
+  /**
+   * Id used by Dolphin as impersonation of a GCS.
+   */
   private static final int GCS_DOLPHIN_ID = 0xD0;
-  private static final MAVLinkPacket HB_PACKET;
-
-  static {
-    // Build GGS heartbeat packet
-    msg_heartbeat hb = new msg_heartbeat();
-    hb.type = MAV_TYPE.MAV_TYPE_GCS;
-    hb.autopilot = MAV_AUTOPILOT.MAV_AUTOPILOT_INVALID;
-    hb.custom_mode = 0;
-    hb.system_status = MAV_STATE.MAV_STATE_ACTIVE;
-    HB_PACKET = hb.pack();
-    HB_PACKET.sysid = GCS_DOLPHIN_ID;
-    HB_PACKET.compid = 0;
-  }
-
+  
+  /**
+   * Get instance.
+   * @return Instance of communications manager.
+   */
   public static MAVLinkCommunications getInstance() { 
     synchronized(CREATION_LOCK) {
       if (INSTANCE == null) {
@@ -60,13 +78,34 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
   }
 
+  /**
+   * Active flag.
+   */
   private boolean active;
+  
+  /**
+   * Map of addresses to nodes.
+   */
   private final Map<Integer,MAVLinkNode> nodes = new ConcurrentHashMap<>();
+  
+  /**
+   * Message handler map.
+   */
   private final MessageHandler<MAVLinkNode,MAVLinkMessage> msgHandler = new MessageHandler<>();
+ 
+  /** 
+   * UDP socket.
+   */
   private final DatagramSocket udpSocket;
-  private final DatagramPacket udpPacket = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
+   
+  /**
+   * Time of last heartbeat sent.
+   */
   private double lastHBSent = 0;
 
+  /**
+   * Constructor.
+   */
   private MAVLinkCommunications() {
     super("MAVLink communications");
     try {
@@ -79,6 +118,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       throw new EnvironmentException(e);
     }
 
+    // Setup message handlers.
     msgHandler.bind(msg_heartbeat.class, MAVLinkNode::consume);
     msgHandler.bind(msg_global_position_int.class, MAVLinkNode::consume);
     msgHandler.bind(msg_mission_ack.class, MAVLinkNode::consume);
@@ -87,6 +127,9 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     msgHandler.bind(msg_mission_item.class, MAVLinkNode::consume);
   }
 
+  /**
+   * Receiving thread execution.
+   */
   @Override
   public void run() {
     active = true;
@@ -103,28 +146,9 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
   }
   
-  public void send(MAVLinkMessage msg, MAVLinkNode node) {
-    d("OUT %s >> MAV %s", msg.getClass().getSimpleName(), node.getId());
-    MAVLinkPacket packet = msg.pack();
-    packet.sysid = GCS_DOLPHIN_ID;
-    packet.compid = 1;
-    send(packet, node);
-  }
-
-  public void send(MAVLinkPacket packet, MAVLinkNode node) {
-    try {
-      byte[] data = packet.encodePacket();
-      udpSocket.send(new DatagramPacket(data, 0, data.length, node.getAddress()));
-    } catch (IOException e) {
-      d("Error sending data to node: %s [ %s ]", node.getId(), node.getAddress());
-      e.printStackTrace(System.err);
-    }
-  }
-  
-  public Collection<MAVLinkNode> getNodes() {
-    return nodes.values();
-  }
-
+  /**
+   * Terminate communications.
+   */
   @SuppressWarnings("deprecation")
   public void terminate() {
     if (active && isAlive()) {
@@ -139,18 +163,71 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     }
     active = false;
   }
+  
+  /**
+   * Send a MAVlink message.
+   * @param msg Message.
+   * @param node Target node.
+   */
+  public void send(MAVLinkMessage msg, MAVLinkNode node) {
+    d("OUT %s >> MAV %s", msg.getClass().getSimpleName(), node.getId());
+    MAVLinkPacket packet = msg.pack();
+    packet.sysid = GCS_DOLPHIN_ID;
+    packet.compid = MAV_COMPONENT.MAV_COMP_ID_ALL;
+    send(packet, node);
+  }
 
+  /**
+   * Send a MAVlink packet (already in packed form).
+   * @param packet Packet.
+   * @param node Target node.
+   */
+  public void send(MAVLinkPacket packet, MAVLinkNode node) {
+    try {
+      byte[] data = packet.encodePacket();
+      udpSocket.send(new DatagramPacket(data, 0, data.length, node.getAddress()));
+    } catch (IOException e) {
+      d("Error sending data to node: %s [ %s ]", node.getId(), node.getAddress());
+      e.printStackTrace(System.err);
+    }
+  }
+  
+  /**
+   * Get all connected node.
+   * @return Collection of nodes.
+   */
+  public Collection<MAVLinkNode> getNodes() {
+    return nodes.values();
+  }
+
+  /**
+   * Send heartbeats periodically.
+   * @param timeNow Current time.
+   */
   private void handleOutgoingHeartbeats(double timeNow) {
     if (timeNow - lastHBSent >= HEARTBEAT_PERIOD) {
-      lastHBSent = timeNow;
+      // Build HB message
+      msg_heartbeat hb = new msg_heartbeat();
+      hb.type = MAV_TYPE.MAV_TYPE_GCS;
+      hb.autopilot = MAV_AUTOPILOT.MAV_AUTOPILOT_INVALID;
+      hb.custom_mode = 0;
+      hb.system_status = MAV_STATE.MAV_STATE_ACTIVE;
+       
+      // Send to every vehicle
       for (MAVLinkNode node : nodes.values()) {
         d("HB to MAV %s", node.getId());
-        send(HB_PACKET, node);
+        send(hb, node);
       }
+      
+      lastHBSent = timeNow;
     }
   }
 
+  /**
+   * Process incoming messages.
+   */
   private void handleIncomingMessages() {
+    DatagramPacket udpPacket = new DatagramPacket(new byte[BUFFER_LENGTH], 0, BUFFER_LENGTH);
     try {
       udpSocket.receive(udpPacket);
     } 

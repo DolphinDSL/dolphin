@@ -17,28 +17,69 @@ import pt.lsts.dolphin.runtime.Payload;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.util.Debuggable;
 
+/**
+ * MAVLink node.
+ * 
+ * It represents a vehicle in the network.
+ *
+ */
 public final class MAVLinkNode extends AbstractNode implements Debuggable {
 
-  private final int mavId;
+  /**
+   * System id for the node.
+   */
+  private final int sysId;
+  
+  /**
+   * Socket address.
+   */
   private final SocketAddress sockAddr;
+  
+  /**
+   * Last known position.
+   */
   private Position position = new Position(0, 0, 0);
-  private msg_heartbeat lastHB;
+  
+  /**
+   * Last HB received.
+   */
+  private msg_heartbeat lastHBReceived;
+  
+  /**
+   * Handle for mission upload protocol.
+   */
   private final MissionUploadProtocol mup; 
+  
+  /**
+   * Handle for mission download protocol.
+   */
   private final MissionDownloadProtocol mdp; 
   
-  protected MAVLinkNode(int sysId, SocketAddress addr) {
+  /**
+   * Constructor.
+   * @param sysId System id.
+   * @param addr Socket address.
+   */
+  public MAVLinkNode(int sysId, SocketAddress addr) {
     super(String.valueOf(sysId));
-    mavId = sysId;
+    this.sysId = sysId;
     sockAddr = addr;
     mup = new MissionUploadProtocol(this);
     mdp = new MissionDownloadProtocol(this);
   }
   
 
+  /**
+   * Get System id.
+   * @return the system id.
+   */
   public int getMAVLinkId() {
-    return mavId;
+    return sysId;
   }
 
+  /**
+   * Get type of vehicle (fixed to "UAV" for now).
+   */
   @Override
   public String getType() {
     return "UAV";
@@ -58,48 +99,97 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
   public void release() {
     
   }
-
+  
+  /**
+   * Get the socket address of the communication endpoint.
+   * @return A socket address.
+   */
   public SocketAddress getAddress() {
     return sockAddr;
   }
 
+  /** 
+   * Send a message to the node.
+   * @param message Message to send.
+   */
+  public void send(MAVLinkMessage message) {
+    MAVLinkCommunications.getInstance().send(message, this);
+  }
 
+  /**
+   * Check if node is available (communications are active and autopilot is on).
+   * @return true if node is available.
+   */
+  public boolean available() {
+    return lastHBReceived != null && lastHBReceived.autopilot == MAV_MODE.MAV_MODE_AUTO_ARMED;
+  }
+
+
+  /**
+   * Get handle for mission download protocol.
+   * @return The handle for the mission download protocol.
+   */
+  public MissionDownloadProtocol getDownloadProtocol() {
+    return mdp;
+  }
+  
+  /**
+   * Get handle for mission upload protocol.
+   * @return The handle for the mission download protocol.
+   */
+  public MissionUploadProtocol getUploadProtocol() {
+    return mup;
+  }
+
+  /**
+   * Handler for position message.
+   * @param msg Incoming message.
+   */
   void consume(msg_global_position_int msg) {
     position = Position.fromDegrees(msg.lat * 1e-07, msg.lon * 1e-07, msg.relative_alt * 1e-03);
     // d("%s - Position update: %s", getId(), position);
   }
  
+  /**
+   * Handler for heartbeat message.
+   * @param msg Incoming message.
+   */
   void consume(msg_heartbeat msg) {
-    lastHB = msg;
+    lastHBReceived = msg;
   }
   
-  void consume(msg_mission_ack ack) {
-    mup.consume(ack);
+  /**
+   * Handler for mission acknowledgement message.
+   * @param msg Incoming message.
+   */
+  void consume(msg_mission_ack msg) {
+    mup.consume(msg);
   }
   
-  void consume(msg_mission_request mr) {
-    mup.consume(mr);
+  /**
+   * Handler for mission request message.
+   * @param msg Incoming message.
+   */
+  void consume(msg_mission_request msg) {
+    mup.consume(msg);
   }
   
-  void consume(msg_mission_item mi) {
-    mdp.consume(mi);
+  /**
+   * Handler for mission item message.
+   * @param msg Incoming messsage.
+   */
+  void consume(msg_mission_item msg) {
+    mdp.consume(msg);
   }
   
-  void consume(msg_mission_count mc) {
-    mdp.consume(mc);
+  /**
+   * Handler for mission count message.
+   * @param msg Incoming messsage.
+   */
+  void consume(msg_mission_count msg) {
+    mdp.consume(msg);
   }
   
-  public void send(MAVLinkMessage message) {
-    MAVLinkCommunications.getInstance().send(message, this);
-  }
 
-  public boolean available() {
-    return lastHB != null && lastHB.autopilot == MAV_MODE.MAV_MODE_AUTO_ARMED;
-  }
-
-
-  public MissionDownloadProtocol getDownloadProtocol() {
-    return mdp;
-  }
 
 }

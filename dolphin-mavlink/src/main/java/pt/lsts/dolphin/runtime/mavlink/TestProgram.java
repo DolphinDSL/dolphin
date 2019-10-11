@@ -1,12 +1,19 @@
 package pt.lsts.dolphin.runtime.mavlink;
 
-import java.io.IOException;
 
 import pt.lsts.dolphin.util.Debug;
 
+/**
+ * Temporary test program for sanity checks.
+ *
+ */
 public class TestProgram {
 
-  public static void main(String[] args) throws IOException {
+  /**
+   * Main method.
+   * @param args Arguments (ignored).
+   */
+  public static void main(String[] args) {
     MAVLinkCommunications comm = MAVLinkCommunications.getInstance();
     Debug.enable(System.out, false);
     comm.start();

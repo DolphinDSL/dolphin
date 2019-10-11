@@ -13,10 +13,19 @@ import pt.lsts.dolphin.runtime.Platform;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
 import pt.lsts.dolphin.util.Debuggable;
 
+/**
+ * Instantiation of Dolphin platform for MAVLink.
+ */
 public final class MAVLinkPlatform implements Platform, Debuggable {
 
+  /**
+   * MAVLink communications manager.
+   */
   private final MAVLinkCommunications comm = MAVLinkCommunications.getInstance();
   
+  /**
+   * Constructor.
+   */
   public MAVLinkPlatform() {
     if (!comm.isAlive()) {
       comm.start();

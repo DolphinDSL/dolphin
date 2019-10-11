@@ -11,33 +11,83 @@ import com.MAVLink.enums.MAV_MISSION_RESULT;
 
 import pt.lsts.dolphin.runtime.Position;
 
+/**
+ * Mission upload protocol.
+ */
 final class MissionUploadProtocol {
+  
+  /**
+   * Logical state.
+   */
   public enum State {
+    /**
+     * Initializing.
+     */
     INIT,
+    /**
+     * In progress.
+     */
     IN_PROGRESS,
+    /**
+     * Completed with success.
+     */
     SUCCESS,
+    /**
+     * Completed with an error.
+     */
     ERROR,
   }
 
+  /**
+   * Target node.
+   */
   private final MAVLinkNode node;
+  
+  /**
+   * Current logical state.
+   */
   private State state;
+  
+  /**
+   * Current item being processe.
+   */
   private int currentItem;
+  
+  /**
+   * Waypoints to send (temporary supprort).
+   */
   private Position[] waypoints; 
 
+  /**
+   * Constructor.
+   * @param node Target node.
+   */
   MissionUploadProtocol(MAVLinkNode node) {
     this.node = node;
     this.state = State.INIT;
   }
 
-  int numberOfWaypoints() {
+  /**
+   * Return number of waypoints (temporary).
+   * @return Number of waypoints.
+   */
+  public int numberOfWaypoints() {
     return waypoints.length;
   }
 
-  State getState() {
+  /**
+   * Get  logical state.
+   * @return Current state.
+   */
+  public State getState() {
     return state;
   }
   
-  void start(Position[] wpts) {
+  /**
+   * Start.
+   * @param wpts Waypoints.
+   */
+  public void start(Position[] wpts) {
     this.waypoints = wpts.clone();
     msg_mission_count m = new msg_mission_count();
     m.count = numberOfWaypoints();
@@ -47,11 +97,15 @@ final class MissionUploadProtocol {
     state = State.IN_PROGRESS;
   }
 
-  void consume(msg_mission_request mr) {
+  /**
+   * Handler for mission request message.
+   * @param msg Incoming message.
+   */
+  void consume(msg_mission_request msg) {
     if (state == State.IN_PROGRESS &&
-        mr.seq == currentItem && 
-        mr.target_system == node.getMAVLinkId() && 
-        mr.target_component == 0) {
+        msg.seq == currentItem && 
+        msg.target_system == node.getMAVLinkId() && 
+        msg.target_component == 0) {
       Position w = waypoints[currentItem];
       msg_mission_item mi = new msg_mission_item();
       mi.target_system = (short) node.getMAVLinkId();
@@ -76,12 +130,16 @@ final class MissionUploadProtocol {
     }
   }
 
-  void consume(msg_mission_ack ack) {
+  /**
+   * Handler for mission acknowlegement message.
+   * @param msg Incoming message.
+   */
+  void consume(msg_mission_ack msg) {
     if (state == State.IN_PROGRESS &&
         currentItem == numberOfWaypoints() && 
-        ack.type != MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED &&
-        ack.target_system == node.getMAVLinkId() && 
-        ack.target_component == 0) {
+        msg.type != MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED &&
+        msg.target_system == node.getMAVLinkId() && 
+        msg.target_component == 0) {
       state = State.SUCCESS;       
     } 
     else {
