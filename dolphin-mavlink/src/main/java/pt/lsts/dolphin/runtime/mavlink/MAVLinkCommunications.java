@@ -193,13 +193,22 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
   }
   
   /**
-   * Get all connected node.
+   * Get all connected nodes.
    * @return Collection of nodes.
    */
   public Collection<MAVLinkNode> getNodes() {
     return nodes.values();
   }
 
+  /**
+   * Get node by system id.
+   * @param systemId System id.
+   * @return Handle to node, or null if not found.
+   */
+  public MAVLinkNode getNode(int systemId) {
+    return nodes.get(systemId);
+  }
+  
   /**
    * Send heartbeats periodically.
    * @param timeNow Current time.
