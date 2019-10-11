@@ -21,7 +21,6 @@ public final class Main {
       return;
     }
 
-    pt.lsts.dolphin.util.Debug.enable(System.err,false);
     MAVLinkCommunications.getInstance().start();
     try {
       Engine engine = Engine.create(new MAVLinkPlatform());

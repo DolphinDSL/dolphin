@@ -4,10 +4,12 @@ import java.io.PrintStream;
 
 public class Debug {
 
+  public static final String DEBUG_ENV_VAR = "DOLPHIN_DEBUG";
+  
   private static boolean debugOn = false;
   private static Log debugLog;
   private static boolean shortVersion = false;
-
+ 
   public static void enable(PrintStream ps,boolean shortV) {
     if (!debugOn) {
       debugOn = true;

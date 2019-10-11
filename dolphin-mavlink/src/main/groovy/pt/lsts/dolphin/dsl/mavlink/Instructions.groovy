@@ -16,8 +16,8 @@ class Instructions {
 
   static void sendMessage(NodeSet nodes, MAVLinkMessage message) {
     for (Node n : nodes) {
-      Engine.platform().displayMessage 'Sending message \'%d\' to node \'%s\'',
-          message.msgid, n.getId();
+      Engine.platform().displayMessage 'Sending message \'%s\' (%d) to node \'%s\'',
+          message.getClass().getSimpleName(), message.msgid, n.getId() 
       ((MAVLinkNode) n).send message
     }
   }
