@@ -189,7 +189,5 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
   void consume(msg_mission_count msg) {
     mdp.consume(msg);
   }
-  
-
-
+ 
 }

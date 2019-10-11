@@ -221,7 +221,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
       hb.autopilot = MAV_AUTOPILOT.MAV_AUTOPILOT_INVALID;
       hb.custom_mode = 0;
       hb.system_status = MAV_STATE.MAV_STATE_ACTIVE;
-       
+      
       // Send to every vehicle
       for (MAVLinkNode node : nodes.values()) {
         d("HB to MAV %s", node.getId());
