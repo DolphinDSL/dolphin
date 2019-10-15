@@ -28,9 +28,9 @@ public class Debug {
 
   public static boolean d(String format, Object... args) {
     if (debugOn) {
-      StackTraceElement info = Thread.currentThread().getStackTrace()[3];
       String fullFmt;
       if(!shortVersion){
+        StackTraceElement info = Thread.currentThread().getStackTrace()[3];
 	      fullFmt = 
 	          String.format("%-16s %d %-16s %s", 
 	                        info.getFileName(), info.getLineNumber(),
@@ -39,7 +39,7 @@ public class Debug {
 	                       );
       }
       else {
-    	  fullFmt = String.format("%s", format);
+    	  fullFmt = format;
       }
       debugLog.message(fullFmt, args);
     }
