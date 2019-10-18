@@ -10,11 +10,12 @@ import com.MAVLink.enums.MAV_FRAME;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 
 import pt.lsts.dolphin.runtime.Position;
+import pt.lsts.dolphin.util.Debuggable;
 
 /**
  * Mission upload protocol.
  */
-final class MissionUploadProtocol {
+final class MissionUploadProtocol implements Debuggable {
   
   /**
    * Logical state.
@@ -88,6 +89,7 @@ final class MissionUploadProtocol {
    * @param wpts Waypoints.
    */
   public void start(Position[] wpts) {
+    d("starting upload protocol");
     this.waypoints = wpts.clone();
     msg_mission_count m = new msg_mission_count();
     m.count = numberOfWaypoints();
@@ -103,6 +105,7 @@ final class MissionUploadProtocol {
    * @param msg Incoming message.
    */
   void consume(msg_mission_request msg) {
+    d("got request");
     if (state == State.IN_PROGRESS &&
         msg.seq == currentItem && 
         msg.target_system == node.getMAVLinkId() && 
