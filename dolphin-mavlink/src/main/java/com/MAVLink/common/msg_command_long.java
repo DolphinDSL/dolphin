@@ -21,7 +21,7 @@ public class msg_command_long extends MAVLinkMessage{
     private static final long serialVersionUID = MAVLINK_MSG_ID_COMMAND_LONG;
 
 
-      
+
     /**
     * Parameter 1, as defined by MAV_CMD enum.
     */
@@ -106,7 +106,7 @@ public class msg_command_long extends MAVLinkMessage{
         packet.payload.putUnsignedShort(command);
               
         packet.payload.putUnsignedByte(target_system);
-              
+
         packet.payload.putUnsignedByte(target_component);
               
         packet.payload.putUnsignedByte(confirmation);

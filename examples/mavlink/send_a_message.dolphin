@@ -2,17 +2,28 @@
 v = pick {
   type 'UAV'
   timeout 10.seconds
-} 
+}
 
 message 'Obtained vehicle ' + v
 
-arm_command = new msg_command_int()
+arm_command = new msg_command_long()
 
 arm_command.command = MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM
 arm_command.param1 = 1
 arm_command.param2 = 0
 
-sendMessage v, arm_command 
+sendMessage v, arm_command
 
-message 'Sent arm command ...' 
+message 'Sent arm command ...'
 
+sleep 2000
+
+disarm_command = new msg_command_long()
+
+disarm_command.command = MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM
+disarm_command.param1 = 0
+disarm_command.param2 = 0;
+
+sendMessage v, disarm_command
+
+message 'Sent disarm command ...'

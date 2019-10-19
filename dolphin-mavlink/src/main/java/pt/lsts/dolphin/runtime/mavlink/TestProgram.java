@@ -22,15 +22,17 @@ public class TestProgram {
     comm.start();
 
     while(true) {
-//      for (MAVLinkNode n : comm.getNodes()) {
-//        n.getDownloadProtocol().start();
-//      }
+      for (MAVLinkNode n : comm.getNodes()) {
+        n.getDownloadProtocol().start();
+      }
+
       try { 
         Thread.sleep(10000);
       } 
       catch (InterruptedException e) {
         
       }
+
       for (MAVLinkNode n : comm.getNodes()) {
         Position ref = Position.fromDegrees(41.185781, -8.70606486, 0.0);
         NED ned = new NED(100, 0, 0);

@@ -111,7 +111,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     try {
       setDaemon(true);
       udpSocket = new DatagramSocket(GCS_UDP_PORT);
-      udpSocket.setSoTimeout(1);
+      udpSocket.setSoTimeout(100);
       active = false;
     }
     catch (IOException e) {
