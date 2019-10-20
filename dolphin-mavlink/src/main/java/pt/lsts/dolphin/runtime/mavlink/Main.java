@@ -22,12 +22,14 @@ public final class Main {
     }
 
     MAVLinkCommunications.getInstance().start();
+
     try {
       Engine engine = Engine.create(new MAVLinkPlatform());
       for (String fileName : args) {
         engine.run(new File(fileName));
       }
     }
+
     finally {
       MAVLinkCommunications.getInstance().terminate();
     }

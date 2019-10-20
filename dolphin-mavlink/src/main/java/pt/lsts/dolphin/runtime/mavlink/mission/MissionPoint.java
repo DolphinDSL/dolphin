@@ -2,9 +2,6 @@ package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
-import pt.lsts.dolphin.util.wgs84.WGS84;
-
-import java.awt.*;
 
 public class MissionPoint {
 
@@ -18,6 +15,17 @@ public class MissionPoint {
         this.positionLocation = pointLocation;
         this.payload = payload;
         this.pointType = pointType;
+    }
+
+    public MissionPoint withPointType(PointType pointType) {
+        this.pointType = pointType;
+        return this;
+    }
+
+    public MissionPoint withPayload(PointPayload pointPayload) {
+        this.payload = pointPayload;
+
+        return this;
     }
 
     public void sendTo(MAVLinkNode node) {

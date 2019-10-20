@@ -34,15 +34,6 @@ public class TestProgram {
       }
 
       for (MAVLinkNode n : comm.getNodes()) {
-        Position ref = Position.fromDegrees(41.185781, -8.70606486, 0.0);
-        NED ned = new NED(100, 0, 0);
-        Position a = WGS84.displace(ref, ned);
-        NED ned2 = new NED(100, 200, 0);
-        Position b = WGS84.displace(a, ned2);
-        
-        Position[] wpts = { ref, a, b };
-            
-        n.getUploadProtocol().start(wpts);
       }
     }
 
