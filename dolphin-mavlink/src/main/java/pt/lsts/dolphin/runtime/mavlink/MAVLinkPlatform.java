@@ -54,6 +54,8 @@ public final class MAVLinkPlatform implements Platform, Debuggable {
     d("Customizing compilation for MAVlink runtime ...");
     ImportCustomizer ic = new ImportCustomizer();
     ic.addStaticStars("pt.lsts.dolphin.dsl.mavlink.Instructions");
+    ic.addStaticStars("pt.lsts.dolphin.dsl.mavlink.GoTo");
+    ic.addStaticStars("pt.lsts.dolphin.dls.mavlink.PositionBuilder");
     ic.addStarImports("pt.lsts.mavlink.groovy.dsl");
     ic.addStarImports("com.MAVLink.Messages");
     ic.addStarImports("com.MAVLink.common");

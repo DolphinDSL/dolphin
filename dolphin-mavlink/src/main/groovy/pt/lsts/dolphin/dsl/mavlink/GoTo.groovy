@@ -9,19 +9,20 @@ import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint.PointType
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.GoToPoint
 
 @DSLClass
 class GoTo {
 
     static MissionPoint goTo(Position position) {
-        MissionPoint.initGoToPoint(position);
+        return GoToPoint.initGoToPoint(position);
     }
 
-    static MissionPoint goTo(Double latInDeg, Double longInDeg, Double alt) {
-        MissionPoint.initGoToPoint(latInDeg, longInDeg, alt);
+    static MissionPoint goTo(double latInDeg, double longInDeg, double alt) {
+        return GoToPoint.initGoToPoint(latInDeg, longInDeg, alt);
     }
 
-    static MissionPoint goTo(Double latInDeg, Double longInDeg, Double alt, PointType type) {
+    static MissionPoint goTo(double latInDeg, double longInDeg, double alt, PointType type) {
         goTo(latInDeg, longInDeg, alt).withPointType(type);
     }
 
@@ -36,7 +37,7 @@ class GoTo {
 
     }
 
-    static void goTo(NodeSet nodes, Double latInDeg, Double longInDeg, Double alt) {
+    static void goTo(NodeSet nodes, double latInDeg, double longInDeg, double alt) {
 
         for (Node n : nodes) {
 
@@ -49,14 +50,14 @@ class GoTo {
 
     }
 
-    static void goTo(NodeSet nodes, Double latInDeg, Double longInDeg, Double alt, PointType type) {
+    static void goTo(NodeSet nodes, double latInDeg, double longInDeg, double alt, PointType type) {
 
         for (Node n : nodes) {
 
             Mission m = Mission.initializeMission()
                     .addPoint(goTo(latInDeg, longInDeg, alt, type));
 
-            attemptToGiveMissionToNode(n , m)
+            attemptToGiveMissionToNode(n, m)
 
         }
 
@@ -70,18 +71,18 @@ class GoTo {
                         destination.getId());
 
         MAVLinkNode node = (MAVLinkNode) destination;
-
-        if (node.startMission(mission)) {
-            Engine.platform()
-                    .displayMessage("Successfully started drone %s on the mission.",
-                            node.getId())
-        } else {
-
-            Engine.platform()
-                    .displayMessage("Failed to start drone %s on the mission, the drone might be executing another mission at this moment",
-                            node.getId());
-
-        }
+//
+//        if (node.startMission(mission)) {
+//            Engine.platform()
+//                    .displayMessage("Successfully started drone %s on the mission.",
+//                            node.getId())
+//        } else {
+//
+//            Engine.platform()
+//                    .displayMessage("Failed to start drone %s on the mission, the drone might be executing another mission at this moment",
+//                            node.getId());
+//
+//        }
     }
 
     private GoTo() {}

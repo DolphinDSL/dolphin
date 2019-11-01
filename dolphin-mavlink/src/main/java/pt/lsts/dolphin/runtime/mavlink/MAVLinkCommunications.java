@@ -12,12 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.MAVLink.MAVLinkPacket;
 import com.MAVLink.Parser;
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.msg_global_position_int;
-import com.MAVLink.common.msg_heartbeat;
-import com.MAVLink.common.msg_mission_ack;
-import com.MAVLink.common.msg_mission_count;
-import com.MAVLink.common.msg_mission_item;
-import com.MAVLink.common.msg_mission_request;
+import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_AUTOPILOT;
 import com.MAVLink.enums.MAV_COMPONENT;
 import com.MAVLink.enums.MAV_STATE;
@@ -125,6 +120,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
     msgHandler.bind(msg_mission_request.class, MAVLinkNode::consume);
     msgHandler.bind(msg_mission_count.class, MAVLinkNode::consume);
     msgHandler.bind(msg_mission_item.class, MAVLinkNode::consume);
+    msgHandler.bind(msg_mission_current.class, MAVLinkNode::consume);
   }
 
   /**

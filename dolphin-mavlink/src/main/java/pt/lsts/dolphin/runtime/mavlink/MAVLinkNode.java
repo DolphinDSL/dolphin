@@ -5,12 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.msg_global_position_int;
-import com.MAVLink.common.msg_heartbeat;
-import com.MAVLink.common.msg_mission_ack;
-import com.MAVLink.common.msg_mission_count;
-import com.MAVLink.common.msg_mission_item;
-import com.MAVLink.common.msg_mission_request;
+import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_MODE;
 
 import pt.lsts.dolphin.runtime.AbstractNode;
@@ -47,18 +42,6 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
     private msg_heartbeat lastHBReceived;
 
     /**
-     * The current mission the node is executing
-     */
-    private Mission currentMission;
-
-    /**
-     * The previous missions done by this node
-     * <p>
-     * This is stored as a FILO design so to get the latest mission, you get the first node
-     */
-    private LinkedList<Mission> previousMissions, nextMissions;
-
-    /**
      * Handle for mission upload protocol.
      */
     private final MissionUploadProtocol mup;
@@ -80,8 +63,6 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
         sockAddr = addr;
         mup = new MissionUploadProtocol(this);
         mdp = new MissionDownloadProtocol(this);
-
-        previousMissions = new LinkedList<>();
     }
 
 
@@ -144,6 +125,10 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
         return lastHBReceived != null && lastHBReceived.autopilot == MAV_MODE.MAV_MODE_AUTO_ARMED;
     }
 
+    public msg_heartbeat getLastHBReceived() {
+        return lastHBReceived;
+    }
+
 
     /**
      * Get handle for mission download protocol.
@@ -161,44 +146,6 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      */
     public MissionUploadProtocol getUploadProtocol() {
         return mup;
-    }
-
-    /**
-     * Attempt to start a given mission
-     *
-     * @param mission The mission for the node to execute
-     * @return If the mission has been successfully started
-     */
-    public boolean startMission(Mission mission) {
-
-        if (this.currentMission != null && !this.currentMission.hasEnded()) {
-            //Drone is currently in the middle of a mission
-            //TODO
-            return false;
-        } else if (this.currentMission != null) {
-
-            //Drone's last mission has been completed, and drone is ready to receive mission
-            this.previousMissions.addFirst(mission);
-        }
-
-        //Receive and commence execution the new mission
-        this.currentMission = mission.clone();
-
-        this.currentMission.sendTo(this);
-
-        return true;
-    }
-
-    /**Attempt to enqueue a new mission for this drone to execute, after current mission and all enqueued missions
-     *
-     * @param mission The mission to enqueue
-     * @return
-     */
-    public boolean enqueueMission(Mission mission) {
-
-        this.nextMissions.addLast(mission.clone());
-
-        return true;
     }
 
     /**
@@ -254,6 +201,10 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      */
     void consume(msg_mission_count msg) {
         mdp.consume(msg);
+    }
+
+    void consume(msg_mission_current msg) {
+
     }
 
 }

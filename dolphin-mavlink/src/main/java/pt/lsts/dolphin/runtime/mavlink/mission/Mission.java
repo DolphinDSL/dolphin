@@ -1,11 +1,18 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.Messages.MAVLinkMessage;
+import com.MAVLink.common.msg_mission_count;
+import pt.lsts.dolphin.runtime.NodeFilter;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
+import pt.lsts.dolphin.runtime.tasks.PlatformTask;
+import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
-public class Mission implements Cloneable {
+public class Mission extends PlatformTask implements Cloneable {
 
     private LinkedList<MissionPoint> missionPoints;
 
@@ -16,6 +23,7 @@ public class Mission implements Cloneable {
     private boolean ended;
 
     private Mission() {
+        super("");
         missionPoints = new LinkedList<>();
         completed = new LinkedList<>();
 
@@ -57,14 +65,25 @@ public class Mission implements Cloneable {
 
     }
 
-    public void sendTo(MAVLinkNode node) {
+    public List<MAVLinkMessage> toMavLinkMessages(MAVLinkNode dest) {
 
-        missionPoints.forEach((missionPoint -> {
+        List<MAVLinkMessage> messages = new ArrayList<>();
 
-            missionPoint.sendTo(node);
+        msg_mission_count count = new msg_mission_count();
 
-        }));
+        count.count = this.missionPoints.size();
+        count.target_component = 0;
+        count.target_system = (short) dest.getMAVLinkId();
 
+        messages.add(count);
+
+        int current = 0;
+
+        for (MissionPoint missionPoint : this.missionPoints) {
+            messages.add(missionPoint.toMavLinkMessage(dest, current++));
+        }
+
+        return messages;
     }
 
     @Override
@@ -81,4 +100,15 @@ public class Mission implements Cloneable {
     public static Mission initializeMission() {
         return new Mission();
     }
+
+    @Override
+    public List<NodeFilter> getRequirements() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public TaskExecutor getExecutor() {
+        return new MissionExecutor(this);
+    }
+
 }

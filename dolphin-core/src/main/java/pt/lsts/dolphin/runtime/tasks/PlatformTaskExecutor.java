@@ -1,9 +1,9 @@
 package pt.lsts.dolphin.runtime.tasks;
 
+import pt.lsts.dolphin.runtime.Node;
+
 import java.util.List;
 import java.util.Map;
-
-import pt.lsts.dolphin.runtime.Node;
 
 public abstract class PlatformTaskExecutor extends TaskExecutor {
 
@@ -22,5 +22,7 @@ public abstract class PlatformTaskExecutor extends TaskExecutor {
   protected final List<Node> getVehicles() {
     return nodes;
   }
+
+  protected final Node getVehicle() {return nodes.get(0);}
 
 }
