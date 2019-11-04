@@ -54,7 +54,8 @@ public abstract class MissionPoint {
         LOITER(MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM),
         LOITER_DIST(MAV_CMD.MAV_CMD_NAV_LOITER_TURNS),
         LOITER_TIME(MAV_CMD.MAV_CMD_NAV_LOITER_TIME),
-        LANDING(MAV_CMD.MAV_CMD_NAV_LAND);
+        LANDING(MAV_CMD.MAV_CMD_NAV_LAND),
+        TAKEOFF(MAV_CMD.MAV_CMD_NAV_TAKEOFF);
         /**
          * TODO: Add more modes
          */

@@ -7,10 +7,7 @@ import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
 import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Mission extends PlatformTask implements Cloneable {
 
@@ -22,8 +19,8 @@ public class Mission extends PlatformTask implements Cloneable {
 
     private boolean ended;
 
-    private Mission() {
-        super("");
+    private Mission(String id) {
+        super(id);
         missionPoints = new LinkedList<>();
         completed = new LinkedList<>();
 
@@ -61,10 +58,6 @@ public class Mission extends PlatformTask implements Cloneable {
         return this.ended;
     }
 
-    public void consume(MAVLinkMessage message) {
-
-    }
-
     public List<MAVLinkMessage> toMavLinkMessages(MAVLinkNode dest) {
 
         List<MAVLinkMessage> messages = new ArrayList<>();
@@ -97,8 +90,14 @@ public class Mission extends PlatformTask implements Cloneable {
         return null;
     }
 
+    private static final Random random = new Random();
+
     public static Mission initializeMission() {
-        return new Mission();
+        return initializeMission(String.valueOf(random.nextLong()));
+    }
+
+    public static Mission initializeMission(String id) {
+        return new Mission(id);
     }
 
     @Override

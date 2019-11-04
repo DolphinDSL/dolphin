@@ -13,7 +13,6 @@ import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.GoToPoint
 
 @DSLClass
 class GoTo {
-
     static MissionPoint goTo(Position position) {
         return GoToPoint.initGoToPoint(position);
     }
@@ -71,18 +70,10 @@ class GoTo {
                         destination.getId());
 
         MAVLinkNode node = (MAVLinkNode) destination;
-//
-//        if (node.startMission(mission)) {
-//            Engine.platform()
-//                    .displayMessage("Successfully started drone %s on the mission.",
-//                            node.getId())
-//        } else {
-//
-//            Engine.platform()
-//                    .displayMessage("Failed to start drone %s on the mission, the drone might be executing another mission at this moment",
-//                            node.getId());
-//
-//        }
+
+        node.getUploadProtocol().start(mission);
+
+        Engine.platform().displayMessage("Attempted to send mission to drone %s" , destination.getId())
     }
 
     private GoTo() {}

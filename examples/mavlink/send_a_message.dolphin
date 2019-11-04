@@ -16,6 +16,8 @@ sendMessage v, arm_command
 
 message 'Sent arm command ...'
 
+goTo v, 100, 100, 100
+
 sleep 2000
 
 disarm_command = new msg_command_long()

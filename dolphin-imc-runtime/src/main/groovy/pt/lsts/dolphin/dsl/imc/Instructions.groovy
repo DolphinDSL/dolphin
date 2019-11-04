@@ -26,6 +26,7 @@ class Instructions {
     code.resolveStrategy = Closure.DELEGATE_ONLY
     code()
     def ps = dslPlan.asPlanSpecification()
+
     new IMCPlanTask(ps)
 
   }

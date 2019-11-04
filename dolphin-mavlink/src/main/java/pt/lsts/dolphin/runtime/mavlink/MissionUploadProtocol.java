@@ -59,7 +59,7 @@ public final class MissionUploadProtocol implements Debuggable {
     private int currentItem;
 
     /**
-     * Waypoints to send (temporary supprort).
+     * Waypoints to send (temporary support).
      */
     private Position[] waypoints;
 
@@ -125,7 +125,7 @@ public final class MissionUploadProtocol implements Debuggable {
         d("Sent item count");
     }
 
-    void consumeNew(msg_mission_request msg) {
+    void consume(msg_mission_request msg) {
         d("got consume request");
 
         //Have to check msg.seq == currentItem - 1 because the item count msg is also stored in the list
@@ -147,7 +147,7 @@ public final class MissionUploadProtocol implements Debuggable {
      *
      * @param msg Incoming message.
      */
-    void consume(msg_mission_request msg) {
+    void consumeOld(msg_mission_request msg) {
         d("got request");
         if (state == State.IN_PROGRESS &&
                 msg.seq == currentItem &&
@@ -176,12 +176,26 @@ public final class MissionUploadProtocol implements Debuggable {
         }
     }
 
+    void consume(msg_mission_ack msg) {
+        if (state == State.IN_PROGRESS
+                && currentItem == messageList.size()
+                && msg.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED
+                && msg.target_system == node.getMAVLinkId()
+                && msg.target_component == 0) {
+
+            state = State.SUCCESS;
+
+        } else {
+            state = State.ERROR;
+        }
+    }
+
     /**
      * Handler for mission acknowlegement message.
      *
      * @param msg Incoming message.
      */
-    void consume(msg_mission_ack msg) {
+    void consumeOld(msg_mission_ack msg) {
         if (state == State.IN_PROGRESS &&
                 currentItem == numberOfWaypoints() &&
                 msg.type != MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED &&
