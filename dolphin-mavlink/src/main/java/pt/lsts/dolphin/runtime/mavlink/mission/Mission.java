@@ -2,6 +2,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_count;
+import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.NodeFilter;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
@@ -70,6 +71,7 @@ public class Mission extends PlatformTask implements Cloneable {
 
         messages.add(count);
 
+        //TODO: Sent, already on the drone, start mission (MSG_DO_SET_MISSION_CURRENT ?)
         int current = 0;
 
         for (MissionPoint missionPoint : this.missionPoints) {

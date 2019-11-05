@@ -16,16 +16,8 @@ sendMessage v, arm_command
 
 message 'Sent arm command ...'
 
-goTo v, 100, 100, 100
+p = initPosition(41.185, -8.70, 0)
 
-sleep 2000
+p = movePosition(p, initMoveDistances(100, 100, 100));
 
-disarm_command = new msg_command_long()
-
-disarm_command.command = MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM
-disarm_command.param1 = 0
-disarm_command.param2 = 0;
-
-sendMessage v, disarm_command
-
-message 'Sent disarm command ...'
+goTo v, p

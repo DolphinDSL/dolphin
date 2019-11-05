@@ -20,8 +20,8 @@ class PositionBuilder {
         return movePosition(position, initMoveDistances(north, east, alt));
     }
 
-    static NED initMoveDistances(double north, double east, double alt) {
-        return new NED(north, east, alt);
+    static NED initMoveDistances(double north, double east, double down) {
+        return new NED(north, east, down);
     }
 
 }

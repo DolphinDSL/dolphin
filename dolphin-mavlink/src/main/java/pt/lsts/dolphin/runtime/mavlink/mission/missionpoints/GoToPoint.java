@@ -2,6 +2,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_item;
+import com.MAVLink.common.msg_mission_item_int;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
@@ -24,7 +25,7 @@ public class GoToPoint extends MissionPoint {
 
         msg_item.target_system = (short) node.getMAVLinkId();
         msg_item.target_component = 0;
-        msg_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL_INT;
+        msg_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         msg_item.seq = current;
         msg_item.current = 0;
         msg_item.autocontinue = 1;
@@ -32,7 +33,12 @@ public class GoToPoint extends MissionPoint {
         msg_item.param2 = 50;
         msg_item.param3 = 0;
         msg_item.param4 = Float.NaN;
-        msg_item.x = (float) getPositionLocation().lat;
+//
+//        msg_item.x = (int) (getPositionLocation().lat * 1e+07);
+//        msg_item.y = (int) (getPositionLocation().lon * 1e+07);
+//        msg_item.z = (float) getPositionLocation().hae;
+
+        msg_item.x = (float) (getPositionLocation().lat);
         msg_item.y = (float) getPositionLocation().lon;
         msg_item.z = (float) getPositionLocation().hae;
 

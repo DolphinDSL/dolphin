@@ -2,14 +2,12 @@ package pt.lsts.dolphin.runtime.mavlink;
 
 
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.msg_mission_ack;
-import com.MAVLink.common.msg_mission_count;
-import com.MAVLink.common.msg_mission_item;
-import com.MAVLink.common.msg_mission_request;
+import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 
+import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission;
 import pt.lsts.dolphin.util.Debuggable;
@@ -112,9 +110,12 @@ public final class MissionUploadProtocol implements Debuggable {
 
     public void start(Mission mission) {
         d("starting upload protocol");
+        Engine.platform().displayMessage("Starting upload protocol");
 
         List<MAVLinkMessage> mavLinkMessages = mission.toMavLinkMessages(this.node);
         this.messageList = mavLinkMessages;
+
+        Engine.platform().displayMessage("Messages %d", mavLinkMessages.size());
 
         MAVLinkMessage mavLinkMessage = mavLinkMessages.get(0);
 
@@ -122,24 +123,42 @@ public final class MissionUploadProtocol implements Debuggable {
 
         this.currentItem = 1;
         state = State.IN_PROGRESS;
+        Engine.platform().displayMessage("Sent item count");
         d("Sent item count");
     }
 
     void consume(msg_mission_request msg) {
         d("got consume request");
+        Engine.platform().displayMessage("Got consume request");
+
+//        Engine.platform().displayMessage("%b %b %b %b %d %d", state == State.IN_PROGRESS, msg.seq == (currentItem - 1),
+//                msg.target_system == node.getMAVLinkId(), msg.target_component == 0, msg.target_system, node.getMAVLinkId());
+        Engine.platform().displayMessage(msg.toString());
 
         //Have to check msg.seq == currentItem - 1 because the item count msg is also stored in the list
         if (state == State.IN_PROGRESS &&
                 msg.seq == (currentItem - 1) &&
-                msg.target_system == node.getMAVLinkId() &&
+//                msg.target_system == node.getMAVLinkId() &&
                 msg.target_component == 0) {
 
             MAVLinkMessage mavLinkMessage = messageList.get(currentItem++);
 
+            //This isn't working?
+
+            Engine.platform().displayMessage(mavLinkMessage.toString());
             node.send(mavLinkMessage);
+
+            Engine.platform().displayMessage("Sent mission item");
+
         } else {
             state = State.ERROR;
         }
+    }
+
+    void consume(msg_mission_request_int msg) {
+
+        Engine.platform().displayMessage(msg.toString());
+
     }
 
     /**

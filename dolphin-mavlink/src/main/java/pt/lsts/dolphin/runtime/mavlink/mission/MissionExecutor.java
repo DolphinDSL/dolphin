@@ -2,6 +2,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.common.msg_heartbeat;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
+import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
 import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 
@@ -21,7 +22,8 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         Mission mission = (Mission) getTask();
 
-        vehicle.getUploadProtocol().start(mission);
+        MissionUploadProtocol uploadP = vehicle.getUploadProtocol();
+        uploadP.start(mission);
     }
 
     @Override
