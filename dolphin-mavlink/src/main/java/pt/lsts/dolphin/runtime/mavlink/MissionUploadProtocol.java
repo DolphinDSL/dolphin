@@ -202,27 +202,25 @@ public final class MissionUploadProtocol implements Debuggable {
                 && msg.target_system == node.getMAVLinkId()
                 && msg.target_component == 0) {
 
+            d("Mission sent successfully, sending start mission packet ");
+
             state = State.SUCCESS;
+
+            d("Send the msg for the node to start the mission");
+
+            MAVLinkMessage mavLinkMessage = messageList.get(messageList.size() - 1);
+
+            node.send(mavLinkMessage);
 
         } else {
             state = State.ERROR;
         }
     }
 
-    /**
-     * Handler for mission acknowlegement message.
-     *
-     * @param msg Incoming message.
-     */
-    void consumeOld(msg_mission_ack msg) {
-        if (state == State.IN_PROGRESS &&
-                currentItem == numberOfWaypoints() &&
-                msg.type != MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED &&
-                msg.target_system == node.getMAVLinkId() &&
-                msg.target_component == 0) {
-            state = State.SUCCESS;
-        } else {
-            state = State.ERROR;
-        }
+    void consume(msg_mission_current updateCurrent) {
+
+        d("Drone successfully started mission item %d", updateCurrent.seq);
+
     }
+
 }

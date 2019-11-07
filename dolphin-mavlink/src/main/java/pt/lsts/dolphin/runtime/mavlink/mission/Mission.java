@@ -2,6 +2,9 @@ package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_count;
+import com.MAVLink.common.msg_mission_current;
+import com.MAVLink.common.msg_mission_item;
+import com.MAVLink.common.msg_mission_set_current;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.NodeFilter;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
@@ -77,6 +80,14 @@ public class Mission extends PlatformTask implements Cloneable {
         for (MissionPoint missionPoint : this.missionPoints) {
             messages.add(missionPoint.toMavLinkMessage(dest, current++));
         }
+
+        msg_mission_set_current start = new msg_mission_set_current();
+
+        start.target_system = (short) dest.getMAVLinkId();
+        start.target_component = 0;
+        start.seq = 0;
+
+        messages.add(start);
 
         return messages;
     }
