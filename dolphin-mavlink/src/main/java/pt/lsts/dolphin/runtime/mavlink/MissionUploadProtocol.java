@@ -6,13 +6,19 @@ import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
-
 import pt.lsts.dolphin.dsl.Engine;
+import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission;
+import pt.lsts.dolphin.runtime.mavlink.mission.MissionExecutor;
+import pt.lsts.dolphin.runtime.tasks.Task;
+import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 import pt.lsts.dolphin.util.Debuggable;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Mission upload protocol.
@@ -60,6 +66,8 @@ public final class MissionUploadProtocol implements Debuggable {
      * Waypoints to send (temporary support).
      */
     private Position[] waypoints;
+
+    private MissionExecutor executor;
 
     private List<MAVLinkMessage> messageList;
 
@@ -111,6 +119,16 @@ public final class MissionUploadProtocol implements Debuggable {
     public void start(Mission mission) {
         d("starting upload protocol");
         Engine.platform().displayMessage("Starting upload protocol");
+
+        MissionExecutor executor = (MissionExecutor) mission.getExecutor();
+
+        Map<Task, List<Node>> maps = new TreeMap<>();
+
+        maps.put(mission, Collections.singletonList(node));
+
+        executor.initialize(maps);
+
+        this.executor = executor;
 
         List<MAVLinkMessage> mavLinkMessages = mission.toMavLinkMessages(this.node);
         this.messageList = mavLinkMessages;
@@ -221,6 +239,9 @@ public final class MissionUploadProtocol implements Debuggable {
 
         d("Drone successfully started mission item %d", updateCurrent.seq);
 
+        this.executor.setLast_item(updateCurrent);
+
+        this.executor.step();
     }
 
 }
