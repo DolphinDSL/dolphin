@@ -116,7 +116,7 @@ public final class MissionUploadProtocol implements Debuggable {
         state = State.IN_PROGRESS;
     }
 
-    public void start(Mission mission) {
+    public MissionExecutor start(Mission mission) {
         d("starting upload protocol");
         Engine.platform().displayMessage("Starting upload protocol");
 
@@ -143,6 +143,8 @@ public final class MissionUploadProtocol implements Debuggable {
         state = State.IN_PROGRESS;
         Engine.platform().displayMessage("Sent item count");
         d("Sent item count");
+
+        return executor;
     }
 
     void consume(msg_mission_request msg) {

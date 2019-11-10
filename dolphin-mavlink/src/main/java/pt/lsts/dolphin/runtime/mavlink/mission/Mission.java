@@ -6,7 +6,9 @@ import com.MAVLink.common.msg_mission_current;
 import com.MAVLink.common.msg_mission_item;
 import com.MAVLink.common.msg_mission_set_current;
 import pt.lsts.dolphin.dsl.Engine;
+import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.NodeFilter;
+import pt.lsts.dolphin.runtime.NodeSet;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
 import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
@@ -70,6 +72,18 @@ public class Mission extends PlatformTask implements Cloneable {
         }
 
         return null;
+    }
+
+    public Map<Node, MissionExecutor> startMission(NodeSet nodes) {
+
+        Map<Node, MissionExecutor> missions = new HashMap<>(nodes.size());
+
+        for (Node node : nodes) {
+            missions.put(node,
+                    ((MAVLinkNode) node).getUploadProtocol().start(this));
+        }
+
+        return missions;
     }
 
     private static final Random random = new Random();

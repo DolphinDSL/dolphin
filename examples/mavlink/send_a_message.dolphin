@@ -20,4 +20,8 @@ p = initPosition(41.185, -8.70, 0)
 
 p = movePosition(p, initMoveDistances(100, 100, 100));
 
-goTo v, p
+loiter = initLoiterPoint(movePosition(p, initMoveDistances(100, 100, 100)));
+
+mission = initMissionBuilder().andThen(goto p).andThen(loiter).build();
+
+mission.start(v);

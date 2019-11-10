@@ -2,7 +2,6 @@ package pt.lsts.dolphin.dsl.mavlink
 
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
-import pt.lsts.dolphin.runtime.mavlink.mission.MissionExecutor
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
 
 @DSLClass
@@ -21,10 +20,8 @@ class MissionBuilder {
         this.points = new LinkedList<>();
     }
 
-    public MissionBuilder andThen(Closure cl) {
-
-        
-
+    public MissionBuilder andThen(MissionPoint point) {
+        this.points.add(point);
         return this;
     }
 

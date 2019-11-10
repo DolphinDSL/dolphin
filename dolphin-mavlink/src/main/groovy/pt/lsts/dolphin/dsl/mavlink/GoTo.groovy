@@ -1,5 +1,6 @@
 package pt.lsts.dolphin.dsl.mavlink
 
+
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.dsl.Engine
 import pt.lsts.dolphin.runtime.Node
@@ -28,8 +29,8 @@ class GoTo {
     static void goTo(NodeSet nodes, Position position) {
 
         for (Node n : nodes) {
-            Mission m = Mission.initializeMission()
-                    .addPoint(goTo(position));
+
+            Mission m = MissionBuilder.initMissionBuilder().andThen(goTo(position)).build();
 
             attemptToGiveMissionToNode(n, m);
         }
@@ -40,8 +41,7 @@ class GoTo {
 
         for (Node n : nodes) {
 
-            Mission m = Mission.initializeMission()
-                    .addPoint(goTo(latInDeg, longInDeg, alt));
+            Mission m = MissionBuilder.initMissionBuilder().andThen(goTo(latInDeg, longInDeg, alt)).build();
 
             attemptToGiveMissionToNode(n, m)
 
@@ -53,8 +53,7 @@ class GoTo {
 
         for (Node n : nodes) {
 
-            Mission m = Mission.initializeMission()
-                    .addPoint(goTo(latInDeg, longInDeg, alt, type));
+            Mission m = MissionBuilder.initMissionBuilder().andThen(goTo(latInDeg, longInDeg, alt, type)).build();
 
             attemptToGiveMissionToNode(n, m)
 
