@@ -1,32 +1,37 @@
 package pt.lsts.dolphin.dsl.mavlink
 
+import pt.lsts.dolphin.dsl.Builder
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
 
 @DSLClass
-class MissionBuilder {
+class MissionBuilder extends Builder<Mission> {
 
-    static MissionBuilder initMissionBuilder() {
-        return new MissionBuilder("MISSIONPLAN_" + String.valueOf(System.currentTimeMillis()));
-    }
+    String name;
 
-    private String name;
+    LinkedList<MissionPoint> points;
 
-    private LinkedList<MissionPoint> points;
+    public MissionBuilder() {
+        this.name = "MissionPlan_" + String.valueOf(System.currentTimeMillis());
 
-    private MissionBuilder(String name) {
-        this.name = name;
         this.points = new LinkedList<>();
     }
 
-    public MissionBuilder andThen(MissionPoint point) {
+    void name (String name) {
+        this.name = name;
+    }
+
+    void point(MissionPoint point) {
         this.points.add(point);
-        return this;
     }
 
-    public Mission build() {
-        return Mission.initializeMission(name).setPoints(points);
-    }
+    @Override
+    Mission build() {
+        Mission m = Mission.initializeMission(name);
 
+        m.setPoints(points);
+
+        return m
+    }
 }

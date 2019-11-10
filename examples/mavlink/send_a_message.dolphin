@@ -16,12 +16,33 @@ sendMessage v, arm_command
 
 message 'Sent arm command ...'
 
-p = initPosition(41.185, -8.70, 0)
+p = pos {
+    lat 41.185
+    lon -8.70
+    hae 0
+}
 
-p = movePosition(p, initMoveDistances(100, 100, 100));
+p = move p, moveDistance {
+                    north 100
+                    east 100
+                    height 100
+                  }
 
-loiter = initLoiterPoint(movePosition(p, initMoveDistances(100, 100, 100)));
+loiterP = loiter {
+   pos move(p, moveDistance {
+        north 100
+   })
 
-mission = initMissionBuilder().andThen(goto p).andThen(loiter).build();
+   radius 100
+}
 
-mission.start(v);
+task = mission {
+
+    name "Test Task"
+
+    point (takeOff {
+        pos p
+    })
+
+    point loiterP
+}

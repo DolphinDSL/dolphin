@@ -3,8 +3,6 @@ package pt.lsts.dolphin.dsl.mavlink
 import pt.lsts.dolphin.dsl.Builder
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.runtime.Position
-import pt.lsts.dolphin.util.wgs84.NED
-import pt.lsts.dolphin.util.wgs84.WGS84
 
 @DSLClass
 class PositionBuilder extends Builder<Position> {
@@ -20,6 +18,10 @@ class PositionBuilder extends Builder<Position> {
     }
 
     void hae(double hae) {
+        this.hae = hae;
+    }
+
+    void height(double hae) {
         this.hae = hae;
     }
 
