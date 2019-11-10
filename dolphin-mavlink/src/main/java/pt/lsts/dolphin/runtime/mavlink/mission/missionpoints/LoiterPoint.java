@@ -5,10 +5,9 @@ import com.MAVLink.common.msg_mission_item;
 import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
-import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 
-public class LoiterPoint extends MissionPoint {
+public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint {
 
     private static final float DEFAULT_RADIUS = 20f;
 
@@ -45,19 +44,19 @@ public class LoiterPoint extends MissionPoint {
         return m_item;
     }
 
-    public static MissionPoint initLoiterPoint(double lat, double lon, double hae) {
+    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(double lat, double lon, double hae) {
         return initLoiterPoint(lat, lon, hae, DEFAULT_RADIUS);
     }
 
-    public static MissionPoint initLoiterPoint(Position pos) {
+    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(Position pos) {
         return initLoiterPoint(pos, DEFAULT_RADIUS);
     }
 
-    public static MissionPoint initLoiterPoint(double lat, double lon, double hae, float radius) {
+    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(double lat, double lon, double hae, float radius) {
         return initLoiterPoint(Position.fromDegrees(lat, lon, hae), radius);
     }
 
-    public static MissionPoint initLoiterPoint(Position pos, float radius) {
+    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(Position pos, float radius) {
         return new LoiterPoint(pos, null, radius);
     }
 }

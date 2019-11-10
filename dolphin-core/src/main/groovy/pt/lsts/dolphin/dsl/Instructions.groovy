@@ -69,8 +69,6 @@ class Instructions implements Debuggable {
     new IdleTask(duration)
   }
 
- 
-
   static NodeSet pick (Closure cl) {
     new Picker().build(cl)
   }

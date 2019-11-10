@@ -11,8 +11,6 @@ import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 
 public class TakeOffPoint extends MissionPoint {
 
-    private static final float DEFAULT_PITCH = 0.0f;
-    private static final float DEFAULT_YAW = Float.NaN;
 
     private float pitch;
 
@@ -48,26 +46,6 @@ public class TakeOffPoint extends MissionPoint {
         takeOff.z = (float) getPositionLocation().hae;
 
         return takeOff;
-    }
-
-    public static MissionPoint initTakeOffPoint(double lat, double lon, double hae) {
-        return initTakeOffPoint(Position.fromDegrees(lat, lon, hae), DEFAULT_PITCH, DEFAULT_YAW);
-    }
-
-    public static MissionPoint initTakeOffPoint(double lat, double lon, double hae, float pitch) {
-        return initTakeOffPoint(Position.fromDegrees(lat, lon, hae), pitch, DEFAULT_YAW);
-    }
-
-    public static MissionPoint initTakeOffPoint(double lat, double lon, double hae, float pitch, float yaw) {
-        return initTakeOffPoint(Position.fromDegrees(lat, lon, hae), pitch, yaw);
-    }
-
-    public static MissionPoint initTakeOffPoint(Position pos) {
-        return initTakeOffPoint(pos, DEFAULT_PITCH, DEFAULT_YAW);
-    }
-
-    public static MissionPoint initTakeOffPoint(Position pos, float pitch) {
-        return initTakeOffPoint(pos, pitch, DEFAULT_YAW);
     }
 
     public static MissionPoint initTakeOffPoint(Position pos, float pitch, float yaw) {
