@@ -47,6 +47,10 @@ class Instructions {
         new TakeOffBuilder().build(cl);
     }
 
+    static MissionPoint arm(Closure cl) {
+        new ArmBuilder().build(cl);
+    }
+
     static Position pos(Closure cl) {
         new PositionBuilder().build(cl);
     }
