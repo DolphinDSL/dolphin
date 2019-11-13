@@ -11,6 +11,7 @@ import pt.lsts.dolphin.runtime.NodeFilter;
 import pt.lsts.dolphin.runtime.NodeSet;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
+import pt.lsts.dolphin.runtime.tasks.Task;
 import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 
 import java.util.*;
@@ -79,8 +80,17 @@ public class Mission extends PlatformTask implements Cloneable {
         Map<Node, MissionExecutor> missions = new HashMap<>(nodes.size());
 
         for (Node node : nodes) {
-            missions.put(node,
-                    ((MAVLinkNode) node).getUploadProtocol().start(this));
+
+            TaskExecutor executor = getExecutor();
+
+            Map<Task, List<Node>> missionListMap = new HashMap<>();
+
+            missionListMap.put(this, Collections.singletonList(node));
+
+            executor.initialize(missionListMap);
+
+            executor.start();
+
         }
 
         return missions;

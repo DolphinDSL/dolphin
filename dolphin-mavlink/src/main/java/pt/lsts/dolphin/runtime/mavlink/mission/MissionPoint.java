@@ -15,17 +15,10 @@ public abstract class MissionPoint {
 
     private PointPayload payload;
 
-    private PointType pointType;
 
-    protected MissionPoint(Position pointLocation, PointPayload payload, PointType pointType) {
+    protected MissionPoint(Position pointLocation, PointPayload payload) {
         this.positionLocation = pointLocation;
         this.payload = payload;
-        this.pointType = pointType;
-    }
-
-    public MissionPoint withPointType(PointType pointType) {
-        this.pointType = pointType;
-        return this;
     }
 
     public MissionPoint withPayload(PointPayload pointPayload) {
@@ -42,35 +35,6 @@ public abstract class MissionPoint {
         return payload;
     }
 
-    public PointType getPointType() {
-        return pointType;
-    }
 
     public abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current);
-
-    public enum PointType {
-
-        WAYPOINT(MAV_CMD.MAV_CMD_NAV_WAYPOINT),
-        LOITER(MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM),
-        LOITER_DIST(MAV_CMD.MAV_CMD_NAV_LOITER_TURNS),
-        LOITER_TIME(MAV_CMD.MAV_CMD_NAV_LOITER_TIME),
-        LANDING(MAV_CMD.MAV_CMD_NAV_LAND),
-        TAKEOFF(MAV_CMD.MAV_CMD_NAV_TAKEOFF),
-        ARM_COMMAND(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM),
-        DISARM_COMMAND(MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM);
-        /**
-         * TODO: Add more modes
-         */
-
-        private int MAV_CMD_;
-
-        PointType(int MAV_LINK_NUMBER) {
-            this.MAV_CMD_ = MAV_LINK_NUMBER;
-        }
-
-        public int getMAV_CMD() {
-            return MAV_CMD_;
-        }
-    }
-
 }

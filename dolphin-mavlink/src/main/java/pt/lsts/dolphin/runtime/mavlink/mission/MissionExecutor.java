@@ -2,6 +2,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.common.msg_heartbeat;
 import com.MAVLink.common.msg_mission_current;
+import com.MAVLink.common.msg_mission_item_reached;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
@@ -9,7 +10,7 @@ import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 
 public class MissionExecutor extends PlatformTaskExecutor {
 
-    private msg_mission_current last_item;
+    private msg_mission_item_reached last_item;
 
     private boolean[] completed;
 
@@ -21,10 +22,6 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     MAVLinkNode getVehicleMAV() {
         return (MAVLinkNode) getVehicle();
-    }
-
-    public void setLast_item(msg_mission_current last_item) {
-        this.last_item = last_item;
     }
 
     @Override
@@ -59,6 +56,10 @@ public class MissionExecutor extends PlatformTaskExecutor {
         }
 
         return new CompletionState(CompletionState.Type.ERROR, "");
+    }
+
+    public void consume(msg_mission_item_reached item_reached) {
+        this.last_item = item_reached;
     }
 
     @Override

@@ -7,18 +7,11 @@ import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 import pt.lsts.dolphin.dsl.Engine;
-import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission;
-import pt.lsts.dolphin.runtime.mavlink.mission.MissionExecutor;
-import pt.lsts.dolphin.runtime.tasks.Task;
-import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 import pt.lsts.dolphin.util.Debuggable;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Mission upload protocol.
@@ -67,8 +60,6 @@ public final class MissionUploadProtocol implements Debuggable {
      */
     private Position[] waypoints;
 
-    private MissionExecutor executor;
-
     private List<MAVLinkMessage> messageList;
 
     /**
@@ -116,19 +107,10 @@ public final class MissionUploadProtocol implements Debuggable {
         state = State.IN_PROGRESS;
     }
 
-    public MissionExecutor start(Mission mission) {
+    public void start(Mission mission) {
+        //TODO: Remove executor references from here
         d("starting upload protocol");
         Engine.platform().displayMessage("Starting upload protocol");
-
-        MissionExecutor executor = (MissionExecutor) mission.getExecutor();
-
-        Map<Task, List<Node>> maps = new TreeMap<>();
-
-        maps.put(mission, Collections.singletonList(node));
-
-        executor.initialize(maps);
-
-        this.executor = executor;
 
         List<MAVLinkMessage> mavLinkMessages = mission.toMavLinkMessages(this.node);
         this.messageList = mavLinkMessages;
@@ -143,16 +125,12 @@ public final class MissionUploadProtocol implements Debuggable {
         state = State.IN_PROGRESS;
         Engine.platform().displayMessage("Sent item count");
         d("Sent item count");
-
-        return executor;
     }
 
     void consume(msg_mission_request msg) {
         d("got consume request");
         Engine.platform().displayMessage("Got consume request");
 
-//        Engine.platform().displayMessage("%b %b %b %b %d %d", state == State.IN_PROGRESS, msg.seq == (currentItem - 1),
-//                msg.target_system == node.getMAVLinkId(), msg.target_component == 0, msg.target_system, node.getMAVLinkId());
         Engine.platform().displayMessage(msg.toString());
 
         //Have to check msg.seq == currentItem - 1 because the item count msg is also stored in the list
@@ -237,13 +215,14 @@ public final class MissionUploadProtocol implements Debuggable {
         }
     }
 
+    //TODO MISSION_ITEM_REACHED
+
+    void consume(msg_mission_item_reached item_reached) {
+        d("Drone successfully reached mission item %d", item_reached.seq);
+    }
+
     void consume(msg_mission_current updateCurrent) {
-
         d("Drone successfully started mission item %d", updateCurrent.seq);
-
-        this.executor.setLast_item(updateCurrent);
-
-        this.executor.step();
     }
 
 }

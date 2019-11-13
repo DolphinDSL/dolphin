@@ -13,7 +13,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 public class GoToPoint extends MissionPoint {
 
     private GoToPoint(Position pointLocation, PointPayload payload) {
-        super(pointLocation, payload, PointType.WAYPOINT);
+        super(pointLocation, payload);
     }
 
     @Override
@@ -21,7 +21,7 @@ public class GoToPoint extends MissionPoint {
 
         msg_mission_item msg_item = new msg_mission_item();
 
-        msg_item.command = getPointType().getMAV_CMD();
+        msg_item.command = MAV_CMD.MAV_CMD_NAV_WAYPOINT;
 
         msg_item.target_system = (short) node.getMAVLinkId();
         msg_item.target_component = 0;

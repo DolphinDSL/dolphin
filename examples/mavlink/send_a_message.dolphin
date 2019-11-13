@@ -22,27 +22,11 @@ p = pos {
     hae 0
 }
 
-p = move p, moveDistance {
-                    north 100
-                    east 100
-                    height 100
-                  }
-
-loiterP = loiter {
-   pos move(p, moveDistance {
-        north 100
-   })
-
-   radius 100
-}
-
 task = mission {
 
     name "Test Task"
 
-    point (takeOff {
-        pos p
-    })
-
-    point loiterP
+    goPos 41.185, -8.70
 }
+
+task.startMission(v)

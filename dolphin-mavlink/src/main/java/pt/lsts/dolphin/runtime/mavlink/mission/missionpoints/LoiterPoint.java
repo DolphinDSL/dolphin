@@ -2,6 +2,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_item;
+import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
@@ -11,10 +12,12 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
 
     private static final float DEFAULT_RADIUS = 20f;
 
+    //TODO:Add different loiter types
+
     private float radius;
 
     private LoiterPoint(Position position, PointPayload payload, float radius) {
-        super(position, payload, PointType.LOITER);
+        super(position, payload);
 
         this.radius = radius;
     }
@@ -24,13 +27,13 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
 
         msg_mission_item m_item = new msg_mission_item();
 
-        m_item.command = getPointType().getMAV_CMD();
+        m_item.command = MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM;
         m_item.target_system = (short) dest.getMAVLinkId();
         m_item.target_component = 0;
 
         m_item.current = 0;
         m_item.autocontinue = 1;
-        m_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL_INT;
+        m_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         m_item.seq = current;
 
         m_item.param1 = 0;

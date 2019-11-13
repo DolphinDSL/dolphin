@@ -35,7 +35,7 @@ class Instructions {
         new LoiterBuilder().build(cl);
     }
 
-    static MissionPoint goto(Closure cl) {
+    static MissionPoint goTo(Closure cl) {
         new GoToBuilder().build(cl);
     }
 

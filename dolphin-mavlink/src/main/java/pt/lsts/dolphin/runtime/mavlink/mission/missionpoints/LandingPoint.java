@@ -2,6 +2,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_item;
+import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
@@ -11,7 +12,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 public class LandingPoint extends MissionPoint {
 
     private LandingPoint(Position position, PointPayload payload) {
-        super(position, payload, PointType.LANDING);
+        super(position, payload);
     }
 
     @Override
@@ -19,12 +20,12 @@ public class LandingPoint extends MissionPoint {
 
         msg_mission_item msg_item = new msg_mission_item();
 
-        msg_item.command = getPointType().getMAV_CMD();
+        msg_item.command = MAV_CMD.MAV_CMD_NAV_LAND;
 
         msg_item.target_system = (short) dest.getMAVLinkId();
         msg_item.target_component = 0;
         msg_item.seq = current;
-        msg_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL_INT;
+        msg_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         msg_item.current = 0;
         msg_item.autocontinue = 1;
         msg_item.param1 = 0;

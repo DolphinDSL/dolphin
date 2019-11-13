@@ -211,4 +211,8 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
         mup.consume(msg);
     }
 
+    void consume(msg_mission_item_reached msg) {
+
+    }
+
 }
