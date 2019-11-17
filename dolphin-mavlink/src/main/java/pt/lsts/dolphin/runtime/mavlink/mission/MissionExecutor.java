@@ -1,8 +1,8 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
-import com.MAVLink.common.msg_heartbeat;
-import com.MAVLink.common.msg_mission_current;
-import com.MAVLink.common.msg_mission_item_reached;
+import com.MAVLink.common.*;
+import com.MAVLink.enums.MAV_MISSION_RESULT;
+import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
@@ -60,6 +60,28 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     public void consume(msg_mission_item_reached item_reached) {
         this.last_item = item_reached;
+
+        Engine.platform().displayMessage("Reached the item %d", item_reached.seq);
+    }
+
+    public void consume(msg_mission_ack mission_received) {
+
+        if (mission_received.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
+            Engine.platform().displayMessage("The drone has received the mission.");
+
+            msg_mission_set_current start = new msg_mission_set_current();
+
+            start.target_system = (short) getVehicleMAV().getMAVLinkId();
+            start.target_component = 0;
+            start.seq = 0;
+
+            getVehicleMAV().send(start);
+
+            Engine.platform().displayMessage("Sent the mission start command to the drone.");
+        } else {
+            Engine.platform().displayMessage("Failed to send the mission to the drone");
+        }
+
     }
 
     @Override

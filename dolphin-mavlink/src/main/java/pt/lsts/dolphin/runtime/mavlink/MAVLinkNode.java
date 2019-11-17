@@ -12,6 +12,7 @@ import pt.lsts.dolphin.runtime.AbstractNode;
 import pt.lsts.dolphin.runtime.Payload;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission;
+import pt.lsts.dolphin.runtime.mavlink.mission.MissionExecutor;
 import pt.lsts.dolphin.util.Debuggable;
 
 /**
@@ -50,6 +51,8 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      * Handle for mission download protocol.
      */
     private final MissionDownloadProtocol mdp;
+
+    private MissionExecutor currentExecutor;
 
     /**
      * Constructor.
@@ -149,6 +152,14 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
     }
 
     /**
+     * Sets the current mission executor of this drone
+     * @param executor
+     */
+    public void setExecutor(MissionExecutor executor) {
+        this.currentExecutor = executor;
+    }
+
+    /**
      * Handler for position message.
      *
      * @param msg Incoming message.
@@ -173,7 +184,9 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      * @param msg Incoming message.
      */
     void consume(msg_mission_ack msg) {
-        mup.consume(msg);
+//        mup.consume(msg);
+
+        if (this.currentExecutor != null) this.currentExecutor.consume(msg);
     }
 
     /**
@@ -212,7 +225,7 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
     }
 
     void consume(msg_mission_item_reached msg) {
-
+        if (this.currentExecutor != null) this.currentExecutor.consume(msg);
     }
 
 }

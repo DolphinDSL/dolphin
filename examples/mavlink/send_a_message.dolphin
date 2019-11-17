@@ -27,6 +27,8 @@ task = mission {
     name "Test Task"
 
     goPos 41.185, -8.70
+
+    loiterPos p
 }
 
 task.startMission(v)

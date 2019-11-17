@@ -53,14 +53,6 @@ public class Mission extends PlatformTask implements Cloneable {
             messages.add(missionPoint.toMavLinkMessage(dest, current++));
         }
 
-        msg_mission_set_current start = new msg_mission_set_current();
-
-        start.target_system = (short) dest.getMAVLinkId();
-        start.target_component = 0;
-        start.seq = 0;
-
-        messages.add(start);
-
         return messages;
     }
 
@@ -84,6 +76,10 @@ public class Mission extends PlatformTask implements Cloneable {
             TaskExecutor executor = getExecutor();
 
             Map<Task, List<Node>> missionListMap = new HashMap<>();
+
+            node.setRunningTask(this);
+
+            ((MAVLinkNode) node).setExecutor((MissionExecutor) executor);
 
             missionListMap.put(this, Collections.singletonList(node));
 

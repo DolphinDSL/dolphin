@@ -194,17 +194,21 @@ public final class MissionUploadProtocol implements Debuggable {
     }
 
     void consume(msg_mission_ack msg) {
+
+        Engine.platform().displayMessage("Received message ack %s", msg.toString());
+        Engine.platform().displayMessage("%d of %d" , currentItem, messageList.size());
+
         if (state == State.IN_PROGRESS
-                && currentItem == messageList.size()
+                && currentItem == (messageList.size() - 1)
                 && msg.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED
                 && msg.target_system == node.getMAVLinkId()
                 && msg.target_component == 0) {
 
-            d("Mission sent successfully, sending start mission packet ");
+            Engine.platform().displayMessage("Mission sent successfully, sending start mission packet ");
 
             state = State.SUCCESS;
 
-            d("Send the msg for the node to start the mission");
+            Engine.platform().displayMessage("Send the msg for the node to start the mission");
 
             MAVLinkMessage mavLinkMessage = messageList.get(messageList.size() - 1);
 
@@ -216,10 +220,6 @@ public final class MissionUploadProtocol implements Debuggable {
     }
 
     //TODO MISSION_ITEM_REACHED
-
-    void consume(msg_mission_item_reached item_reached) {
-        d("Drone successfully reached mission item %d", item_reached.seq);
-    }
 
     void consume(msg_mission_current updateCurrent) {
         d("Drone successfully started mission item %d", updateCurrent.seq);

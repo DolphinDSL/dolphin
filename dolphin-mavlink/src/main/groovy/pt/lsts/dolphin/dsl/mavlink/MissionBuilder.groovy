@@ -5,10 +5,14 @@ import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.runtime.Position
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ChangeAltitude
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ChangeSpeed
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.GoToPoint
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LandingPoint
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetHomeCommand
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.TakeOffPoint
 import pt.lsts.dolphin.util.wgs84.NED
 import pt.lsts.dolphin.util.wgs84.WGS84
 
@@ -37,6 +41,14 @@ class MissionBuilder extends Builder<Mission> {
         this.points.add(point);
     }
 
+    void arm() {
+        point(ArmCommand.initArmCommand(1))
+    }
+
+    void disarm() {
+        point(ArmCommand.initArmCommand(0));
+    }
+
     void goPos(double lat, double lon, double hae = 0d) {
         point(GoToPoint.initGoToPoint(lat, lon, hae));
     }
@@ -50,6 +62,7 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void speed(double newSpeed, boolean groundSpeed = false) {
+        this.speed = newSpeed;
         point(ChangeSpeed.initChangeSpeed(newSpeed, groundSpeed));
     }
 
@@ -64,6 +77,29 @@ class MissionBuilder extends Builder<Mission> {
 
     }
 
+    void loiterPos(Position pos, float radius = 15) {
+        point(LoiterPoint.initLoiterPoint(pos, radius))
+    }
+
+    void loiterPos(double lat, double lon, double hae, float radius = 15) {
+        point(LoiterPoint.initLoiterPoint(lat, lon, hae, radius))
+    }
+
+    void landingPoint(double lat, double lon, double hae = 0) {
+        point(LandingPoint.initLandingPoint(lat, lon, hae));
+    }
+
+    void landingPoint(Position pos) {
+        point(LandingPoint.initLandingPoint(pos))
+    }
+
+    void takeOff(Position pos, float pitch = 0) {
+        point(TakeOffPoint.initTakeOffPoint(pos, pitch, Float.NaN));
+    }
+
+    void takeOffYaw(Position pos, float pitch, float yaw = Float.NaN) {
+        point(TakeOffPoint.initTakeOffPoint(pos, pitch, yaw));
+    }
 
     @Override
     Mission build() {
