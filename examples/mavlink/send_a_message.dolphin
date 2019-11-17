@@ -17,20 +17,30 @@ sendMessage v, arm_command
 message 'Sent arm command ...'
 
 p = pos {
-    lat 41.185
-    lon -8.70
-    hae 0
+   lat 41.15242
+   lon -8.64096
+   height 72.0
+}
+
+p1 = move p, {
+
+    north 100
+    east 100
+    down -40
+
 }
 
 task = mission {
 
     name "Test Task"
 
-    goPos 41.185, -8.70
+    home p
+
+    move 100, 100, 40
 
     speed 10
 
-    loiterPos p
+    loiterPos p1
 }
 
 task.startMission(v)

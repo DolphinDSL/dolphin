@@ -12,6 +12,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.DelayCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.GoToPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LandingPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint.LoiterType
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetHomeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.TakeOffPoint
 import pt.lsts.dolphin.util.wgs84.NED
@@ -78,6 +79,12 @@ class MissionBuilder extends Builder<Mission> {
 
     }
 
+    void home (Position pos) {
+        this.home = pos;
+
+        point(SetHomeCommand.initSetHome(this.home));
+    }
+
     void delay(long time) {
         point(DelayCommand.initDelayPoint(time));
     }
@@ -88,6 +95,14 @@ class MissionBuilder extends Builder<Mission> {
 
     void loiterPos(double lat, double lon, double hae, float radius = 15) {
         point(LoiterPoint.initLoiterPoint(lat, lon, hae, radius))
+    }
+
+    void loiterTurns(double lat, double lon, double hae, float radius = 15, int arg = 0) {
+        point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TURNS, radius, arg));
+    }
+
+    void loiterTime(double lat, double lon, double hae, float radius = 15, int arg = 0) {
+        point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TIME, radius, arg))
     }
 
     void landingPoint(double lat, double lon, double hae = 0) {

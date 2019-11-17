@@ -108,7 +108,6 @@ public final class MissionUploadProtocol implements Debuggable {
     }
 
     public void start(Mission mission) {
-        //TODO: Remove executor references from here
         d("starting upload protocol");
         Engine.platform().displayMessage("Starting upload protocol");
 
@@ -218,8 +217,6 @@ public final class MissionUploadProtocol implements Debuggable {
             state = State.ERROR;
         }
     }
-
-    //TODO MISSION_ITEM_REACHED
 
     void consume(msg_mission_current updateCurrent) {
         d("Drone successfully started mission item %d", updateCurrent.seq);

@@ -6,20 +6,25 @@ import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
+import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 
 public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint {
 
     private static final float DEFAULT_RADIUS = 20f;
 
-    //TODO:Add different loiter types
+    private LoiterType type;
 
     private float radius;
 
-    private LoiterPoint(Position position, PointPayload payload, float radius) {
+    private int arg;
+
+    private LoiterPoint(Position position, PointPayload payload, LoiterType type, float radius, int arg) {
         super(position, payload);
 
+        this.type = type;
         this.radius = radius;
+        this.arg = arg;
     }
 
     @Override
@@ -27,7 +32,7 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
 
         msg_mission_item m_item = new msg_mission_item();
 
-        m_item.command = MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM;
+        m_item.command = type.getCmd();
         m_item.target_system = (short) dest.getMAVLinkId();
         m_item.target_component = 0;
 
@@ -36,7 +41,7 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
         m_item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         m_item.seq = current;
 
-        m_item.param1 = 0;
+        m_item.param1 = arg;
         m_item.param2 = 0;
         m_item.param3 = radius;
 
@@ -47,19 +52,39 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
         return m_item;
     }
 
-    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(double lat, double lon, double hae) {
+    public enum LoiterType {
+        UNLIM(MAV_CMD.MAV_CMD_NAV_LOITER_UNLIM),
+        TURNS(MAV_CMD.MAV_CMD_NAV_LOITER_TURNS),
+        TIME(MAV_CMD.MAV_CMD_NAV_LOITER_TIME);
+
+        int cmd;
+
+        LoiterType(int cmd) {
+            this.cmd = cmd;
+        }
+
+        int getCmd() {
+            return cmd;
+        }
+    }
+
+    public static MissionPoint initLoiterPoint(double lat, double lon, double hae) {
         return initLoiterPoint(lat, lon, hae, DEFAULT_RADIUS);
     }
 
-    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(Position pos) {
+    public static MissionPoint initLoiterPoint(Position pos) {
         return initLoiterPoint(pos, DEFAULT_RADIUS);
     }
 
-    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(double lat, double lon, double hae, float radius) {
+    public static MissionPoint initLoiterPoint(double lat, double lon, double hae, float radius) {
         return initLoiterPoint(Position.fromDegrees(lat, lon, hae), radius);
     }
 
-    public static pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint initLoiterPoint(Position pos, float radius) {
-        return new LoiterPoint(pos, null, radius);
+    public static MissionPoint initLoiterPoint(Position pos, float radius) {
+        return new LoiterPoint(pos, null, LoiterType.UNLIM, radius, 0);
+    }
+
+    public static MissionPoint initLoiterPoint(Position pos, LoiterType type, float radius, int arg) {
+        return new LoiterPoint(pos, null, type, radius, arg);
     }
 }
