@@ -26,6 +26,7 @@ public class ChangeAltitude extends MissionPoint {
         item.target_system = (short) dest.getMAVLinkId();
         item.target_component = 0;
         item.autocontinue = 1;
+        item.seq = current;
         item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         item.command = MAV_CMD.MAV_CMD_DO_CHANGE_ALTITUDE;
 

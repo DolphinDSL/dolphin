@@ -28,6 +28,8 @@ task = mission {
 
     goPos 41.185, -8.70
 
+    speed 10
+
     loiterPos p
 }
 

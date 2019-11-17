@@ -3,6 +3,7 @@ package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_item;
 import com.MAVLink.enums.MAV_CMD;
+import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
@@ -22,6 +23,8 @@ public class SetHomeCommand extends MissionPoint {
         msg.target_component = 0;
         msg.autocontinue = 1;
         msg.command = MAV_CMD.MAV_CMD_DO_SET_HOME;
+        msg.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
+        msg.seq = current;
 
         msg.param1 = 0;
 

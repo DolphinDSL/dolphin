@@ -80,6 +80,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
             Engine.platform().displayMessage("Sent the mission start command to the drone.");
         } else {
             Engine.platform().displayMessage("Failed to send the mission to the drone");
+            Engine.platform().displayMessage("%d", mission_received.type);
         }
 
     }

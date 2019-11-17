@@ -23,8 +23,6 @@ public class ChangeSpeed extends MissionPoint {
         this.groundSpeed = groundSpeed;
     }
 
-
-    //TODO: MAV_CMD_DO_CHANGE_SPEED
     @Override
     public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
         msg_mission_item item = new msg_mission_item();
@@ -34,6 +32,7 @@ public class ChangeSpeed extends MissionPoint {
         item.target_component = 0;
         item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         item.autocontinue = 1;
+        item.seq = current;
 
         item.command = MAV_CMD.MAV_CMD_DO_CHANGE_SPEED;
         item.param1 = groundSpeed ? 1 : 0;
