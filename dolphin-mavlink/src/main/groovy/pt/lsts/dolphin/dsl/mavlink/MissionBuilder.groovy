@@ -8,6 +8,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ChangeAltitude
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ChangeSpeed
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.DelayCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.GoToPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LandingPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint
@@ -75,6 +76,10 @@ class MissionBuilder extends Builder<Mission> {
         this.home = Position.fromDegrees(lat, lon, hae);
         point(SetHomeCommand.initSetHome(this.home));
 
+    }
+
+    void delay(long time) {
+        point(DelayCommand.initDelayPoint(time));
     }
 
     void loiterPos(Position pos, float radius = 15) {
