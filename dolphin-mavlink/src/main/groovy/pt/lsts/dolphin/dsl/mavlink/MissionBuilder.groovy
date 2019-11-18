@@ -73,13 +73,12 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void home(double lat, double lon, double hae = 0d) {
-
         this.home = Position.fromDegrees(lat, lon, hae);
-        point(SetHomeCommand.initSetHome(this.home));
 
+        point(SetHomeCommand.initSetHome(this.home));
     }
 
-    void home (Position pos) {
+    void home(Position pos) {
         this.home = pos;
 
         point(SetHomeCommand.initSetHome(this.home));

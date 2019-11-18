@@ -38,8 +38,8 @@ public class GoToPoint extends MissionPoint {
 //        msg_item.y = (int) (getPositionLocation().lon * 1e+07);
 //        msg_item.z = (float) getPositionLocation().hae;
 
-        msg_item.x = (float) (getPositionLocation().lat);
-        msg_item.y = (float) getPositionLocation().lon;
+        msg_item.x = (float) (getPositionLocation().lat * Position.R2D);
+        msg_item.y = (float) (getPositionLocation().lon * Position.R2D);
         msg_item.z = (float) getPositionLocation().hae;
 
         return msg_item;

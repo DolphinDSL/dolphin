@@ -45,8 +45,8 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
         m_item.param2 = 0;
         m_item.param3 = radius;
 
-        m_item.x = (float) getPositionLocation().lat;
-        m_item.y = (float) getPositionLocation().lon;
+        m_item.x = (float) (getPositionLocation().lat * Position.R2D);
+        m_item.y = (float) (getPositionLocation().lon * Position.R2D);
         m_item.z = (float) getPositionLocation().hae;
 
         return m_item;

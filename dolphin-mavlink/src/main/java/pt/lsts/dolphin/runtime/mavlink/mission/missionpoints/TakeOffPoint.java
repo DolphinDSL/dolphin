@@ -41,8 +41,8 @@ public class TakeOffPoint extends MissionPoint {
         takeOff.param1 = pitch;
         takeOff.param4 = yaw;
 
-        takeOff.x = (float) getPositionLocation().lat;
-        takeOff.y = (float) getPositionLocation().lon;
+        takeOff.x = (float) (getPositionLocation().lat * Position.R2D);
+        takeOff.y = (float) (getPositionLocation().lon * Position.R2D);
         takeOff.z = (float) getPositionLocation().hae;
 
         return takeOff;

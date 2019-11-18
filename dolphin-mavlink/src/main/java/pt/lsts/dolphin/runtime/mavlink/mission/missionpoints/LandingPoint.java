@@ -32,8 +32,8 @@ public class LandingPoint extends MissionPoint {
         msg_item.param2 = 0;
         msg_item.param3 = 0;
 
-        msg_item.x = (float) getPositionLocation().lat;
-        msg_item.y = (float) getPositionLocation().lon;
+        msg_item.x = (float) (getPositionLocation().lat * Position.R2D);
+        msg_item.y = (float) (getPositionLocation().lon * Position.R2D);
         msg_item.z = (float) getPositionLocation().hae;
 
         return msg_item;

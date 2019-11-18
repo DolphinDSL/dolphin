@@ -28,8 +28,8 @@ public class SetHomeCommand extends MissionPoint {
 
         msg.param1 = 0;
 
-        msg.x = (float) (getPositionLocation().lat);
-        msg.y = (float) getPositionLocation().lon;
+        msg.x = (float) (getPositionLocation().lat * Position.R2D);
+        msg.y = (float) (getPositionLocation().lon * Position.R2D);
         msg.z = (float) getPositionLocation().hae;
 
         return msg;
