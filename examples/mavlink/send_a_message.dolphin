@@ -18,15 +18,15 @@ message 'Sent arm command ...'
 
 p = pos {
    lat 41.15242
-   lon -8.64096
+   lon (-8.64096)
    height 72.0
 }
 
 p1 = move p, {
 
-    north 100
-    east 100
-    down -40
+    north 5
+    east 0
+    down 0
 
 }
 
@@ -34,13 +34,15 @@ task = mission {
 
     name "Test Task"
 
+    takeOff p
+
     home p
 
-    move 100, 100, 40
+    move 5, 0, 0
 
     speed 10
 
-    loiterPos p1
+    moveAndLoiterPos 10, 5, 0
 }
 
 task.startMission(v)

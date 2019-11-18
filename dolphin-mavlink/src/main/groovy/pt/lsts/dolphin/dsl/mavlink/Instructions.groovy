@@ -43,7 +43,7 @@ class Instructions {
         new LandingBuilder().build(cl);
     }
 
-    static MissionPoint takeOff(Closure cl) {
+    static MissionPoint takeOffBuild(Closure cl) {
         new TakeOffBuilder().build(cl);
     }
 

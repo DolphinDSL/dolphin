@@ -2,9 +2,9 @@ package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_item;
-import com.MAVLink.common.msg_mission_item_int;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_FRAME;
+import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
@@ -33,10 +33,6 @@ public class GoToPoint extends MissionPoint {
         msg_item.param2 = 50;
         msg_item.param3 = 0;
         msg_item.param4 = Float.NaN;
-//
-//        msg_item.x = (int) (getPositionLocation().lat * 1e+07);
-//        msg_item.y = (int) (getPositionLocation().lon * 1e+07);
-//        msg_item.z = (float) getPositionLocation().hae;
 
         msg_item.x = (float) (getPositionLocation().lat * Position.R2D);
         msg_item.y = (float) (getPositionLocation().lon * Position.R2D);

@@ -12,6 +12,8 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     private msg_mission_item_reached last_item;
 
+    private msg_mission_current msg_mission_current;
+
     private boolean[] completed;
 
     public MissionExecutor(Mission mission) {
@@ -62,6 +64,16 @@ public class MissionExecutor extends PlatformTaskExecutor {
         this.last_item = item_reached;
 
         Engine.platform().displayMessage("Reached the item %d", item_reached.seq);
+    }
+
+    /**
+     * Handle the current mission
+     * @param currentItem
+     */
+    public void consume(msg_mission_current currentItem) {
+        this.msg_mission_current = currentItem;
+
+        Engine.platform().displayMessage("Current Mission item %d", currentItem.seq);
     }
 
     public void consume(msg_mission_ack mission_received) {

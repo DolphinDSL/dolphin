@@ -15,7 +15,6 @@ public abstract class MissionPoint {
 
     private PointPayload payload;
 
-
     protected MissionPoint(Position pointLocation, PointPayload payload) {
         this.positionLocation = pointLocation;
         this.payload = payload;
@@ -34,7 +33,6 @@ public abstract class MissionPoint {
     public PointPayload getPayload() {
         return payload;
     }
-
 
     public abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current);
 }

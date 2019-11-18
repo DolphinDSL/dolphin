@@ -2,6 +2,7 @@ package pt.lsts.dolphin.dsl.mavlink
 
 import pt.lsts.dolphin.dsl.Builder
 import pt.lsts.dolphin.dsl.DSLClass
+import pt.lsts.dolphin.dsl.Engine
 import pt.lsts.dolphin.runtime.Position
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
@@ -86,6 +87,15 @@ class MissionBuilder extends Builder<Mission> {
 
     void delay(long time) {
         point(DelayCommand.initDelayPoint(time));
+    }
+
+    void moveAndLoiterPos(double north, double east, double up, float radius = 15) {
+        //TODO: Make move points relative to the last position or to the home position ?
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(this.home, move);
+
+        point(LoiterPoint.initLoiterPoint(moved, radius));
     }
 
     void loiterPos(Position pos, float radius = 15) {

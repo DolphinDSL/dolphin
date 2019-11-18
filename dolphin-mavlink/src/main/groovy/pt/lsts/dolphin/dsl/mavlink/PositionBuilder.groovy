@@ -7,7 +7,7 @@ import pt.lsts.dolphin.runtime.Position
 @DSLClass
 class PositionBuilder extends Builder<Position> {
 
-    double lat, lon, hae;
+    double lat, lon, hae = 0;
 
     void lat(double lat) {
         this.lat = lat;
