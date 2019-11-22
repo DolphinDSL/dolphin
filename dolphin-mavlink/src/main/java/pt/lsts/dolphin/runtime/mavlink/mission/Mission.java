@@ -5,6 +5,7 @@ import com.MAVLink.common.msg_mission_count;
 import com.MAVLink.common.msg_mission_current;
 import com.MAVLink.common.msg_mission_item;
 import com.MAVLink.common.msg_mission_set_current;
+import com.MAVLink.enums.MAV_CMD;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.NodeFilter;
@@ -23,7 +24,6 @@ public class Mission extends PlatformTask implements Cloneable {
     private Mission(String id) {
         super(id);
         missionPoints = new LinkedList<>();
-
     }
 
     public void setPoints(LinkedList<MissionPoint> points) {

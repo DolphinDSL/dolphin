@@ -33,7 +33,7 @@ public final class Main {
                 engine.run(new File(fileName));
             }
 
-            Thread.sleep(10000);
+            Thread.sleep(100000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {

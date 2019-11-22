@@ -1,6 +1,7 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.common.*;
+import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;

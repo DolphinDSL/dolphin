@@ -15,6 +15,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LandingPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint.LoiterType
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetHomeCommand
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.TakeOffPoint
 import pt.lsts.dolphin.util.wgs84.NED
 import pt.lsts.dolphin.util.wgs84.WGS84
@@ -34,6 +35,8 @@ class MissionBuilder extends Builder<Mission> {
         this.name = "MissionPlan_" + String.valueOf(System.currentTimeMillis());
 
         this.points = new LinkedList<>();
+
+        this.points.add(SetModeCommand.initSetArmedAuto());
     }
 
     void name(String name) {
@@ -76,13 +79,13 @@ class MissionBuilder extends Builder<Mission> {
     void home(double lat, double lon, double hae = 0d) {
         this.home = Position.fromDegrees(lat, lon, hae);
 
-        point(SetHomeCommand.initSetHome(this.home));
+//        point(SetHomeCommand.initSetHome(this.home));
     }
 
     void home(Position pos) {
         this.home = pos;
 
-        point(SetHomeCommand.initSetHome(this.home));
+//        point(SetHomeCommand.initSetHome(this.home));
     }
 
     void delay(long time) {
@@ -95,7 +98,7 @@ class MissionBuilder extends Builder<Mission> {
 
         def moved = WGS84.displace(this.home, move);
 
-        point(LoiterPoint.initLoiterPoint(moved, radius));
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, 10));
     }
 
     void loiterPos(Position pos, float radius = 15) {
@@ -122,7 +125,7 @@ class MissionBuilder extends Builder<Mission> {
         point(LandingPoint.initLandingPoint(pos))
     }
 
-    void takeOff(Position pos, float pitch = 0) {
+    void takeOff(Position pos, float pitch = 15) {
         point(TakeOffPoint.initTakeOffPoint(pos, pitch, Float.NaN));
     }
 

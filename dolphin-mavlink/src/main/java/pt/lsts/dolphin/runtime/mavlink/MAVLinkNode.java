@@ -8,6 +8,7 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_MODE;
 
+import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.AbstractNode;
 import pt.lsts.dolphin.runtime.Payload;
 import pt.lsts.dolphin.runtime.Position;
@@ -228,6 +229,11 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
 
     void consume(msg_mission_item_reached msg) {
         if (this.currentExecutor != null) this.currentExecutor.consume(msg);
+    }
+
+    void consume(msg_statustext msg) {
+        Engine.platform().displayMessage(msg.toString());
+        Engine.platform().displayMessage("Teste %s", new String(msg.text));
     }
 
 }

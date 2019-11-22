@@ -30,19 +30,21 @@ p1 = move p, {
 
 }
 
+takeOffPoint = move p, {
+    down -50
+}
+
 task = mission {
 
     name "Test Task"
 
-    takeOff p
-
     home p
 
-    move 5, 0, 0
+    takeOff takeOffPoint
 
-    speed 10
+    move 50, 0, 0
 
-    moveAndLoiterPos 10, 5, 0
+    moveAndLoiterPos 100, 50, 0
 }
 
 task.startMission(v)
