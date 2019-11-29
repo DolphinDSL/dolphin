@@ -40,6 +40,10 @@ public class Mission extends PlatformTask implements Cloneable {
 
         msg_mission_count count = new msg_mission_count();
 
+        Engine.platform().displayMessage("Item count: %d", this.missionPoints.size());
+
+        Engine.platform().displayMessage("%s", this.missionPoints);
+
         count.count = this.missionPoints.size();
         count.target_component = 0;
         count.target_system = (short) dest.getMAVLinkId();

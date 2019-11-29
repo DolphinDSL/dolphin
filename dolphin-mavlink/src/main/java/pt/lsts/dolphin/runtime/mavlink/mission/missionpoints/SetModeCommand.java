@@ -21,6 +21,7 @@ public class SetModeCommand extends MissionPoint {
         item.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
         item.autocontinue = 1;
         item.target_system = (short) dest.getMAVLinkId();
+        item.seq = current;
 
         item.target_component = 0;
 

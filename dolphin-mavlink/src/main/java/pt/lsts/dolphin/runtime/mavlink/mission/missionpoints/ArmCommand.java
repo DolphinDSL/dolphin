@@ -6,18 +6,16 @@ import com.MAVLink.enums.MAV_CMD;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
-public class ArmCommand extends MissionPoint {
+public class ArmCommand {
 
     private int arm_disarm;
 
     private ArmCommand(int arm_disarm) {
-        super(null, null);
 
         this.arm_disarm = arm_disarm;
     }
 
-    @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
 
         msg_command_long arm_cmd = new msg_command_long();
 
@@ -29,7 +27,7 @@ public class ArmCommand extends MissionPoint {
         return arm_cmd;
     }
 
-    public static MissionPoint initArmCommand(int arm_disarm) {
+    public static ArmCommand initArmCommand(int arm_disarm) {
         return new ArmCommand(arm_disarm);
     }
 }

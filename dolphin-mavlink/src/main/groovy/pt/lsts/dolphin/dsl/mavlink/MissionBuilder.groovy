@@ -36,8 +36,6 @@ class MissionBuilder extends Builder<Mission> {
         this.name = "MissionPlan_" + String.valueOf(System.currentTimeMillis());
 
         this.points = new LinkedList<>();
-
-        this.points.add(SetModeCommand.initSetArmedAuto());
     }
 
     void name(String name) {
@@ -49,11 +47,9 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void arm() {
-        point(ArmCommand.initArmCommand(1))
     }
 
     void disarm() {
-        point(ArmCommand.initArmCommand(0));
     }
 
     void goPos(double lat, double lon, double hae = 0d) {
@@ -86,7 +82,7 @@ class MissionBuilder extends Builder<Mission> {
     void home(Position pos) {
         this.home = pos;
 
-//        point(SetHomeCommand.initSetHome(this.home));
+        point(SetHomeCommand.initSetHome(this.home));
     }
 
     void delay(long time) {

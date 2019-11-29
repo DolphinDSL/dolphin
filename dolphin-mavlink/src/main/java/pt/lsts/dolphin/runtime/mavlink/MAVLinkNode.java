@@ -185,7 +185,7 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      * @param msg Incoming message.
      */
     void consume(msg_mission_ack msg) {
-//        mup.consume(msg);
+        mup.consume(msg);
 
         if (this.currentExecutor != null) this.currentExecutor.consume(msg);
     }

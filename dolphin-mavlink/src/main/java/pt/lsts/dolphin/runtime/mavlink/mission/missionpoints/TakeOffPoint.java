@@ -32,7 +32,6 @@ public class TakeOffPoint extends MissionPoint {
         takeOff.target_component = 0;
         takeOff.target_system = (short) dest.getMAVLinkId();
 
-        takeOff.current = 0;
         takeOff.autocontinue = 1;
         takeOff.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
         takeOff.seq = current;

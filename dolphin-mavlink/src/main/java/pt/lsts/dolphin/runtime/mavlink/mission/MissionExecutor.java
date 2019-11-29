@@ -1,11 +1,15 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
+import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
+import com.MAVLink.enums.MAV_MODE;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
 import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 
@@ -33,8 +37,17 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         Mission mission = (Mission) getTask();
 
+        Engine.platform().displayMessage("Arming drone...");
+
+        ArmCommand armCommand = ArmCommand.initArmCommand(1);
+
+        MAVLinkMessage mavLinkMessage = armCommand.toMavLinkMessage(getVehicleMAV());
+
+        getVehicleMAV().send(mavLinkMessage);
+
         MissionUploadProtocol uploadP = vehicle.getUploadProtocol();
         uploadP.start(mission);
+
     }
 
     @Override
@@ -79,6 +92,10 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     public void consume(msg_mission_ack mission_received) {
 
+        if (getVehicleMAV().getUploadProtocol().getState() == MissionUploadProtocol.State.CLEARING) {
+            return;
+        }
+
         if (mission_received.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
             Engine.platform().displayMessage("The drone has received the mission.");
 
@@ -86,7 +103,17 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
             start.target_system = (short) getVehicleMAV().getMAVLinkId();
             start.target_component = 0;
-            start.seq = 0;
+            start.seq = 1;
+
+            getVehicleMAV().send(start);
+
+            msg_command_long set_mode = new msg_command_long();
+
+            set_mode.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
+
+            set_mode.target_component = 0;
+            set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
+            set_mode.param1 = MAV_MODE.MAV_MODE_AUTO_ARMED;
 
             getVehicleMAV().send(start);
 

@@ -37,7 +37,7 @@ public class ChangeSpeed extends MissionPoint {
         item.command = MAV_CMD.MAV_CMD_DO_CHANGE_SPEED;
         item.param1 = groundSpeed ? 1 : 0;
         item.param2 = (float) speed;
-        item.param3 = -1;
+        item.param3 = 10;
 
         return item;
     }

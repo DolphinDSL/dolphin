@@ -22,6 +22,6 @@ class ArmBuilder extends Builder<MissionPoint> {
 
     @Override
     MissionPoint build() {
-        return ArmCommand.initArmCommand(armDisarm)
+        return null;
     }
 }
