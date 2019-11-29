@@ -7,6 +7,7 @@ import pt.lsts.dolphin.runtime.Position
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.CameraPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ChangeAltitude
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ChangeSpeed
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.DelayCommand
@@ -133,6 +134,18 @@ class MissionBuilder extends Builder<Mission> {
         point(TakeOffPoint.initTakeOffPoint(pos, pitch, yaw));
     }
 
+    void capturePhoto() {
+        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.ONE_PHOTO, 1));
+    }
+
+    void captureSeveralPhotos(int photos) {
+        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.IMAGE_COUNT, photos));
+    }
+
+    void captureUntilStop() {
+        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.UNTIL_STOP, 0));
+    }
+    
     @Override
     Mission build() {
         Mission m = Mission.initializeMission(name);
