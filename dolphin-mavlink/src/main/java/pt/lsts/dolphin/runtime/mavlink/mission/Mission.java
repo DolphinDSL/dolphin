@@ -50,7 +50,6 @@ public class Mission extends PlatformTask implements Cloneable {
 
         messages.add(count);
 
-        //TODO: Sent, already on the drone, start mission (MSG_DO_SET_MISSION_CURRENT ?)
         int current = 0;
 
         for (MissionPoint missionPoint : this.missionPoints) {
@@ -71,31 +70,6 @@ public class Mission extends PlatformTask implements Cloneable {
         return null;
     }
 
-    public Map<Node, MissionExecutor> startMission(NodeSet nodes) {
-
-        Map<Node, MissionExecutor> missions = new HashMap<>(nodes.size());
-
-        for (Node node : nodes) {
-
-            TaskExecutor executor = getExecutor();
-
-            Map<Task, List<Node>> missionListMap = new HashMap<>();
-
-            node.setRunningTask(this);
-
-            ((MAVLinkNode) node).setExecutor((MissionExecutor) executor);
-
-            missionListMap.put(this, Collections.singletonList(node));
-
-            executor.initialize(missionListMap);
-
-            executor.start();
-
-        }
-
-        return missions;
-    }
-
     private static final Random random = new Random();
 
     public static Mission initializeMission() {
@@ -108,7 +82,11 @@ public class Mission extends PlatformTask implements Cloneable {
 
     @Override
     public List<NodeFilter> getRequirements() {
-        return Collections.emptyList();
+        List<NodeFilter> filters = new LinkedList<>();
+        NodeFilter filter = new NodeFilter();
+
+        filters.add(filter);
+        return filters;
     }
 
     @Override

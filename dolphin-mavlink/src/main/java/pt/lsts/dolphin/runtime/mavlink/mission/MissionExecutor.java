@@ -4,12 +4,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
-import com.MAVLink.enums.MAV_MODE;
+import com.MAVLink.enums.MAV_MODE_FLAG;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand;
-import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
 import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 
@@ -45,9 +44,34 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         getVehicleMAV().send(mavLinkMessage);
 
+        vehicle.setExecutor(this);
+
+        //TODO: If vehicle is in Auto mode, make it manual so it can receive the mission
+
+        if (vehicle.getLastHBReceived().custom_mode == 10) {
+            //Vehicle is currently in auto mode
+            Engine.platform().displayMessage("The drone %d is in auto mode, changing to RTL ", getVehicleMAV().getMAVLinkId());
+
+            setIntoRTL();
+        }
+
+        Engine.platform().displayMessage("Starting the drone %d on to the mission %s", getVehicleMAV().getMAVLinkId(), getTask().getId());
+
         MissionUploadProtocol uploadP = vehicle.getUploadProtocol();
         uploadP.start(mission);
 
+    }
+
+    private void setIntoRTL() {
+        msg_command_long set_mode = new msg_command_long();
+
+        set_mode.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
+
+        set_mode.target_component = 0;
+        set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
+        set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+        //Set the drone as RTL mode
+        set_mode.param2 = 11;
     }
 
     @Override
@@ -59,19 +83,14 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         long custom_mode = lastHBReceived.custom_mode;
 
-        completed[this.last_item.seq] = true;
+//        Engine.platform().displayMessage("On step %d", custom_mode);
 
-        if (this.last_item.seq == completed.length) {
+        if (custom_mode == 11 && timeElapsed() >= 5) {
+            Engine.platform().displayMessage("DONE");
             return new CompletionState(CompletionState.Type.DONE);
         }
 
-        if (custom_mode == 11) {
-            return new CompletionState(CompletionState.Type.DONE);
-        } else if (custom_mode == 10) {
-            return new CompletionState(CompletionState.Type.IN_PROGRESS);
-        }
-
-        return new CompletionState(CompletionState.Type.ERROR, "");
+        return new CompletionState(CompletionState.Type.IN_PROGRESS, "");
     }
 
     public void consume(msg_mission_item_reached item_reached) {
@@ -82,12 +101,13 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     /**
      * Handle the current mission
+     *
      * @param currentItem
      */
     public void consume(msg_mission_current currentItem) {
         this.msg_mission_current = currentItem;
 
-        Engine.platform().displayMessage("Current Mission item %d", currentItem.seq);
+//        Engine.platform().displayMessage("Current Mission item %d", currentItem.seq);
     }
 
     public void consume(msg_mission_ack mission_received) {
@@ -97,15 +117,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
         }
 
         if (mission_received.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
-            Engine.platform().displayMessage("The drone has received the mission.");
-
-            msg_mission_set_current start = new msg_mission_set_current();
-
-            start.target_system = (short) getVehicleMAV().getMAVLinkId();
-            start.target_component = 0;
-            start.seq = 1;
-
-            getVehicleMAV().send(start);
+            Engine.platform().displayMessage("The drone %d has received the mission.", this.getVehicleMAV().getMAVLinkId());
 
             msg_command_long set_mode = new msg_command_long();
 
@@ -113,7 +125,17 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
             set_mode.target_component = 0;
             set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
-            set_mode.param1 = MAV_MODE.MAV_MODE_AUTO_ARMED;
+            set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+            //Set the drone as auto mode
+            set_mode.param2 = 10;
+
+            getVehicleMAV().send(set_mode);
+
+            msg_mission_set_current start = new msg_mission_set_current();
+
+            start.target_system = (short) getVehicleMAV().getMAVLinkId();
+            start.target_component = 0;
+            start.seq = 1;
 
             getVehicleMAV().send(start);
 

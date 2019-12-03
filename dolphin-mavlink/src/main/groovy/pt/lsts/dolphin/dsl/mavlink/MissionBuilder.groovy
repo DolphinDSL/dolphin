@@ -76,7 +76,7 @@ class MissionBuilder extends Builder<Mission> {
     void home(double lat, double lon, double hae = 0d) {
         this.home = Position.fromDegrees(lat, lon, hae);
 
-//        point(SetHomeCommand.initSetHome(this.home));
+        point(SetHomeCommand.initSetHome(this.home));
     }
 
     void home(Position pos) {
@@ -84,6 +84,8 @@ class MissionBuilder extends Builder<Mission> {
 
         point(SetHomeCommand.initSetHome(this.home));
     }
+
+    //TODO: change names to more friendly names
 
     void delay(long time) {
         point(DelayCommand.initDelayPoint(time));
