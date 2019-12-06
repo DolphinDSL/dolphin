@@ -16,29 +16,28 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_terrain_data extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_TERRAIN_DATA = 134;
-    public static final int MAVLINK_MSG_ID_TERRAIN_DATA_CRC = 229;
     public static final int MAVLINK_MSG_LENGTH = 43;
     private static final long serialVersionUID = MAVLINK_MSG_ID_TERRAIN_DATA;
 
 
       
     /**
-    * Latitude of SW corner of first grid (degrees *10^7)
+    * Latitude of SW corner of first grid
     */
     public int lat;
       
     /**
-    * Longitude of SW corner of first grid (in degrees *10^7)
+    * Longitude of SW corner of first grid
     */
     public int lon;
       
     /**
-    * Grid spacing in meters
+    * Grid spacing
     */
     public int grid_spacing;
       
     /**
-    * Terrain data in meters AMSL
+    * Terrain data MSL
     */
     public short data[] = new short[16];
       
@@ -57,7 +56,6 @@ public class msg_terrain_data extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_TERRAIN_DATA;
-        packet.crc_extra = MAVLINK_MSG_ID_TERRAIN_DATA_CRC;
               
         packet.payload.putInt(lat);
               
@@ -116,7 +114,7 @@ public class msg_terrain_data extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_TERRAIN_DATA;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
               

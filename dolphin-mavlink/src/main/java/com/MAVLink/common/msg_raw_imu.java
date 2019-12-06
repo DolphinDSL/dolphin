@@ -11,19 +11,18 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* The RAW IMU readings for the usual 9DOF sensor setup. This message should always contain the true raw values without any scaling to allow data capture and system debugging.
+* The RAW IMU readings for a 9DOF sensor, which is identified by the id (default IMU1). This message should always contain the true raw values without any scaling to allow data capture and system debugging.
 */
 public class msg_raw_imu extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_RAW_IMU = 27;
-    public static final int MAVLINK_MSG_ID_RAW_IMU_CRC = 144;
-    public static final int MAVLINK_MSG_LENGTH = 26;
+    public static final int MAVLINK_MSG_LENGTH = 29;
     private static final long serialVersionUID = MAVLINK_MSG_ID_RAW_IMU;
 
 
       
     /**
-    * Timestamp (microseconds since UNIX epoch or microseconds since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
@@ -71,6 +70,16 @@ public class msg_raw_imu extends MAVLinkMessage{
     * Z Magnetic field (raw)
     */
     public short zmag;
+      
+    /**
+    * Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)
+    */
+    public short id;
+      
+    /**
+    * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
+    */
+    public short temperature;
     
 
     /**
@@ -82,7 +91,6 @@ public class msg_raw_imu extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_RAW_IMU;
-        packet.crc_extra = MAVLINK_MSG_ID_RAW_IMU_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -103,6 +111,10 @@ public class msg_raw_imu extends MAVLinkMessage{
         packet.payload.putShort(ymag);
               
         packet.payload.putShort(zmag);
+              
+        packet.payload.putUnsignedByte(id);
+              
+        packet.payload.putShort(temperature);
         
         return packet;
     }
@@ -134,6 +146,10 @@ public class msg_raw_imu extends MAVLinkMessage{
         this.ymag = payload.getShort();
               
         this.zmag = payload.getShort();
+              
+        this.id = payload.getUnsignedByte();
+              
+        this.temperature = payload.getShort();
         
     }
 
@@ -153,15 +169,15 @@ public class msg_raw_imu extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_RAW_IMU;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                        
+                            
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_RAW_IMU - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+"";
+        return "MAVLINK_MSG_ID_RAW_IMU - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+" id:"+id+" temperature:"+temperature+"";
     }
 }
         

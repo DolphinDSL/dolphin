@@ -11,12 +11,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Emit the value of a onboard parameter. The inclusion of param_count and param_index in the message allows the recipient to keep track of received parameters and allows him to re-request missing parameters after a loss or timeout.
+* Emit the value of a onboard parameter. The inclusion of param_count and param_index in the message allows the recipient to keep track of received parameters and allows him to re-request missing parameters after a loss or timeout. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html
 */
 public class msg_param_value extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_PARAM_VALUE = 22;
-    public static final int MAVLINK_MSG_ID_PARAM_VALUE_CRC = 220;
     public static final int MAVLINK_MSG_LENGTH = 25;
     private static final long serialVersionUID = MAVLINK_MSG_ID_PARAM_VALUE;
 
@@ -43,7 +42,7 @@ public class msg_param_value extends MAVLinkMessage{
     public byte param_id[] = new byte[16];
       
     /**
-    * Onboard parameter type: see the MAV_PARAM_TYPE enum for supported data types.
+    * Onboard parameter type.
     */
     public short param_type;
     
@@ -57,7 +56,6 @@ public class msg_param_value extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_PARAM_VALUE;
-        packet.crc_extra = MAVLINK_MSG_ID_PARAM_VALUE_CRC;
               
         packet.payload.putFloat(param_value);
               
@@ -116,7 +114,7 @@ public class msg_param_value extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_PARAM_VALUE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
            

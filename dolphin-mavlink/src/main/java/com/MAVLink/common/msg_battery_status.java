@@ -11,39 +11,38 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Battery information
+* Battery information. Updates GCS with flight controller battery status. Use SMART_BATTERY_* messages instead for smart batteries.
 */
 public class msg_battery_status extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_BATTERY_STATUS = 147;
-    public static final int MAVLINK_MSG_ID_BATTERY_STATUS_CRC = 154;
-    public static final int MAVLINK_MSG_LENGTH = 36;
+    public static final int MAVLINK_MSG_LENGTH = 41;
     private static final long serialVersionUID = MAVLINK_MSG_ID_BATTERY_STATUS;
 
 
       
     /**
-    * Consumed charge, in milliampere hours (1 = 1 mAh), -1: autopilot does not provide mAh consumption estimate
+    * Consumed charge, -1: autopilot does not provide consumption estimate
     */
     public int current_consumed;
       
     /**
-    * Consumed energy, in HectoJoules (intergrated U*I*dt)  (1 = 100 Joule), -1: autopilot does not provide energy consumption estimate
+    * Consumed energy, -1: autopilot does not provide energy consumption estimate
     */
     public int energy_consumed;
       
     /**
-    * Temperature of the battery in centi-degrees celsius. INT16_MAX for unknown temperature.
+    * Temperature of the battery. INT16_MAX for unknown temperature.
     */
     public short temperature;
       
     /**
-    * Battery voltage of cells, in millivolts (1 = 1 millivolt). Cells above the valid cell count for this battery should have the UINT16_MAX value.
+    * Battery voltage of cells. Cells above the valid cell count for this battery should have the UINT16_MAX value.
     */
     public int voltages[] = new int[10];
       
     /**
-    * Battery current, in 10*milliamperes (1 = 10 milliampere), -1: autopilot does not measure the current
+    * Battery current, -1: autopilot does not measure the current
     */
     public short current_battery;
       
@@ -63,9 +62,19 @@ public class msg_battery_status extends MAVLinkMessage{
     public short type;
       
     /**
-    * Remaining battery energy: (0%: 0, 100%: 100), -1: autopilot does not estimate the remaining battery
+    * Remaining battery energy. Values: [0-100], -1: autopilot does not estimate the remaining battery.
     */
     public byte battery_remaining;
+      
+    /**
+    * Remaining battery time, 0: autopilot does not provide remaining battery time estimate
+    */
+    public int time_remaining;
+      
+    /**
+    * State for extent of discharge, provided by autopilot for warning or external reactions
+    */
+    public short charge_state;
     
 
     /**
@@ -77,7 +86,6 @@ public class msg_battery_status extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_BATTERY_STATUS;
-        packet.crc_extra = MAVLINK_MSG_ID_BATTERY_STATUS_CRC;
               
         packet.payload.putInt(current_consumed);
               
@@ -100,6 +108,10 @@ public class msg_battery_status extends MAVLinkMessage{
         packet.payload.putUnsignedByte(type);
               
         packet.payload.putByte(battery_remaining);
+              
+        packet.payload.putInt(time_remaining);
+              
+        packet.payload.putUnsignedByte(charge_state);
         
         return packet;
     }
@@ -133,6 +145,10 @@ public class msg_battery_status extends MAVLinkMessage{
         this.type = payload.getUnsignedByte();
               
         this.battery_remaining = payload.getByte();
+              
+        this.time_remaining = payload.getInt();
+              
+        this.charge_state = payload.getUnsignedByte();
         
     }
 
@@ -152,15 +168,15 @@ public class msg_battery_status extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_BATTERY_STATUS;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                      
+                          
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_BATTERY_STATUS - sysid:"+sysid+" compid:"+compid+" current_consumed:"+current_consumed+" energy_consumed:"+energy_consumed+" temperature:"+temperature+" voltages:"+voltages+" current_battery:"+current_battery+" id:"+id+" battery_function:"+battery_function+" type:"+type+" battery_remaining:"+battery_remaining+"";
+        return "MAVLINK_MSG_ID_BATTERY_STATUS - sysid:"+sysid+" compid:"+compid+" current_consumed:"+current_consumed+" energy_consumed:"+energy_consumed+" temperature:"+temperature+" voltages:"+voltages+" current_battery:"+current_battery+" id:"+id+" battery_function:"+battery_function+" type:"+type+" battery_remaining:"+battery_remaining+" time_remaining:"+time_remaining+" charge_state:"+charge_state+"";
     }
 }
         

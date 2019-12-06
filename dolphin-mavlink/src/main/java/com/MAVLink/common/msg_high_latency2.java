@@ -11,12 +11,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* WIP: Message appropriate for high latency connections like Iridium (version 2)
+* Message appropriate for high latency connections like Iridium (version 2)
 */
 public class msg_high_latency2 extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIGH_LATENCY2 = 235;
-    public static final int MAVLINK_MSG_ID_HIGH_LATENCY2_CRC = 179;
     public static final int MAVLINK_MSG_LENGTH = 42;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIGH_LATENCY2;
 
@@ -28,12 +27,12 @@ public class msg_high_latency2 extends MAVLinkMessage{
     public long timestamp;
       
     /**
-    * Latitude, expressed as degrees * 1E7
+    * Latitude
     */
     public int latitude;
       
     /**
-    * Longitude, expressed as degrees * 1E7
+    * Longitude
     */
     public int longitude;
       
@@ -53,7 +52,7 @@ public class msg_high_latency2 extends MAVLinkMessage{
     public short target_altitude;
       
     /**
-    * Distance to target waypoint or position (meters / 10)
+    * Distance to target waypoint or position
     */
     public int target_distance;
       
@@ -63,82 +62,82 @@ public class msg_high_latency2 extends MAVLinkMessage{
     public int wp_num;
       
     /**
-    * Indicates failures as defined in HL_FAILURE_FLAG ENUM. 
+    * Bitmap of failure flags.
     */
     public int failure_flags;
       
     /**
-    * Type of the MAV (quadrotor, helicopter, etc., up to 15 types, defined in MAV_TYPE ENUM)
+    * Type of the MAV (quadrotor, helicopter, etc.)
     */
     public short type;
       
     /**
-    * Autopilot type / class. defined in MAV_AUTOPILOT ENUM
+    * Autopilot type / class. Use MAV_AUTOPILOT_INVALID for components that are not flight controllers.
     */
     public short autopilot;
       
     /**
-    * Heading (degrees / 2)
+    * Heading
     */
     public short heading;
       
     /**
-    * Heading setpoint (degrees / 2)
+    * Heading setpoint
     */
     public short target_heading;
       
     /**
-    * Throttle (percentage)
+    * Throttle
     */
     public short throttle;
       
     /**
-    * Airspeed (m/s * 5)
+    * Airspeed
     */
     public short airspeed;
       
     /**
-    * Airspeed setpoint (m/s * 5)
+    * Airspeed setpoint
     */
     public short airspeed_sp;
       
     /**
-    * Groundspeed (m/s * 5)
+    * Groundspeed
     */
     public short groundspeed;
       
     /**
-    * Windspeed (m/s * 5)
+    * Windspeed
     */
     public short windspeed;
       
     /**
-    * Wind heading (deg / 2)
+    * Wind heading
     */
     public short wind_heading;
       
     /**
-    * Maximum error horizontal position since last message (m * 10)
+    * Maximum error horizontal position since last message
     */
     public short eph;
       
     /**
-    * Maximum error vertical position since last message (m * 10)
+    * Maximum error vertical position since last message
     */
     public short epv;
       
     /**
-    * Air temperature (degrees C) from airspeed sensor
+    * Air temperature from airspeed sensor
     */
     public byte temperature_air;
       
     /**
-    * Maximum climb rate magnitude since last message (m/s * 10)
+    * Maximum climb rate magnitude since last message
     */
     public byte climb_rate;
       
     /**
-    * Battery (percentage, -1 for DNU)
+    * Battery level (-1 if field not provided).
     */
     public byte battery;
       
@@ -167,7 +166,6 @@ public class msg_high_latency2 extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIGH_LATENCY2;
-        packet.crc_extra = MAVLINK_MSG_ID_HIGH_LATENCY2_CRC;
               
         packet.payload.putUnsignedInt(timestamp);
               
@@ -306,7 +304,7 @@ public class msg_high_latency2 extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIGH_LATENCY2;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                                                           

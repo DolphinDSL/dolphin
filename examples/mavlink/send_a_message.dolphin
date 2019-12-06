@@ -1,17 +1,14 @@
 
 v = pick {
   type 'UAV'
+  id '1'
   timeout 10.seconds
 }
 
-w = pick {
-  type 'UAV'
-  timeout 10.seconds
-}
 
 message 'Obtained vehicle ' + v
 
-message 'Obtained second vehicle ' + w
+message 'Obtained second vehicle '
 
 p = pos {
    lat 41.15242
@@ -40,6 +37,8 @@ task = mission {
     move 50, 0, 0
 
     move ((-50), (-50), 0)
+
+    capturePhoto()
 
 }
 
@@ -73,7 +72,7 @@ task3 = mission {
 
 task4 = mission {
 
-    name "Test Task 2"
+    name "Test Task 4"
 
     home p
 
@@ -87,4 +86,4 @@ task4 = mission {
 
 }
 
-execute task[v] >> task3[v] | task2[w] >> task4[w]
+execute task[v]

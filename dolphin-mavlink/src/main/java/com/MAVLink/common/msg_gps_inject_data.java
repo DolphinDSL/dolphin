@@ -11,12 +11,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* data for injecting into the onboard GPS (used for DGPS)
+* Data for injecting into the onboard GPS (used for DGPS)
 */
 public class msg_gps_inject_data extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GPS_INJECT_DATA = 123;
-    public static final int MAVLINK_MSG_ID_GPS_INJECT_DATA_CRC = 250;
     public static final int MAVLINK_MSG_LENGTH = 113;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GPS_INJECT_DATA;
 
@@ -33,12 +32,12 @@ public class msg_gps_inject_data extends MAVLinkMessage{
     public short target_component;
       
     /**
-    * data length
+    * Data length
     */
     public short len;
       
     /**
-    * raw data (110 is enough for 12 satellites of RTCMv2)
+    * Raw data (110 is enough for 12 satellites of RTCMv2)
     */
     public short data[] = new short[110];
     
@@ -52,7 +51,6 @@ public class msg_gps_inject_data extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_GPS_INJECT_DATA;
-        packet.crc_extra = MAVLINK_MSG_ID_GPS_INJECT_DATA_CRC;
               
         packet.payload.putUnsignedByte(target_system);
               
@@ -107,7 +105,7 @@ public class msg_gps_inject_data extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_GPS_INJECT_DATA;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
             

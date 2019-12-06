@@ -16,44 +16,43 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_radio_status extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_RADIO_STATUS = 109;
-    public static final int MAVLINK_MSG_ID_RADIO_STATUS_CRC = 185;
     public static final int MAVLINK_MSG_LENGTH = 9;
     private static final long serialVersionUID = MAVLINK_MSG_ID_RADIO_STATUS;
 
 
       
     /**
-    * Receive errors
+    * Count of radio packet receive errors (since boot).
     */
     public int rxerrors;
       
     /**
-    * Count of error corrected packets
+    * Count of error corrected radio packets (since boot).
     */
     public int fixed;
       
     /**
-    * Local signal strength
+    * Local (message sender) recieved signal strength indication in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.
     */
     public short rssi;
       
     /**
-    * Remote signal strength
+    * Remote (message receiver) signal strength indication in device-dependent units/scale. Values: [0-254], 255: invalid/unknown.
     */
     public short remrssi;
       
     /**
-    * Remaining free buffer space in percent.
+    * Remaining free transmitter buffer space.
     */
     public short txbuf;
       
     /**
-    * Background noise level
+    * Local background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], 255: invalid/unknown.
     */
     public short noise;
       
     /**
-    * Remote background noise level
+    * Remote background noise level. These are device dependent RSSI values (scale as approx 2x dB on SiK radios). Values: [0-254], 255: invalid/unknown.
     */
     public short remnoise;
     
@@ -67,7 +66,6 @@ public class msg_radio_status extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_RADIO_STATUS;
-        packet.crc_extra = MAVLINK_MSG_ID_RADIO_STATUS_CRC;
               
         packet.payload.putUnsignedShort(rxerrors);
               
@@ -126,7 +124,7 @@ public class msg_radio_status extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_RADIO_STATUS;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                   

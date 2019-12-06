@@ -16,44 +16,43 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_attitude extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_ATTITUDE = 30;
-    public static final int MAVLINK_MSG_ID_ATTITUDE_CRC = 39;
     public static final int MAVLINK_MSG_LENGTH = 28;
     private static final long serialVersionUID = MAVLINK_MSG_ID_ATTITUDE;
 
 
       
     /**
-    * Timestamp (milliseconds since system boot)
+    * Timestamp (time since system boot).
     */
     public long time_boot_ms;
       
     /**
-    * Roll angle (rad, -pi..+pi)
+    * Roll angle (-pi..+pi)
     */
     public float roll;
       
     /**
-    * Pitch angle (rad, -pi..+pi)
+    * Pitch angle (-pi..+pi)
     */
     public float pitch;
       
     /**
-    * Yaw angle (rad, -pi..+pi)
+    * Yaw angle (-pi..+pi)
     */
     public float yaw;
       
     /**
-    * Roll angular speed (rad/s)
+    * Roll angular speed
     */
     public float rollspeed;
       
     /**
-    * Pitch angular speed (rad/s)
+    * Pitch angular speed
     */
     public float pitchspeed;
       
     /**
-    * Yaw angular speed (rad/s)
+    * Yaw angular speed
     */
     public float yawspeed;
     
@@ -67,7 +66,6 @@ public class msg_attitude extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_ATTITUDE;
-        packet.crc_extra = MAVLINK_MSG_ID_ATTITUDE_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -126,7 +124,7 @@ public class msg_attitude extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_ATTITUDE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                   

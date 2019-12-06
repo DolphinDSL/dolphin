@@ -1,0 +1,27 @@
+v = pick {
+
+    type 'UAV'
+    timeout 10.seconds
+
+}
+
+message 'Got vehicle ' + v
+
+p = pos {
+   lat 41.15242
+   lon (-8.64096)
+   height 200
+}
+
+task = mission {
+
+    name "Test Task"
+
+    home p
+    takeOff p
+
+    move 50, 0 ,0
+
+}
+
+execute task[v]

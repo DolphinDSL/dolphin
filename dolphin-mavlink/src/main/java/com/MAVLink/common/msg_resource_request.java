@@ -16,7 +16,6 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_resource_request extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_RESOURCE_REQUEST = 142;
-    public static final int MAVLINK_MSG_ID_RESOURCE_REQUEST_CRC = 72;
     public static final int MAVLINK_MSG_LENGTH = 243;
     private static final long serialVersionUID = MAVLINK_MSG_ID_RESOURCE_REQUEST;
 
@@ -57,7 +56,6 @@ public class msg_resource_request extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_RESOURCE_REQUEST;
-        packet.crc_extra = MAVLINK_MSG_ID_RESOURCE_REQUEST_CRC;
               
         packet.payload.putUnsignedByte(request_id);
               
@@ -124,7 +122,7 @@ public class msg_resource_request extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_RESOURCE_REQUEST;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
               

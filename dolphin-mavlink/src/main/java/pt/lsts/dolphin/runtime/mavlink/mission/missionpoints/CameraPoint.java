@@ -31,6 +31,7 @@ public class CameraPoint extends MissionPoint {
         item.autocontinue = 1;
         item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
 
+        item.param2 = type == CameraType.IMAGE_COUNT ? 10 : 0;
         item.param3 = type == CameraType.IMAGE_COUNT ? arg : type.getParam();
 
         return item;

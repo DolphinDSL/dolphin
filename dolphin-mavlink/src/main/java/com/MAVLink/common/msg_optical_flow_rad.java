@@ -16,59 +16,58 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_optical_flow_rad extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_OPTICAL_FLOW_RAD = 106;
-    public static final int MAVLINK_MSG_ID_OPTICAL_FLOW_RAD_CRC = 138;
     public static final int MAVLINK_MSG_LENGTH = 44;
     private static final long serialVersionUID = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD;
 
 
       
     /**
-    * Timestamp (microseconds, synced to UNIX time or since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
     /**
-    * Integration time in microseconds. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.
+    * Integration time. Divide integrated_x and integrated_y by the integration time to obtain average flow. The integration time also indicates the.
     */
     public long integration_time_us;
       
     /**
-    * Flow in radians around X axis (Sensor RH rotation about the X axis induces a positive flow. Sensor linear motion along the positive Y axis induces a negative flow.)
+    * Flow around X axis (Sensor RH rotation about the X axis induces a positive flow. Sensor linear motion along the positive Y axis induces a negative flow.)
     */
     public float integrated_x;
       
     /**
-    * Flow in radians around Y axis (Sensor RH rotation about the Y axis induces a positive flow. Sensor linear motion along the positive X axis induces a positive flow.)
+    * Flow around Y axis (Sensor RH rotation about the Y axis induces a positive flow. Sensor linear motion along the positive X axis induces a positive flow.)
     */
     public float integrated_y;
       
     /**
-    * RH rotation around X axis (rad)
+    * RH rotation around X axis
     */
     public float integrated_xgyro;
       
     /**
-    * RH rotation around Y axis (rad)
+    * RH rotation around Y axis
     */
     public float integrated_ygyro;
       
     /**
-    * RH rotation around Z axis (rad)
+    * RH rotation around Z axis
     */
     public float integrated_zgyro;
       
     /**
-    * Time in microseconds since the distance was sampled.
+    * Time since the distance was sampled.
     */
     public long time_delta_distance_us;
       
     /**
-    * Distance to the center of the flow field in meters. Positive value (including zero): distance known. Negative value: Unknown distance.
+    * Distance to the center of the flow field. Positive value (including zero): distance known. Negative value: Unknown distance.
     */
     public float distance;
       
     /**
-    * Temperature * 100 in centi-degrees Celsius
+    * Temperature
     */
     public short temperature;
       
@@ -92,7 +91,6 @@ public class msg_optical_flow_rad extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD;
-        packet.crc_extra = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -171,7 +169,7 @@ public class msg_optical_flow_rad extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_OPTICAL_FLOW_RAD;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                             

@@ -12,13 +12,12 @@ import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
 * Message encoding a mission item. This message is emitted to announce
-                the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See also https://mavlink.io/en/protocol/mission.html.
+                the presence of a mission item and to set a mission item on the system. The mission item can be either in x, y, z meters (type: LOCAL) or x:lat, y:lon, z:altitude. Local frame is Z-down, right handed (NED), global frame is Z-up, right handed (ENU). See also https://mavlink.io/en/services/mission.html.
 */
 public class msg_mission_item_int extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MISSION_ITEM_INT = 73;
-    public static final int MAVLINK_MSG_ID_MISSION_ITEM_INT_CRC = 38;
-    public static final int MAVLINK_MSG_LENGTH = 37;
+    public static final int MAVLINK_MSG_LENGTH = 38;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MISSION_ITEM_INT;
 
 
@@ -64,7 +63,7 @@ public class msg_mission_item_int extends MAVLinkMessage{
     public int seq;
       
     /**
-    * The scheduled action for the waypoint, as defined by MAV_CMD enum
+    * The scheduled action for the waypoint.
     */
     public int command;
       
@@ -79,7 +78,7 @@ public class msg_mission_item_int extends MAVLinkMessage{
     public short target_component;
       
     /**
-    * The coordinate system of the waypoint, as defined by MAV_FRAME enum
+    * The coordinate system of the waypoint.
     */
     public short frame;
       
@@ -89,9 +88,14 @@ public class msg_mission_item_int extends MAVLinkMessage{
     public short current;
       
     /**
-    * autocontinue to next wp
+    * Autocontinue to next waypoint
     */
     public short autocontinue;
+      
+    /**
+    * Mission type.
+    */
+    public short mission_type;
     
 
     /**
@@ -103,7 +107,6 @@ public class msg_mission_item_int extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_MISSION_ITEM_INT;
-        packet.crc_extra = MAVLINK_MSG_ID_MISSION_ITEM_INT_CRC;
               
         packet.payload.putFloat(param1);
               
@@ -132,6 +135,8 @@ public class msg_mission_item_int extends MAVLinkMessage{
         packet.payload.putUnsignedByte(current);
               
         packet.payload.putUnsignedByte(autocontinue);
+              
+        packet.payload.putUnsignedByte(mission_type);
         
         return packet;
     }
@@ -171,6 +176,8 @@ public class msg_mission_item_int extends MAVLinkMessage{
         this.current = payload.getUnsignedByte();
               
         this.autocontinue = payload.getUnsignedByte();
+              
+        this.mission_type = payload.getUnsignedByte();
         
     }
 
@@ -190,15 +197,15 @@ public class msg_mission_item_int extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_MISSION_ITEM_INT;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                                
+                                  
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MISSION_ITEM_INT - sysid:"+sysid+" compid:"+compid+" param1:"+param1+" param2:"+param2+" param3:"+param3+" param4:"+param4+" x:"+x+" y:"+y+" z:"+z+" seq:"+seq+" command:"+command+" target_system:"+target_system+" target_component:"+target_component+" frame:"+frame+" current:"+current+" autocontinue:"+autocontinue+"";
+        return "MAVLINK_MSG_ID_MISSION_ITEM_INT - sysid:"+sysid+" compid:"+compid+" param1:"+param1+" param2:"+param2+" param3:"+param3+" param4:"+param4+" x:"+x+" y:"+y+" z:"+z+" seq:"+seq+" command:"+command+" target_system:"+target_system+" target_component:"+target_component+" frame:"+frame+" current:"+current+" autocontinue:"+autocontinue+" mission_type:"+mission_type+"";
     }
 }
         

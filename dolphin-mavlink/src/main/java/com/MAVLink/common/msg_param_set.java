@@ -11,12 +11,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Set a parameter value TEMPORARILY to RAM. It will be reset to default on system reboot. Send the ACTION MAV_ACTION_STORAGE_WRITE to PERMANENTLY write the RAM contents to EEPROM. IMPORTANT: The receiving component should acknowledge the new parameter value by sending a param_value message to all communication partners. This will also ensure that multiple GCS all have an up-to-date list of all parameters. If the sending GCS did not receive a PARAM_VALUE message within its timeout time, it should re-send the PARAM_SET message.
+* Set a parameter value (write new value to permanent storage). IMPORTANT: The receiving component should acknowledge the new parameter value by sending a PARAM_VALUE message to all communication partners. This will also ensure that multiple GCS all have an up-to-date list of all parameters. If the sending GCS did not receive a PARAM_VALUE message within its timeout time, it should re-send the PARAM_SET message. The parameter microservice is documented at https://mavlink.io/en/services/parameter.html
 */
 public class msg_param_set extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_PARAM_SET = 23;
-    public static final int MAVLINK_MSG_ID_PARAM_SET_CRC = 168;
     public static final int MAVLINK_MSG_LENGTH = 23;
     private static final long serialVersionUID = MAVLINK_MSG_ID_PARAM_SET;
 
@@ -43,7 +42,7 @@ public class msg_param_set extends MAVLinkMessage{
     public byte param_id[] = new byte[16];
       
     /**
-    * Onboard parameter type: see the MAV_PARAM_TYPE enum for supported data types.
+    * Onboard parameter type.
     */
     public short param_type;
     
@@ -57,7 +56,6 @@ public class msg_param_set extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_PARAM_SET;
-        packet.crc_extra = MAVLINK_MSG_ID_PARAM_SET_CRC;
               
         packet.payload.putFloat(param_value);
               
@@ -116,7 +114,7 @@ public class msg_param_set extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_PARAM_SET;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
            

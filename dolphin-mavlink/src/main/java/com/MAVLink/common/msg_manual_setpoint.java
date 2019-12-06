@@ -16,29 +16,28 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_manual_setpoint extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MANUAL_SETPOINT = 81;
-    public static final int MAVLINK_MSG_ID_MANUAL_SETPOINT_CRC = 106;
     public static final int MAVLINK_MSG_LENGTH = 22;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MANUAL_SETPOINT;
 
 
       
     /**
-    * Timestamp in milliseconds since system boot
+    * Timestamp (time since system boot).
     */
     public long time_boot_ms;
       
     /**
-    * Desired roll rate in radians per second
+    * Desired roll rate
     */
     public float roll;
       
     /**
-    * Desired pitch rate in radians per second
+    * Desired pitch rate
     */
     public float pitch;
       
     /**
-    * Desired yaw rate in radians per second
+    * Desired yaw rate
     */
     public float yaw;
       
@@ -67,7 +66,6 @@ public class msg_manual_setpoint extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_MANUAL_SETPOINT;
-        packet.crc_extra = MAVLINK_MSG_ID_MANUAL_SETPOINT_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -126,7 +124,7 @@ public class msg_manual_setpoint extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_MANUAL_SETPOINT;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                   

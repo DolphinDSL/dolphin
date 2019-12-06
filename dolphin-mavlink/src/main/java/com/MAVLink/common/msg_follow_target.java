@@ -11,19 +11,18 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* current motion information from a designated system
+* Current motion information from a designated system
 */
 public class msg_follow_target extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_FOLLOW_TARGET = 144;
-    public static final int MAVLINK_MSG_ID_FOLLOW_TARGET_CRC = 127;
     public static final int MAVLINK_MSG_LENGTH = 93;
     private static final long serialVersionUID = MAVLINK_MSG_ID_FOLLOW_TARGET;
 
 
       
     /**
-    * Timestamp in milliseconds since system boot
+    * Timestamp (time since system boot).
     */
     public long timestamp;
       
@@ -33,17 +32,17 @@ public class msg_follow_target extends MAVLinkMessage{
     public long custom_state;
       
     /**
-    * Latitude (WGS84), in degrees * 1E7
+    * Latitude (WGS84)
     */
     public int lat;
       
     /**
-    * Longitude (WGS84), in degrees * 1E7
+    * Longitude (WGS84)
     */
     public int lon;
       
     /**
-    * AMSL, in meters
+    * Altitude (MSL)
     */
     public float alt;
       
@@ -87,7 +86,6 @@ public class msg_follow_target extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_FOLLOW_TARGET;
-        packet.crc_extra = MAVLINK_MSG_ID_FOLLOW_TARGET_CRC;
               
         packet.payload.putUnsignedLong(timestamp);
               
@@ -202,7 +200,7 @@ public class msg_follow_target extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_FOLLOW_TARGET;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                           

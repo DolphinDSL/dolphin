@@ -16,7 +16,6 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_sim_state extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SIM_STATE = 108;
-    public static final int MAVLINK_MSG_ID_SIM_STATE_CRC = 32;
     public static final int MAVLINK_MSG_LENGTH = 84;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SIM_STATE;
 
@@ -58,47 +57,47 @@ public class msg_sim_state extends MAVLinkMessage{
     public float yaw;
       
     /**
-    * X acceleration m/s/s
+    * X acceleration
     */
     public float xacc;
       
     /**
-    * Y acceleration m/s/s
+    * Y acceleration
     */
     public float yacc;
       
     /**
-    * Z acceleration m/s/s
+    * Z acceleration
     */
     public float zacc;
       
     /**
-    * Angular speed around X axis rad/s
+    * Angular speed around X axis
     */
     public float xgyro;
       
     /**
-    * Angular speed around Y axis rad/s
+    * Angular speed around Y axis
     */
     public float ygyro;
       
     /**
-    * Angular speed around Z axis rad/s
+    * Angular speed around Z axis
     */
     public float zgyro;
       
     /**
-    * Latitude in degrees
+    * Latitude
     */
     public float lat;
       
     /**
-    * Longitude in degrees
+    * Longitude
     */
     public float lon;
       
     /**
-    * Altitude in meters
+    * Altitude
     */
     public float alt;
       
@@ -113,17 +112,17 @@ public class msg_sim_state extends MAVLinkMessage{
     public float std_dev_vert;
       
     /**
-    * True velocity in m/s in NORTH direction in earth-fixed NED frame
+    * True velocity in north direction in earth-fixed NED frame
     */
     public float vn;
       
     /**
-    * True velocity in m/s in EAST direction in earth-fixed NED frame
+    * True velocity in east direction in earth-fixed NED frame
     */
     public float ve;
       
     /**
-    * True velocity in m/s in DOWN direction in earth-fixed NED frame
+    * True velocity in down direction in earth-fixed NED frame
     */
     public float vd;
     
@@ -137,7 +136,6 @@ public class msg_sim_state extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SIM_STATE;
-        packet.crc_extra = MAVLINK_MSG_ID_SIM_STATE_CRC;
               
         packet.payload.putFloat(q1);
               
@@ -252,7 +250,7 @@ public class msg_sim_state extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SIM_STATE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                                               

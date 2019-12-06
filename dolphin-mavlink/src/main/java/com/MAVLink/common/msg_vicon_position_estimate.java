@@ -11,19 +11,18 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* 
+* Global position estimate from a Vicon motion system source.
 */
 public class msg_vicon_position_estimate extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE = 104;
-    public static final int MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE_CRC = 56;
-    public static final int MAVLINK_MSG_LENGTH = 32;
+    public static final int MAVLINK_MSG_LENGTH = 116;
     private static final long serialVersionUID = MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE;
 
 
       
     /**
-    * Timestamp (microseconds, synced to UNIX time or since system boot)
+    * Timestamp (UNIX time or time since system boot)
     */
     public long usec;
       
@@ -43,19 +42,24 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
     public float z;
       
     /**
-    * Roll angle in rad
+    * Roll angle
     */
     public float roll;
       
     /**
-    * Pitch angle in rad
+    * Pitch angle
     */
     public float pitch;
       
     /**
-    * Yaw angle in rad
+    * Yaw angle
     */
     public float yaw;
+      
+    /**
+    * Row-major representation of 6x6 pose cross-covariance matrix upper right triangle (states: x, y, z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW, etc.). If unknown, assign NaN value to first element in the array.
+    */
+    public float covariance[] = new float[21];
     
 
     /**
@@ -67,7 +71,6 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE;
-        packet.crc_extra = MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE_CRC;
               
         packet.payload.putUnsignedLong(usec);
               
@@ -82,6 +85,12 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         packet.payload.putFloat(pitch);
               
         packet.payload.putFloat(yaw);
+              
+        
+        for (int i = 0; i < covariance.length; i++) {
+            packet.payload.putFloat(covariance[i]);
+        }
+                    
         
         return packet;
     }
@@ -107,6 +116,12 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         this.pitch = payload.getFloat();
               
         this.yaw = payload.getFloat();
+              
+         
+        for (int i = 0; i < this.covariance.length; i++) {
+            this.covariance[i] = payload.getFloat();
+        }
+                
         
     }
 
@@ -126,15 +141,15 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                  
+                    
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE - sysid:"+sysid+" compid:"+compid+" usec:"+usec+" x:"+x+" y:"+y+" z:"+z+" roll:"+roll+" pitch:"+pitch+" yaw:"+yaw+"";
+        return "MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE - sysid:"+sysid+" compid:"+compid+" usec:"+usec+" x:"+x+" y:"+y+" z:"+z+" roll:"+roll+" pitch:"+pitch+" yaw:"+yaw+" covariance:"+covariance+"";
     }
 }
         

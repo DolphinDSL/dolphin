@@ -11,29 +11,28 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* This message can be requested by sending the MAV_CMD_GET_HOME_POSITION command. The position the system will return to and land on. The position is set automatically by the system during the takeoff in case it was not explicitely set by the operator before or after. The position the system will return to and land on. The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector.
+* This message can be requested by sending the MAV_CMD_GET_HOME_POSITION command. The position the system will return to and land on. The position is set automatically by the system during the takeoff in case it was not explicitly set by the operator before or after. The position the system will return to and land on. The global and local positions encode the position in the respective coordinate frames, while the q parameter encodes the orientation of the surface. Under normal conditions it describes the heading and terrain slope, which can be used by the aircraft to adjust the approach. The approach 3D vector describes the point to which the system should fly in normal flight mode and then perform a landing sequence along the vector.
 */
 public class msg_home_position extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HOME_POSITION = 242;
-    public static final int MAVLINK_MSG_ID_HOME_POSITION_CRC = 104;
-    public static final int MAVLINK_MSG_LENGTH = 52;
+    public static final int MAVLINK_MSG_LENGTH = 60;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HOME_POSITION;
 
 
       
     /**
-    * Latitude (WGS84), in degrees * 1E7
+    * Latitude (WGS84)
     */
     public int latitude;
       
     /**
-    * Longitude (WGS84, in degrees * 1E7
+    * Longitude (WGS84)
     */
     public int longitude;
       
     /**
-    * Altitude (AMSL), in meters * 1000 (positive for up)
+    * Altitude (MSL). Positive for up.
     */
     public int altitude;
       
@@ -71,6 +70,11 @@ public class msg_home_position extends MAVLinkMessage{
     * Local Z position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone.
     */
     public float approach_z;
+      
+    /**
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+    */
+    public long time_usec;
     
 
     /**
@@ -82,7 +86,6 @@ public class msg_home_position extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HOME_POSITION;
-        packet.crc_extra = MAVLINK_MSG_ID_HOME_POSITION_CRC;
               
         packet.payload.putInt(latitude);
               
@@ -107,6 +110,8 @@ public class msg_home_position extends MAVLinkMessage{
         packet.payload.putFloat(approach_y);
               
         packet.payload.putFloat(approach_z);
+              
+        packet.payload.putUnsignedLong(time_usec);
         
         return packet;
     }
@@ -142,6 +147,8 @@ public class msg_home_position extends MAVLinkMessage{
         this.approach_y = payload.getFloat();
               
         this.approach_z = payload.getFloat();
+              
+        this.time_usec = payload.getUnsignedLong();
         
     }
 
@@ -161,15 +168,15 @@ public class msg_home_position extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HOME_POSITION;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                        
+                          
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_HOME_POSITION - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" approach_x:"+approach_x+" approach_y:"+approach_y+" approach_z:"+approach_z+"";
+        return "MAVLINK_MSG_ID_HOME_POSITION - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" approach_x:"+approach_x+" approach_y:"+approach_y+" approach_z:"+approach_z+" time_usec:"+time_usec+"";
     }
 }
         

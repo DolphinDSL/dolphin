@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_altitude extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_ALTITUDE = 141;
-    public static final int MAVLINK_MSG_ID_ALTITUDE_CRC = 47;
     public static final int MAVLINK_MSG_LENGTH = 32;
     private static final long serialVersionUID = MAVLINK_MSG_ID_ALTITUDE;
 
 
       
     /**
-    * Timestamp (micros since boot or Unix epoch)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
@@ -33,7 +32,7 @@ public class msg_altitude extends MAVLinkMessage{
     public float altitude_monotonic;
       
     /**
-    * This altitude measure is strictly above mean sea level and might be non-monotonic (it might reset on events like GPS lock or when a new QNH value is set). It should be the altitude to which global altitude waypoints are compared to. Note that it is *not* the GPS altitude, however, most GPS modules already output AMSL by default and not the WGS84 altitude.
+    * This altitude measure is strictly above mean sea level and might be non-monotonic (it might reset on events like GPS lock or when a new QNH value is set). It should be the altitude to which global altitude waypoints are compared to. Note that it is *not* the GPS altitude, however, most GPS modules already output MSL by default and not the WGS84 altitude.
     */
     public float altitude_amsl;
       
@@ -67,7 +66,6 @@ public class msg_altitude extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_ALTITUDE;
-        packet.crc_extra = MAVLINK_MSG_ID_ALTITUDE_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -126,7 +124,7 @@ public class msg_altitude extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_ALTITUDE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                   

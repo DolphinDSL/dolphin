@@ -17,54 +17,53 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_global_position_int extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GLOBAL_POSITION_INT = 33;
-    public static final int MAVLINK_MSG_ID_GLOBAL_POSITION_INT_CRC = 104;
     public static final int MAVLINK_MSG_LENGTH = 28;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GLOBAL_POSITION_INT;
 
 
       
     /**
-    * Timestamp (milliseconds since system boot)
+    * Timestamp (time since system boot).
     */
     public long time_boot_ms;
       
     /**
-    * Latitude, expressed as degrees * 1E7
+    * Latitude, expressed
     */
     public int lat;
       
     /**
-    * Longitude, expressed as degrees * 1E7
+    * Longitude, expressed
     */
     public int lon;
       
     /**
-    * Altitude in meters, expressed as * 1000 (millimeters), AMSL (not WGS84 - note that virtually all GPS modules provide the AMSL as well)
+    * Altitude (MSL). Note that virtually all GPS modules provide both WGS84 and MSL.
     */
     public int alt;
       
     /**
-    * Altitude above ground in meters, expressed as * 1000 (millimeters)
+    * Altitude above ground
     */
     public int relative_alt;
       
     /**
-    * Ground X Speed (Latitude, positive north), expressed as m/s * 100
+    * Ground X Speed (Latitude, positive north)
     */
     public short vx;
       
     /**
-    * Ground Y Speed (Longitude, positive east), expressed as m/s * 100
+    * Ground Y Speed (Longitude, positive east)
     */
     public short vy;
       
     /**
-    * Ground Z Speed (Altitude, positive down), expressed as m/s * 100
+    * Ground Z Speed (Altitude, positive down)
     */
     public short vz;
       
     /**
-    * Vehicle heading (yaw angle) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
+    * Vehicle heading (yaw angle), 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
     */
     public int hdg;
     
@@ -78,7 +77,6 @@ public class msg_global_position_int extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_GLOBAL_POSITION_INT;
-        packet.crc_extra = MAVLINK_MSG_ID_GLOBAL_POSITION_INT_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -145,7 +143,7 @@ public class msg_global_position_int extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_GLOBAL_POSITION_INT;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                       
