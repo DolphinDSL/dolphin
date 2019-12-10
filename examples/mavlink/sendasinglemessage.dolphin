@@ -22,6 +22,8 @@ task = mission {
 
     move 50, 0 ,0
 
+    lk
+
 }
 
 execute task[v]

@@ -28,6 +28,8 @@ class MissionBuilder extends Builder<Mission> {
 
     LinkedList<MissionPoint> points;
 
+    LinkedList<Position> positions;
+
     private Position home;
 
     private double speed;
@@ -36,6 +38,15 @@ class MissionBuilder extends Builder<Mission> {
         this.name = "MissionPlan_" + String.valueOf(System.currentTimeMillis());
 
         this.points = new LinkedList<>();
+        this.positions = new LinkedList<>();
+    }
+
+    private void addPosition(Position p) {
+        this.positions.add(p)
+    }
+
+    private Position getLastKnownPosition() {
+        return this.positions.getLast();
     }
 
     void name(String name) {
@@ -53,15 +64,72 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void goPos(double lat, double lon, double hae = 0d) {
+
+        addPosition(Position.fromDegrees(lat, lon, hae));
+
         point(GoToPoint.initGoToPoint(lat, lon, hae));
     }
 
     void move(double north, double east, double up = 0d) {
         def move = new NED(north, east, -up);
 
-        def moved = WGS84.displace(home, move);
+        def moved = WGS84.displace(getLastKnownPosition(), move);
+
+        addPosition(moved);
 
         point(GoToPoint.initGoToPoint(moved));
+    }
+
+    void moveFromHome(double north, double east, double up) {
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(home, move);
+
+        addPosition(moved);
+
+        point(GoToPoint.initGoToPoint(moved));
+    }
+
+    void moveAndLoiterPos(double north, double east, double up, float radius = 15) {
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(getLastKnownPosition(), move);
+
+        addPosition(moved);
+
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.UNLIM, radius, 0));
+    }
+
+    void moveAndLoiterTurns(double north, double east, double up, int turns = 10, float radius = 15) {
+
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(getLastKnownPosition(), move);
+
+        addPosition(moved);
+
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, turns))
+    }
+
+    void moveAndLoiterFromHome(double north, double east, double up, float radius = 15) {
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(this.home, move);
+
+        addPosition(moved);
+
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.UNLIM, radius, 0));
+    }
+
+    void moveAndLoiterTurnsFromHome(double north, double east, double up, int turns = 10, float radius = 15) {
+
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(this.home, move);
+
+        addPosition(moved);
+
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, turns));
     }
 
     void speed(double newSpeed, boolean groundSpeed = false) {
@@ -85,19 +153,8 @@ class MissionBuilder extends Builder<Mission> {
         point(SetHomeCommand.initSetHome(this.home));
     }
 
-    //TODO: change names to more friendly names
-
     void delay(long time) {
         point(DelayCommand.initDelayPoint(time));
-    }
-
-    void moveAndLoiterPos(double north, double east, double up, float radius = 15) {
-        //TODO: Make move points relative to the last position or to the home position ?
-        def move = new NED(north, east, -up);
-
-        def moved = WGS84.displace(this.home, move);
-
-        point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, 10));
     }
 
     void loiterPos(Position pos, float radius = 15) {
@@ -143,7 +200,7 @@ class MissionBuilder extends Builder<Mission> {
     void captureUntilStop() {
         point(CameraPoint.initCameraPoint(CameraPoint.CameraType.UNTIL_STOP, 0));
     }
-    
+
     @Override
     Mission build() {
         Mission m = Mission.initializeMission(name);

@@ -46,8 +46,6 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         vehicle.setExecutor(this);
 
-        //TODO: If vehicle is in Auto mode, make it manual so it can receive the mission
-
         if (vehicle.getLastHBReceived().custom_mode == 10) {
             //Vehicle is currently in auto mode
             Engine.platform().displayMessage("The drone %d is in auto mode, changing to RTL ", getVehicleMAV().getMAVLinkId());
@@ -108,6 +106,12 @@ public class MissionExecutor extends PlatformTaskExecutor {
         this.msg_mission_current = currentItem;
 
 //        Engine.platform().displayMessage("Current Mission item %d", currentItem.seq);
+    }
+
+    public void consume(msg_camera_image_captured camera_captured) {
+
+        Engine.platform().displayMessage("Captured an image %d", camera_captured.image_index);
+
     }
 
     public void consume(msg_mission_ack mission_received) {

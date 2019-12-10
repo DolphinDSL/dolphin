@@ -5,10 +5,14 @@ v = pick {
   timeout 10.seconds
 }
 
+w = pick {
+  type 'UAV'
+  timeout 10.seconds
+}
 
 message 'Obtained vehicle ' + v
 
-message 'Obtained second vehicle '
+message 'Obtained second vehicle ' + w
 
 p = pos {
    lat 41.15242
@@ -86,4 +90,4 @@ task4 = mission {
 
 }
 
-execute task[v]
+execute task[v] >> task2[v] | task3[w] >> task4[w]

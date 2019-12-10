@@ -236,4 +236,9 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
         Engine.platform().displayMessage("Teste %s", new String(msg.text));
     }
 
+    void consume(msg_camera_image_captured msg_camera_image_captured) {
+
+        if (this.currentExecutor != null) this.currentExecutor.consume(msg_camera_image_captured);
+
+    }
 }
