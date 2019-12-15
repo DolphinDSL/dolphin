@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_meminfo extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MEMINFO = 152;
-    public static final int MAVLINK_MSG_LENGTH = 8;
+    public static final int MAVLINK_MSG_LENGTH = 4;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MEMINFO;
 
 
@@ -30,11 +30,6 @@ public class msg_meminfo extends MAVLinkMessage{
     * Free memory.
     */
     public int freemem;
-      
-    /**
-    * Free memory (32 bit).
-    */
-    public long freemem32;
     
 
     /**
@@ -50,8 +45,6 @@ public class msg_meminfo extends MAVLinkMessage{
         packet.payload.putUnsignedShort(brkval);
               
         packet.payload.putUnsignedShort(freemem);
-              
-        packet.payload.putUnsignedInt(freemem32);
         
         return packet;
     }
@@ -67,8 +60,6 @@ public class msg_meminfo extends MAVLinkMessage{
         this.brkval = payload.getUnsignedShort();
               
         this.freemem = payload.getUnsignedShort();
-              
-        this.freemem32 = payload.getUnsignedInt();
         
     }
 
@@ -91,12 +82,12 @@ public class msg_meminfo extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-          
+        
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MEMINFO - sysid:"+sysid+" compid:"+compid+" brkval:"+brkval+" freemem:"+freemem+" freemem32:"+freemem32+"";
+        return "MAVLINK_MSG_ID_MEMINFO - sysid:"+sysid+" compid:"+compid+" brkval:"+brkval+" freemem:"+freemem+"";
     }
 }
         

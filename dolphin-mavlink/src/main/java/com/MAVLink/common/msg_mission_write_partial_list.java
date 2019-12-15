@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_mission_write_partial_list extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST = 38;
-    public static final int MAVLINK_MSG_LENGTH = 7;
+    public static final int MAVLINK_MSG_LENGTH = 6;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST;
 
 
@@ -40,11 +40,6 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
     * Component ID
     */
     public short target_component;
-      
-    /**
-    * Mission type.
-    */
-    public short mission_type;
     
 
     /**
@@ -64,8 +59,6 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         packet.payload.putUnsignedByte(target_system);
               
         packet.payload.putUnsignedByte(target_component);
-              
-        packet.payload.putUnsignedByte(mission_type);
         
         return packet;
     }
@@ -85,8 +78,6 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         this.target_system = payload.getUnsignedByte();
               
         this.target_component = payload.getUnsignedByte();
-              
-        this.mission_type = payload.getUnsignedByte();
         
     }
 
@@ -109,12 +100,12 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-              
+            
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST - sysid:"+sysid+" compid:"+compid+" start_index:"+start_index+" end_index:"+end_index+" target_system:"+target_system+" target_component:"+target_component+" mission_type:"+mission_type+"";
+        return "MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST - sysid:"+sysid+" compid:"+compid+" start_index:"+start_index+" end_index:"+end_index+" target_system:"+target_system+" target_component:"+target_component+"";
     }
 }
         

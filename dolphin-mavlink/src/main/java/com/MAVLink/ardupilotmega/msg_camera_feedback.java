@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_camera_feedback extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_CAMERA_FEEDBACK = 180;
-    public static final int MAVLINK_MSG_LENGTH = 47;
+    public static final int MAVLINK_MSG_LENGTH = 45;
     private static final long serialVersionUID = MAVLINK_MSG_ID_CAMERA_FEEDBACK;
 
 
@@ -85,11 +85,6 @@ public class msg_camera_feedback extends MAVLinkMessage{
     * Feedback flags.
     */
     public short flags;
-      
-    /**
-    * Completed image captures.
-    */
-    public int completed_captures;
     
 
     /**
@@ -127,8 +122,6 @@ public class msg_camera_feedback extends MAVLinkMessage{
         packet.payload.putUnsignedByte(cam_idx);
               
         packet.payload.putUnsignedByte(flags);
-              
-        packet.payload.putUnsignedShort(completed_captures);
         
         return packet;
     }
@@ -166,8 +159,6 @@ public class msg_camera_feedback extends MAVLinkMessage{
         this.cam_idx = payload.getUnsignedByte();
               
         this.flags = payload.getUnsignedByte();
-              
-        this.completed_captures = payload.getUnsignedShort();
         
     }
 
@@ -190,12 +181,12 @@ public class msg_camera_feedback extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                                
+                              
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_CAMERA_FEEDBACK - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" lat:"+lat+" lng:"+lng+" alt_msl:"+alt_msl+" alt_rel:"+alt_rel+" roll:"+roll+" pitch:"+pitch+" yaw:"+yaw+" foc_len:"+foc_len+" img_idx:"+img_idx+" target_system:"+target_system+" cam_idx:"+cam_idx+" flags:"+flags+" completed_captures:"+completed_captures+"";
+        return "MAVLINK_MSG_ID_CAMERA_FEEDBACK - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" lat:"+lat+" lng:"+lng+" alt_msl:"+alt_msl+" alt_rel:"+alt_rel+" roll:"+roll+" pitch:"+pitch+" yaw:"+yaw+" foc_len:"+foc_len+" img_idx:"+img_idx+" target_system:"+target_system+" cam_idx:"+cam_idx+" flags:"+flags+"";
     }
 }
         

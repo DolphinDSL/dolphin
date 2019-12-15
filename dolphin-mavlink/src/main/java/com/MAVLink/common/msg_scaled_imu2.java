@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_scaled_imu2 extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SCALED_IMU2 = 116;
-    public static final int MAVLINK_MSG_LENGTH = 24;
+    public static final int MAVLINK_MSG_LENGTH = 22;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SCALED_IMU2;
 
 
@@ -70,11 +70,6 @@ public class msg_scaled_imu2 extends MAVLinkMessage{
     * Z Magnetic field
     */
     public short zmag;
-      
-    /**
-    * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
-    */
-    public short temperature;
     
 
     /**
@@ -106,8 +101,6 @@ public class msg_scaled_imu2 extends MAVLinkMessage{
         packet.payload.putShort(ymag);
               
         packet.payload.putShort(zmag);
-              
-        packet.payload.putShort(temperature);
         
         return packet;
     }
@@ -139,8 +132,6 @@ public class msg_scaled_imu2 extends MAVLinkMessage{
         this.ymag = payload.getShort();
               
         this.zmag = payload.getShort();
-              
-        this.temperature = payload.getShort();
         
     }
 
@@ -163,12 +154,12 @@ public class msg_scaled_imu2 extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                          
+                        
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_SCALED_IMU2 - sysid:"+sysid+" compid:"+compid+" time_boot_ms:"+time_boot_ms+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+" temperature:"+temperature+"";
+        return "MAVLINK_MSG_ID_SCALED_IMU2 - sysid:"+sysid+" compid:"+compid+" time_boot_ms:"+time_boot_ms+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+"";
     }
 }
         

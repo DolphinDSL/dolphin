@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_fence_status extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_FENCE_STATUS = 162;
-    public static final int MAVLINK_MSG_LENGTH = 9;
+    public static final int MAVLINK_MSG_LENGTH = 8;
     private static final long serialVersionUID = MAVLINK_MSG_ID_FENCE_STATUS;
 
 
@@ -40,11 +40,6 @@ public class msg_fence_status extends MAVLinkMessage{
     * Last breach type.
     */
     public short breach_type;
-      
-    /**
-    * Active action to prevent fence breach
-    */
-    public short breach_mitigation;
     
 
     /**
@@ -64,8 +59,6 @@ public class msg_fence_status extends MAVLinkMessage{
         packet.payload.putUnsignedByte(breach_status);
               
         packet.payload.putUnsignedByte(breach_type);
-              
-        packet.payload.putUnsignedByte(breach_mitigation);
         
         return packet;
     }
@@ -85,8 +78,6 @@ public class msg_fence_status extends MAVLinkMessage{
         this.breach_status = payload.getUnsignedByte();
               
         this.breach_type = payload.getUnsignedByte();
-              
-        this.breach_mitigation = payload.getUnsignedByte();
         
     }
 
@@ -109,12 +100,12 @@ public class msg_fence_status extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-              
+            
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_FENCE_STATUS - sysid:"+sysid+" compid:"+compid+" breach_time:"+breach_time+" breach_count:"+breach_count+" breach_status:"+breach_status+" breach_type:"+breach_type+" breach_mitigation:"+breach_mitigation+"";
+        return "MAVLINK_MSG_ID_FENCE_STATUS - sysid:"+sysid+" compid:"+compid+" breach_time:"+breach_time+" breach_count:"+breach_count+" breach_status:"+breach_status+" breach_type:"+breach_type+"";
     }
 }
         

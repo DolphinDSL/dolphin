@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_mission_request_int extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MISSION_REQUEST_INT = 51;
-    public static final int MAVLINK_MSG_LENGTH = 5;
+    public static final int MAVLINK_MSG_LENGTH = 4;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MISSION_REQUEST_INT;
 
 
@@ -35,11 +35,6 @@ public class msg_mission_request_int extends MAVLinkMessage{
     * Component ID
     */
     public short target_component;
-      
-    /**
-    * Mission type.
-    */
-    public short mission_type;
     
 
     /**
@@ -57,8 +52,6 @@ public class msg_mission_request_int extends MAVLinkMessage{
         packet.payload.putUnsignedByte(target_system);
               
         packet.payload.putUnsignedByte(target_component);
-              
-        packet.payload.putUnsignedByte(mission_type);
         
         return packet;
     }
@@ -76,8 +69,6 @@ public class msg_mission_request_int extends MAVLinkMessage{
         this.target_system = payload.getUnsignedByte();
               
         this.target_component = payload.getUnsignedByte();
-              
-        this.mission_type = payload.getUnsignedByte();
         
     }
 
@@ -100,12 +91,12 @@ public class msg_mission_request_int extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-            
+          
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MISSION_REQUEST_INT - sysid:"+sysid+" compid:"+compid+" seq:"+seq+" target_system:"+target_system+" target_component:"+target_component+" mission_type:"+mission_type+"";
+        return "MAVLINK_MSG_ID_MISSION_REQUEST_INT - sysid:"+sysid+" compid:"+compid+" seq:"+seq+" target_system:"+target_system+" target_component:"+target_component+"";
     }
 }
         

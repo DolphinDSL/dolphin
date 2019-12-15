@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_set_home_position extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SET_HOME_POSITION = 243;
-    public static final int MAVLINK_MSG_LENGTH = 61;
+    public static final int MAVLINK_MSG_LENGTH = 53;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SET_HOME_POSITION;
 
 
@@ -75,11 +75,6 @@ public class msg_set_home_position extends MAVLinkMessage{
     * System ID.
     */
     public short target_system;
-      
-    /**
-    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
-    */
-    public long time_usec;
     
 
     /**
@@ -117,8 +112,6 @@ public class msg_set_home_position extends MAVLinkMessage{
         packet.payload.putFloat(approach_z);
               
         packet.payload.putUnsignedByte(target_system);
-              
-        packet.payload.putUnsignedLong(time_usec);
         
         return packet;
     }
@@ -156,8 +149,6 @@ public class msg_set_home_position extends MAVLinkMessage{
         this.approach_z = payload.getFloat();
               
         this.target_system = payload.getUnsignedByte();
-              
-        this.time_usec = payload.getUnsignedLong();
         
     }
 
@@ -180,12 +171,12 @@ public class msg_set_home_position extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                            
+                          
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_SET_HOME_POSITION - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" approach_x:"+approach_x+" approach_y:"+approach_y+" approach_z:"+approach_z+" target_system:"+target_system+" time_usec:"+time_usec+"";
+        return "MAVLINK_MSG_ID_SET_HOME_POSITION - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" x:"+x+" y:"+y+" z:"+z+" q:"+q+" approach_x:"+approach_x+" approach_y:"+approach_y+" approach_z:"+approach_z+" target_system:"+target_system+"";
     }
 }
         

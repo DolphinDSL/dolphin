@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_gps_input extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GPS_INPUT = 232;
-    public static final int MAVLINK_MSG_LENGTH = 65;
+    public static final int MAVLINK_MSG_LENGTH = 63;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GPS_INPUT;
 
 
@@ -110,11 +110,6 @@ public class msg_gps_input extends MAVLinkMessage{
     * Number of satellites visible.
     */
     public short satellites_visible;
-      
-    /**
-    * Yaw of vehicle relative to Earth's North, zero means not available, use 36000 for north
-    */
-    public int yaw;
     
 
     /**
@@ -162,8 +157,6 @@ public class msg_gps_input extends MAVLinkMessage{
         packet.payload.putUnsignedByte(fix_type);
               
         packet.payload.putUnsignedByte(satellites_visible);
-              
-        packet.payload.putUnsignedShort(yaw);
         
         return packet;
     }
@@ -211,8 +204,6 @@ public class msg_gps_input extends MAVLinkMessage{
         this.fix_type = payload.getUnsignedByte();
               
         this.satellites_visible = payload.getUnsignedByte();
-              
-        this.yaw = payload.getUnsignedShort();
         
     }
 
@@ -235,12 +226,12 @@ public class msg_gps_input extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                                          
+                                        
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_GPS_INPUT - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" time_week_ms:"+time_week_ms+" lat:"+lat+" lon:"+lon+" alt:"+alt+" hdop:"+hdop+" vdop:"+vdop+" vn:"+vn+" ve:"+ve+" vd:"+vd+" speed_accuracy:"+speed_accuracy+" horiz_accuracy:"+horiz_accuracy+" vert_accuracy:"+vert_accuracy+" ignore_flags:"+ignore_flags+" time_week:"+time_week+" gps_id:"+gps_id+" fix_type:"+fix_type+" satellites_visible:"+satellites_visible+" yaw:"+yaw+"";
+        return "MAVLINK_MSG_ID_GPS_INPUT - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" time_week_ms:"+time_week_ms+" lat:"+lat+" lon:"+lon+" alt:"+alt+" hdop:"+hdop+" vdop:"+vdop+" vn:"+vn+" ve:"+ve+" vd:"+vd+" speed_accuracy:"+speed_accuracy+" horiz_accuracy:"+horiz_accuracy+" vert_accuracy:"+vert_accuracy+" ignore_flags:"+ignore_flags+" time_week:"+time_week+" gps_id:"+gps_id+" fix_type:"+fix_type+" satellites_visible:"+satellites_visible+"";
     }
 }
         

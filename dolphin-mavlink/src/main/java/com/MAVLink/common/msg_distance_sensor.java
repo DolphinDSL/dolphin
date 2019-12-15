@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_distance_sensor extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_DISTANCE_SENSOR = 132;
-    public static final int MAVLINK_MSG_LENGTH = 38;
+    public static final int MAVLINK_MSG_LENGTH = 14;
     private static final long serialVersionUID = MAVLINK_MSG_ID_DISTANCE_SENSOR;
 
 
@@ -60,21 +60,6 @@ public class msg_distance_sensor extends MAVLinkMessage{
     * Measurement variance. Max standard deviation is 6cm. 255 if unknown.
     */
     public short covariance;
-      
-    /**
-    * Horizontal Field of View (angle) where the distance measurement is valid and the field of view is known. Otherwise this is set to 0.
-    */
-    public float horizontal_fov;
-      
-    /**
-    * Vertical Field of View (angle) where the distance measurement is valid and the field of view is known. Otherwise this is set to 0.
-    */
-    public float vertical_fov;
-      
-    /**
-    * Quaternion of the sensor orientation in vehicle body frame (w, x, y, z order, zero-rotation is 1, 0, 0, 0). Zero-rotation is along the vehicle body x-axis. This field is required if the orientation is set to MAV_SENSOR_ROTATION_CUSTOM. Set it to 0 if invalid."
-    */
-    public float quaternion[] = new float[4];
     
 
     /**
@@ -102,16 +87,6 @@ public class msg_distance_sensor extends MAVLinkMessage{
         packet.payload.putUnsignedByte(orientation);
               
         packet.payload.putUnsignedByte(covariance);
-              
-        packet.payload.putFloat(horizontal_fov);
-              
-        packet.payload.putFloat(vertical_fov);
-              
-        
-        for (int i = 0; i < quaternion.length; i++) {
-            packet.payload.putFloat(quaternion[i]);
-        }
-                    
         
         return packet;
     }
@@ -139,16 +114,6 @@ public class msg_distance_sensor extends MAVLinkMessage{
         this.orientation = payload.getUnsignedByte();
               
         this.covariance = payload.getUnsignedByte();
-              
-        this.horizontal_fov = payload.getFloat();
-              
-        this.vertical_fov = payload.getFloat();
-              
-         
-        for (int i = 0; i < this.quaternion.length; i++) {
-            this.quaternion[i] = payload.getFloat();
-        }
-                
         
     }
 
@@ -171,12 +136,12 @@ public class msg_distance_sensor extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                          
+                    
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_DISTANCE_SENSOR - sysid:"+sysid+" compid:"+compid+" time_boot_ms:"+time_boot_ms+" min_distance:"+min_distance+" max_distance:"+max_distance+" current_distance:"+current_distance+" type:"+type+" id:"+id+" orientation:"+orientation+" covariance:"+covariance+" horizontal_fov:"+horizontal_fov+" vertical_fov:"+vertical_fov+" quaternion:"+quaternion+"";
+        return "MAVLINK_MSG_ID_DISTANCE_SENSOR - sysid:"+sysid+" compid:"+compid+" time_boot_ms:"+time_boot_ms+" min_distance:"+min_distance+" max_distance:"+max_distance+" current_distance:"+current_distance+" type:"+type+" id:"+id+" orientation:"+orientation+" covariance:"+covariance+"";
     }
 }
         
