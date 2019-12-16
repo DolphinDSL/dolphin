@@ -30,7 +30,7 @@ class MissionBuilder extends Builder<Mission> {
 
     LinkedList<Position> positions;
 
-    private Position home;
+    private Position home = Position.fromDegrees(0, 0, 0);
 
     private double speed;
 
@@ -139,8 +139,34 @@ class MissionBuilder extends Builder<Mission> {
         point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, turns));
     }
 
+    void returnHome() {
+
+        def next = this.home;
+
+        addPosition(next);
+
+        point(GoToPoint.initGoToPoint(next));
+    }
+
+    void returnHomeAndLoiter(float radius = 15) {
+        def next = this.home;
+
+        addPosition(next);
+
+        point(LoiterPoint.initLoiterPoint(next, radius));
+    }
+
+    void returnHomeAndLand() {
+        def next = this.home;
+
+        addPosition(next);
+
+        point(LandingPoint.initLandingPoint(next));
+    }
+
     void speed(double newSpeed, boolean groundSpeed = false) {
         this.speed = newSpeed;
+
         point(ChangeSpeed.initChangeSpeed(newSpeed, groundSpeed));
     }
 

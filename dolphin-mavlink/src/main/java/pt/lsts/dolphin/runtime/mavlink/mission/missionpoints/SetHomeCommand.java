@@ -11,7 +11,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 public class SetHomeCommand extends MissionPoint {
 
     private SetHomeCommand(Position home) {
-        super(home, null);
+        super(home);
     }
 
     @Override

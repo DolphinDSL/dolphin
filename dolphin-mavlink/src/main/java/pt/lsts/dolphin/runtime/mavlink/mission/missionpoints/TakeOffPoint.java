@@ -15,8 +15,8 @@ public class TakeOffPoint extends MissionPoint {
 
     private float yaw;
 
-    private TakeOffPoint(Position position, PointPayload payload, float pitch, float yaw) {
-        super(position, payload);
+    private TakeOffPoint(Position position, float pitch, float yaw) {
+        super(position);
 
         this.pitch = pitch;
 
@@ -47,6 +47,6 @@ public class TakeOffPoint extends MissionPoint {
     }
 
     public static MissionPoint initTakeOffPoint(Position pos, float pitch, float yaw) {
-        return new TakeOffPoint(pos, null, pitch, yaw);
+        return new TakeOffPoint(pos, pitch, yaw);
     }
 }

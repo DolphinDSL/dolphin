@@ -5,6 +5,7 @@ import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_CMD;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 import com.MAVLink.enums.MAV_MODE_FLAG;
+import com.MAVLink.enums.PLANE_MODE;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
@@ -46,9 +47,9 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         vehicle.setExecutor(this);
 
-        if (vehicle.getLastHBReceived().custom_mode == 10) {
+        if (vehicle.getLastHBReceived().custom_mode == PLANE_MODE.PLANE_MODE_AUTO) {
             //Vehicle is currently in auto mode
-            Engine.platform().displayMessage("The drone %d is in auto mode, changing to RTL ", getVehicleMAV().getMAVLinkId());
+            Engine.platform().displayMessage("The drone %d is in auto mode, changing to RTL to receive the new mission.", getVehicleMAV().getMAVLinkId());
 
             setIntoRTL();
         }
@@ -68,8 +69,9 @@ public class MissionExecutor extends PlatformTaskExecutor {
         set_mode.target_component = 0;
         set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
         set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+
         //Set the drone as RTL mode
-        set_mode.param2 = 11;
+        set_mode.param2 = PLANE_MODE.PLANE_MODE_RTL;
     }
 
     @Override
@@ -83,8 +85,10 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
 //        Engine.platform().displayMessage("On step %d", custom_mode);
 
-        if (custom_mode == 11 && timeElapsed() >= 5) {
-            Engine.platform().displayMessage("DONE");
+        if (custom_mode == PLANE_MODE.PLANE_MODE_RTL && timeElapsed() >= 5) {
+
+            Engine.platform().displayMessage("Finished the mission %s on the drone %d", this.getTask().getId(), this.getVehicleMAV().getMAVLinkId());
+
             return new CompletionState(CompletionState.Type.DONE);
         }
 
@@ -131,7 +135,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
             set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
             set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
             //Set the drone as auto mode
-            set_mode.param2 = 10;
+            set_mode.param2 = PLANE_MODE.PLANE_MODE_AUTO;
 
             getVehicleMAV().send(set_mode);
 

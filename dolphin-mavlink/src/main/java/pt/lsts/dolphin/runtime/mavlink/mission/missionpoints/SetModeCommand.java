@@ -10,7 +10,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 public class SetModeCommand extends MissionPoint {
 
     private SetModeCommand() {
-        super(null, null);
+        super(null);
     }
 
     @Override

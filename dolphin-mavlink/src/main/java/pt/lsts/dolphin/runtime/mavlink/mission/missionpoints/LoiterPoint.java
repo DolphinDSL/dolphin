@@ -19,8 +19,8 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
 
     private int arg;
 
-    private LoiterPoint(Position position, PointPayload payload, LoiterType type, float radius, int arg) {
-        super(position, payload);
+    private LoiterPoint(Position position, LoiterType type, float radius, int arg) {
+        super(position);
 
         this.type = type;
         this.radius = radius;
@@ -81,10 +81,10 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
     }
 
     public static MissionPoint initLoiterPoint(Position pos, float radius) {
-        return new LoiterPoint(pos, null, LoiterType.UNLIM, radius, 0);
+        return new LoiterPoint(pos, LoiterType.UNLIM, radius, 0);
     }
 
     public static MissionPoint initLoiterPoint(Position pos, LoiterType type, float radius, int arg) {
-        return new LoiterPoint(pos, null, type, radius, arg);
+        return new LoiterPoint(pos, type, radius, arg);
     }
 }

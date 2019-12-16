@@ -15,8 +15,8 @@ public class ChangeSpeed extends MissionPoint {
 
     private boolean groundSpeed;
 
-    private ChangeSpeed(PointPayload payload, double speed, boolean groundSpeed) {
-        super(null, payload);
+    private ChangeSpeed(double speed, boolean groundSpeed) {
+        super(null);
 
         this.speed = speed;
 
@@ -43,6 +43,6 @@ public class ChangeSpeed extends MissionPoint {
     }
 
     public static MissionPoint initChangeSpeed(double speed, boolean groundSpeed) {
-        return new ChangeSpeed(null, speed, groundSpeed);
+        return new ChangeSpeed(speed, groundSpeed);
     }
 }

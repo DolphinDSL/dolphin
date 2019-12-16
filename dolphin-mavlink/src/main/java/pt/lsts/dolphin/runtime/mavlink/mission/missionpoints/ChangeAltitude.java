@@ -12,8 +12,8 @@ public class ChangeAltitude extends MissionPoint {
 
     private double altitude;
 
-    private ChangeAltitude(PointPayload payload, double altitude) {
-        super(null, payload);
+    private ChangeAltitude(double altitude) {
+        super(null);
 
         this.altitude = altitude;
     }
@@ -37,7 +37,7 @@ public class ChangeAltitude extends MissionPoint {
     }
 
     public static MissionPoint initChangeAltitude(double newAltitude) {
-        return new ChangeAltitude(null, newAltitude);
+        return new ChangeAltitude(newAltitude);
     }
 
 }

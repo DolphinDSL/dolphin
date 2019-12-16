@@ -14,7 +14,7 @@ public class CameraPoint extends MissionPoint {
     private int arg;
 
     private CameraPoint(CameraType type, int arg) {
-        super(null, null);
+        super(null);
         this.type = type;
         this.arg = arg;
     }

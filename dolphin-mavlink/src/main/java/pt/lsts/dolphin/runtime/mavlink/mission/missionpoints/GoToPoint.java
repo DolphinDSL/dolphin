@@ -12,8 +12,8 @@ import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 
 public class GoToPoint extends MissionPoint {
 
-    private GoToPoint(Position pointLocation, PointPayload payload) {
-        super(pointLocation, payload);
+    private GoToPoint(Position pointLocation) {
+        super(pointLocation);
     }
 
     @Override
@@ -54,6 +54,6 @@ public class GoToPoint extends MissionPoint {
     }
 
     public static MissionPoint initGoToPoint(Position position) {
-        return new GoToPoint(position, null);
+        return new GoToPoint(position);
     }
 }

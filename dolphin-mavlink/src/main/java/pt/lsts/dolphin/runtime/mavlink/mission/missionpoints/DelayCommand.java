@@ -14,7 +14,7 @@ public class DelayCommand extends MissionPoint {
     private long time;
 
     private DelayCommand(long time) {
-        super(null, null);
+        super(null);
 
         this.time = time;
     }

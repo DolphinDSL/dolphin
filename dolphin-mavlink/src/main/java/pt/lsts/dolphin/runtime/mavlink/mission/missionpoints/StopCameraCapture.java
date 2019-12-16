@@ -9,7 +9,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 public class StopCameraCapture extends MissionPoint {
 
     private StopCameraCapture() {
-        super(null, null);
+        super(null);
     }
 
     @Override
