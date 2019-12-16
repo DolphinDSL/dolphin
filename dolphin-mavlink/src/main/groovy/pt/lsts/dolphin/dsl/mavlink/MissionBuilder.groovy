@@ -46,6 +46,13 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     private Position getLastKnownPosition() {
+        if (this.positions.size() == 0) {
+            if (this.home != null) return this.home;
+
+            else return Position.fromDegrees(0, 0, 0);
+        }
+
+
         return this.positions.getLast();
     }
 

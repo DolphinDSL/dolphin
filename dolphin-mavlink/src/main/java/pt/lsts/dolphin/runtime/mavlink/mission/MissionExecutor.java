@@ -108,11 +108,11 @@ public class MissionExecutor extends PlatformTaskExecutor {
 //        Engine.platform().displayMessage("Current Mission item %d", currentItem.seq);
     }
 
-    public void consume(msg_camera_image_captured camera_captured) {
-
-        Engine.platform().displayMessage("Captured an image %d", camera_captured.image_index);
-
-    }
+//    public void consume(msg_camera_image_captured camera_captured) {
+//
+//        Engine.platform().displayMessage("Captured an image %d", camera_captured.image_index);
+//
+//    }
 
     public void consume(msg_mission_ack mission_received) {
 

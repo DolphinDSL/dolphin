@@ -22,8 +22,7 @@ task = mission {
 
     move 50, 0 ,0
 
-    lk
-
+    capturePhoto()
 }
 
 execute task[v]
