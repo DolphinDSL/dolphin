@@ -57,7 +57,7 @@ public final class MissionUploadProtocol implements Debuggable {
     /**
      * Current item being processe.
      */
-    private int currentItem;
+    private int currentItem, currentMissionItem;
 
     /**
      * Waypoints to send (temporary support).
@@ -131,14 +131,17 @@ public final class MissionUploadProtocol implements Debuggable {
     void startMissionUpload() {
         Engine.platform().displayMessage("Messages %d", messageList.size());
 
-        MAVLinkMessage mavLinkMessage = messageList.get(0);
+        Engine.platform().displayMessage("Starting dispatch of mission to drone %d", node.getMAVLinkId());
+
+        MAVLinkMessage mavLinkMessage = messageList.get(currentItem++);
+
+        if (mavLinkMessage instanceof msg_mission_item) {
+            this.currentMissionItem++;
+        }
 
         node.send(mavLinkMessage);
 
-        this.currentItem = 1;
         state = State.IN_PROGRESS;
-        Engine.platform().displayMessage("Sent item count");
-        d("Sent item count");
     }
 
     void consume(msg_mission_request msg) {
@@ -149,11 +152,20 @@ public final class MissionUploadProtocol implements Debuggable {
 
         //Have to check msg.seq == currentItem - 1 because the item count msg is also stored in the list
         if (state == State.IN_PROGRESS &&
-                msg.seq == (currentItem - 1) &&
-//                msg.target_system == node.getMAVLinkId() &&
+                msg.seq == (currentMissionItem) &&
                 msg.target_component == 0) {
 
             MAVLinkMessage mavLinkMessage = messageList.get(currentItem++);
+
+            while (!(mavLinkMessage instanceof msg_mission_item)) {
+                Engine.platform().displayMessage("Sending non mission related item %s", mavLinkMessage.toString());
+
+                node.send(mavLinkMessage);
+
+                mavLinkMessage = messageList.get(currentItem++);
+            }
+
+            currentMissionItem++;
 
             //This isn't working?
 
@@ -174,6 +186,20 @@ public final class MissionUploadProtocol implements Debuggable {
             Engine.platform().displayMessage("Cleared the drone's mission, starting upload of the new mission.");
 
             startMissionUpload();
+
+        } else if (state == State.IN_PROGRESS
+                && ack.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
+
+            Engine.platform().displayMessage("Mission sent successfully.");
+
+            state = State.SUCCESS;
+
+            while (currentItem < this.messageList.size()) {
+
+                MAVLinkMessage message = this.messageList.get(currentItem++);
+
+                node.send(message);
+            }
 
         }
     }

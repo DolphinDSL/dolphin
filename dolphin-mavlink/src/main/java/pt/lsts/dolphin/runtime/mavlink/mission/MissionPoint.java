@@ -9,7 +9,7 @@ import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class MissionPoint {
+public abstract class MissionPoint extends DroneCommand {
 
     private Position positionLocation;
 
@@ -21,5 +21,10 @@ public abstract class MissionPoint {
         return positionLocation;
     }
 
-    public abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current);
+    @Override
+    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
+        return toMavLinkMessage(dest, 0);
+    }
+
+    public abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int node);
 }

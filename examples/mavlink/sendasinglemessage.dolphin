@@ -21,8 +21,6 @@ task = mission {
     takeOff p
 
     move 50, 0 ,0
-
-    capturePhoto()
 }
 
 execute task[v]

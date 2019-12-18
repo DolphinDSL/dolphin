@@ -1,36 +1,43 @@
 package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.msg_mission_item;
+import com.MAVLink.common.msg_command_long;
 import com.MAVLink.enums.MAV_CMD;
-import com.MAVLink.enums.MAV_MODE;
+import com.MAVLink.enums.MAV_MODE_FLAG;
+import com.MAVLink.enums.PLANE_MODE;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
-import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
+import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
 
-public class SetModeCommand extends MissionPoint {
+public class SetModeCommand extends DroneCommand {
 
-    private SetModeCommand() {
-        super(null);
+    /**
+     * The mode to set
+     *
+     * @see PLANE_MODE
+     */
+    private int mode;
+
+    private SetModeCommand(int mode) {
+        this.mode = mode;
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
 
-        msg_mission_item item = new msg_mission_item();
+        msg_command_long item = new msg_command_long();
 
         item.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
-        item.autocontinue = 1;
         item.target_system = (short) dest.getMAVLinkId();
-        item.seq = current;
-
         item.target_component = 0;
 
-        item.param1 = MAV_MODE.MAV_MODE_AUTO_ARMED;
+        item.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+        //Set the drone as auto mode
+        item.param2 = mode;
 
         return item;
     }
 
-    public static MissionPoint initSetArmedAuto() {
-        return new SetModeCommand();
+    public static DroneCommand initSetMode(int mode) {
+        return new SetModeCommand(mode);
     }
 }

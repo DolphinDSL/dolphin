@@ -72,6 +72,8 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         //Set the drone as RTL mode
         set_mode.param2 = PLANE_MODE.PLANE_MODE_RTL;
+
+        getVehicleMAV().send(set_mode);
     }
 
     @Override
@@ -127,25 +129,25 @@ public class MissionExecutor extends PlatformTaskExecutor {
         if (mission_received.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
             Engine.platform().displayMessage("The drone %d has received the mission.", this.getVehicleMAV().getMAVLinkId());
 
-            msg_command_long set_mode = new msg_command_long();
-
-            set_mode.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
-
-            set_mode.target_component = 0;
-            set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
-            set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-            //Set the drone as auto mode
-            set_mode.param2 = PLANE_MODE.PLANE_MODE_AUTO;
-
-            getVehicleMAV().send(set_mode);
-
-            msg_mission_set_current start = new msg_mission_set_current();
-
-            start.target_system = (short) getVehicleMAV().getMAVLinkId();
-            start.target_component = 0;
-            start.seq = 1;
-
-            getVehicleMAV().send(start);
+//            msg_command_long set_mode = new msg_command_long();
+//
+//            set_mode.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
+//
+//            set_mode.target_component = 0;
+//            set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
+//            set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+//            //Set the drone as auto mode
+//            set_mode.param2 = PLANE_MODE.PLANE_MODE_AUTO;
+//
+//            getVehicleMAV().send(set_mode);
+//
+//            msg_mission_set_current start = new msg_mission_set_current();
+//
+//            start.target_system = (short) getVehicleMAV().getMAVLinkId();
+//            start.target_component = 0;
+//            start.seq = 1;
+//
+//            getVehicleMAV().send(start);
 
             Engine.platform().displayMessage("Sent the mission start command to the drone.");
         } else {

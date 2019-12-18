@@ -4,6 +4,7 @@ import pt.lsts.dolphin.dsl.Builder
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.dsl.Engine
 import pt.lsts.dolphin.runtime.Position
+import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand
@@ -26,7 +27,7 @@ class MissionBuilder extends Builder<Mission> {
 
     String name;
 
-    LinkedList<MissionPoint> points;
+    LinkedList<DroneCommand> points;
 
     LinkedList<Position> positions;
 
@@ -68,6 +69,10 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void disarm() {
+    }
+
+    void startRecording() {
+
     }
 
     void goPos(double lat, double lon, double hae = 0d) {
@@ -238,7 +243,7 @@ class MissionBuilder extends Builder<Mission> {
     Mission build() {
         Mission m = Mission.initializeMission(name);
 
-        m.setPoints(points);
+        m.setDroneCommands(points);
 
         return m
     }

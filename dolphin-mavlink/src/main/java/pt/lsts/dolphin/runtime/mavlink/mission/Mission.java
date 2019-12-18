@@ -1,59 +1,60 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.msg_mission_count;
-import com.MAVLink.common.msg_mission_current;
-import com.MAVLink.common.msg_mission_item;
-import com.MAVLink.common.msg_mission_set_current;
-import com.MAVLink.enums.MAV_CMD;
+import com.MAVLink.enums.PLANE_MODE;
 import pt.lsts.dolphin.dsl.Engine;
-import pt.lsts.dolphin.runtime.Node;
 import pt.lsts.dolphin.runtime.NodeFilter;
-import pt.lsts.dolphin.runtime.NodeSet;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.MissionCountCommand;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetCurrentCommand;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand;
 import pt.lsts.dolphin.runtime.tasks.PlatformTask;
-import pt.lsts.dolphin.runtime.tasks.Task;
 import pt.lsts.dolphin.runtime.tasks.TaskExecutor;
 
 import java.util.*;
 
 public class Mission extends PlatformTask implements Cloneable {
 
-    private LinkedList<MissionPoint> missionPoints;
+    private LinkedList<DroneCommand> droneCommands;
 
     private Mission(String id) {
         super(id);
-        missionPoints = new LinkedList<>();
+        this.droneCommands = new LinkedList<>();
     }
 
-    public void setPoints(LinkedList<MissionPoint> points) {
-        this.missionPoints = points;
+    public void setDroneCommands(LinkedList<DroneCommand> commands) {
+        this.droneCommands = commands;
+
+        int messageCount = (int) this.droneCommands.stream().filter(MissionPoint.class::isInstance).count();
+
+        Engine.platform().displayMessage("Item count: %d", messageCount);
+
+        //Add all the needed drone commands for the drone to auto start the mission
+        this.droneCommands.addFirst(MissionCountCommand.initMissionCountCommand(messageCount));
+
+        this.droneCommands.addLast(SetModeCommand.initSetMode(PLANE_MODE.PLANE_MODE_AUTO));
+
+        this.droneCommands.addLast(SetCurrentCommand.initSetCurrentItem(0));
     }
 
     public int missionPoints() {
-        return this.missionPoints.size();
+        return this.droneCommands.size();
     }
 
     public List<MAVLinkMessage> toMavLinkMessages(MAVLinkNode dest) {
 
         List<MAVLinkMessage> messages = new ArrayList<>();
 
-        msg_mission_count count = new msg_mission_count();
-
-        Engine.platform().displayMessage("Item count: %d", this.missionPoints.size());
-
-        Engine.platform().displayMessage("%s", this.missionPoints);
-
-        count.count = this.missionPoints.size();
-        count.target_component = 0;
-        count.target_system = (short) dest.getMAVLinkId();
-
-        messages.add(count);
-
         int current = 0;
 
-        for (MissionPoint missionPoint : this.missionPoints) {
-            messages.add(missionPoint.toMavLinkMessage(dest, current++));
+        for (DroneCommand missionPoint : this.droneCommands) {
+
+            if (missionPoint instanceof MissionPoint) {
+                messages.add(((MissionPoint) missionPoint).toMavLinkMessage(dest, current++));
+            } else {
+                messages.add(missionPoint.toMavLinkMessage(dest));
+            }
+
         }
 
         return messages;
