@@ -1,0 +1,45 @@
+@startuml
+
+class Mission {
+
+    - commands: LinkedList<DroneCommand>
+
+    + List<MAVLinkMessage> toMavLinkMessages(MAVLinkNode)
+
+    + TaskExecutor getExecutor()
+
+}
+
+abstract class PlatformTask {
+    + abstract TaskExecutor getExecutor()
+}
+
+abstract class TaskExecutor
+
+class MissionExecutor {
+
+    MAVLinkNode executing
+
+}
+
+abstract class MAVLinkMessage
+
+abstract class DroneCommand
+
+abstract class MissionPoint
+
+Mission <|-- PlatformTask
+
+Mission::commands --|> DroneCommand
+
+Mission::toMavLinkMessages --|> MAVLinkMessage
+
+PlatformTask::getExecutor --|> TaskExecutor
+
+Mission::getExecutor --|> MissionExecutor
+
+DroneCommand --|> MissionPoint
+
+MissionExecutor <|-- TaskExecutor
+
+@enduml

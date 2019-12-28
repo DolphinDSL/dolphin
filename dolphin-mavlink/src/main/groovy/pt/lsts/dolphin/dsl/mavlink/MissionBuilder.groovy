@@ -35,7 +35,7 @@ class MissionBuilder extends Builder<Mission> {
 
     private double speed;
 
-    public MissionBuilder() {
+    MissionBuilder() {
         this.name = "MissionPlan_" + String.valueOf(System.currentTimeMillis());
 
         this.points = new LinkedList<>();
@@ -71,9 +71,6 @@ class MissionBuilder extends Builder<Mission> {
     void disarm() {
     }
 
-    void startRecording() {
-
-    }
 
     void goPos(double lat, double lon, double hae = 0d) {
 
@@ -223,7 +220,7 @@ class MissionBuilder extends Builder<Mission> {
         point(TakeOffPoint.initTakeOffPoint(pos, pitch, Float.NaN));
     }
 
-    void takeOffYaw(Position pos, float pitch, float yaw = Float.NaN) {
+    void takeOffWithYaw(Position pos, float pitch, float yaw = Float.NaN) {
         point(TakeOffPoint.initTakeOffPoint(pos, pitch, yaw));
     }
 
