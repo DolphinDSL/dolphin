@@ -14,7 +14,17 @@ abstract class PlatformTask {
     + abstract TaskExecutor getExecutor()
 }
 
-abstract class TaskExecutor
+interface Task {
+    + TaskExecutor getExecutor()
+}
+
+abstract class TaskExecutor {
+
+    + void start()
+    + void step()
+    + void stop()
+
+}
 
 class MissionExecutor {
 
@@ -24,22 +34,57 @@ class MissionExecutor {
 
 abstract class MAVLinkMessage
 
-abstract class DroneCommand
+abstract class DroneCommand {
 
-abstract class MissionPoint
+ + abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode)
 
-Mission <|-- PlatformTask
+}
+
+abstract class MissionPoint {
+
+ + MAVLinkMessage toMavLinkMessage(MAVLinkNode)
+
+ + MAVLinkMessage toMavLinkMessage(MAVLinkNode, int)
+
+}
+
+class MAVLinkNode {
+    # MissionExecutor currentMission
+
+    #MissionUploadProtocol uploadProtocol
+}
+
+class MissionUploadProtocol {
+
+    + void start(Mission)
+
+}
+
+Mission "Extends" --|> PlatformTask
+
+PlatformTask "Implements" --|> Task
 
 Mission::commands --|> DroneCommand
 
 Mission::toMavLinkMessages --|> MAVLinkMessage
 
-PlatformTask::getExecutor --|> TaskExecutor
+PlatformTask::getExecutor "Returns" --|> TaskExecutor
 
-Mission::getExecutor --|> MissionExecutor
+Mission::getExecutor "Returns" --|> MissionExecutor
 
-DroneCommand --|> MissionPoint
+MissionPoint::toMavLinkMessage "calls" --* MissionPoint::toMavLinkMessage
 
-MissionExecutor <|-- TaskExecutor
+DroneCommand <|-- "Extends" MissionPoint
+
+MissionExecutor "Extends" --|> TaskExecutor
+
+MAVLinkNode::currentMission "Contains" --|> MissionExecutor
+
+MAVLinkNode::uploadProtocol --|> MissionUploadProtocol
+
+Mission "Takes" --|> MissionUploadProtocol::start
+
+MissionUploadProtocol::start --|> MissionExecutor
+
 
 @enduml
