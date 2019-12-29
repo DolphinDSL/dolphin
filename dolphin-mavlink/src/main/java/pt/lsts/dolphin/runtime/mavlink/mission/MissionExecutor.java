@@ -10,21 +10,56 @@ import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetCurrentCommand;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
 import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MissionExecutor extends PlatformTaskExecutor {
 
-    private msg_mission_item_reached last_item;
-
-    private msg_mission_current msg_mission_current;
-
-    private boolean[] completed;
+    private Map<SetCurrentCommand, Integer> repetitionsLeft = null;
 
     public MissionExecutor(Mission mission) {
         super(mission);
 
-        completed = new boolean[mission.missionPoints()];
+        for (DroneCommand droneCommand : mission.getCommandList()) {
+            if (droneCommand instanceof SetCurrentCommand) {
+
+                if (repetitionsLeft == null) {
+                    repetitionsLeft = new HashMap<>();
+                }
+
+                SetCurrentCommand set_mission_current = (SetCurrentCommand) droneCommand;
+
+                repetitionsLeft.put(set_mission_current, set_mission_current.getRepetitions());
+
+            }
+        }
+
+    }
+
+    private Mission getMission() {
+        return (Mission) getTask();
+    }
+
+    private int getRealIndex(int current) {
+        int index = 0, realIndex = 0;
+
+        for (DroneCommand droneCommand : getMission().getCommandList()) {
+            realIndex++;
+
+            if (droneCommand instanceof MissionPoint) {
+                index++;
+            }
+
+            if (index == current) {
+                break;
+            }
+        }
+
+        return realIndex;
     }
 
     MAVLinkNode getVehicleMAV() {
@@ -97,8 +132,33 @@ public class MissionExecutor extends PlatformTaskExecutor {
         return new CompletionState(CompletionState.Type.IN_PROGRESS, "");
     }
 
+    /**
+     * Consume the packet that notifies that the drone has reached a given position
+     * @param item_reached The position reached
+     */
     public void consume(msg_mission_item_reached item_reached) {
-        this.last_item = item_reached;
+
+        int realIndex = getRealIndex(item_reached.seq);
+
+        DroneCommand command = getMission().getCommandList().get(realIndex);
+
+        if (command instanceof SetCurrentCommand) {
+
+            int repetitionsLeft = this.repetitionsLeft.get(command);
+
+            if (repetitionsLeft > 0) {
+                repetitionsLeft--;
+
+                this.repetitionsLeft.put((SetCurrentCommand) command, repetitionsLeft);
+
+                MAVLinkMessage mavLinkMessage = command.toMavLinkMessage(getVehicleMAV());
+
+                getVehicleMAV().send(mavLinkMessage);
+
+                Engine.platform().displayMessage("Drone has been sent to item %d, there are %d repetitions left on this jump command", ((SetCurrentCommand) command).getTargetMissionPoint(), repetitionsLeft);
+            }
+
+        }
 
         Engine.platform().displayMessage("Reached the item %d", item_reached.seq);
     }
@@ -109,16 +169,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
      * @param currentItem
      */
     public void consume(msg_mission_current currentItem) {
-        this.msg_mission_current = currentItem;
-
-//        Engine.platform().displayMessage("Current Mission item %d", currentItem.seq);
     }
-
-//    public void consume(msg_camera_image_captured camera_captured) {
-//
-//        Engine.platform().displayMessage("Captured an image %d", camera_captured.image_index);
-//
-//    }
 
     public void consume(msg_mission_ack mission_received) {
 
@@ -128,27 +179,6 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         if (mission_received.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
             Engine.platform().displayMessage("The drone %d has received the mission.", this.getVehicleMAV().getMAVLinkId());
-
-//            msg_command_long set_mode = new msg_command_long();
-//
-//            set_mode.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
-//
-//            set_mode.target_component = 0;
-//            set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
-//            set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
-//            //Set the drone as auto mode
-//            set_mode.param2 = PLANE_MODE.PLANE_MODE_AUTO;
-//
-//            getVehicleMAV().send(set_mode);
-//
-//            msg_mission_set_current start = new msg_mission_set_current();
-//
-//            start.target_system = (short) getVehicleMAV().getMAVLinkId();
-//            start.target_component = 0;
-//            start.seq = 1;
-//
-//            getVehicleMAV().send(start);
-
             Engine.platform().displayMessage("Sent the mission start command to the drone.");
         } else {
             Engine.platform().displayMessage("Failed to send the mission to the drone");

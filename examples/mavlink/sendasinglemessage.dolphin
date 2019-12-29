@@ -21,6 +21,14 @@ task = mission {
     takeOff p
 
     move 50, 0 ,0
+
+    move 100, 0, 50
+
+    jumpToItem 3, 5
+
+    moveAndLoiterPos 100, 0, 50
+
+    returnHome()
 }
 
 execute task[v]

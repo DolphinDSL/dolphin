@@ -16,6 +16,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.GoToPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LandingPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint.LoiterType
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetCurrentCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetHomeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.TakeOffPoint
@@ -61,16 +62,9 @@ class MissionBuilder extends Builder<Mission> {
         this.name = name;
     }
 
-    void point(MissionPoint point) {
+    void point(DroneCommand point) {
         this.points.add(point);
     }
-
-    void arm() {
-    }
-
-    void disarm() {
-    }
-
 
     void goPos(double lat, double lon, double hae = 0d) {
 
@@ -234,6 +228,12 @@ class MissionBuilder extends Builder<Mission> {
 
     void captureUntilStop() {
         point(CameraPoint.initCameraPoint(CameraPoint.CameraType.UNTIL_STOP, 0));
+    }
+
+    void jumpToItem(int item, int repetitions = 1) {
+
+        point(SetCurrentCommand.initSetCurrentItem(item, repetitions));
+
     }
 
     @Override

@@ -9,8 +9,19 @@ public class SetCurrentCommand extends DroneCommand {
 
     private int currentMissionPoint;
 
-    private SetCurrentCommand(int currentMissionPoint) {
+    private int repetitions;
+
+    private SetCurrentCommand(int currentMissionPoint, int repetitions) {
         this.currentMissionPoint = currentMissionPoint;
+        this.repetitions = repetitions;
+    }
+
+    public int getTargetMissionPoint() {
+        return this.currentMissionPoint;
+    }
+
+    public int getRepetitions() {
+        return repetitions;
     }
 
     public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
@@ -24,7 +35,11 @@ public class SetCurrentCommand extends DroneCommand {
     }
 
     public static DroneCommand initSetCurrentItem(int currentItem) {
-        return new SetCurrentCommand(currentItem);
+        return initSetCurrentItem(currentItem, 0);
+    }
+
+    public static DroneCommand initSetCurrentItem(int currentItem, int repetitions) {
+        return new SetCurrentCommand(currentItem, repetitions);
     }
 
 }

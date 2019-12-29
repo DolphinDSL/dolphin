@@ -22,6 +22,10 @@ public class Mission extends PlatformTask implements Cloneable {
         this.droneCommands = new LinkedList<>();
     }
 
+    public List<DroneCommand> getCommandList() {
+        return droneCommands;
+    }
+
     public void setDroneCommands(LinkedList<DroneCommand> commands) {
         this.droneCommands = commands;
 
