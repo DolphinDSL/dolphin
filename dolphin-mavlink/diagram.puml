@@ -32,8 +32,6 @@ class MissionExecutor {
 
 }
 
-abstract class MAVLinkMessage
-
 abstract class DroneCommand {
 
  + abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode)
@@ -49,9 +47,11 @@ abstract class MissionPoint {
 }
 
 class MAVLinkNode {
-    # MissionExecutor currentMission
+    #MissionExecutor currentMission
 
     #MissionUploadProtocol uploadProtocol
+
+    #void send(MAVLinkMessage)
 }
 
 class MissionUploadProtocol {
@@ -66,7 +66,7 @@ PlatformTask "Implements" --|> Task
 
 Mission::commands --|> DroneCommand
 
-Mission::toMavLinkMessages --|> MAVLinkMessage
+Mission::toMavLinkMessages --|> "Generates" MAVLinkMessage
 
 PlatformTask::getExecutor "Returns" --|> TaskExecutor
 
@@ -82,9 +82,10 @@ MAVLinkNode::currentMission "Contains" --|> MissionExecutor
 
 MAVLinkNode::uploadProtocol --|> MissionUploadProtocol
 
-Mission "Takes" --|> MissionUploadProtocol::start
+Mission "Takes" <|-- MissionUploadProtocol::start
 
-MissionUploadProtocol::start --|> MissionExecutor
+MissionExecutor "Sends a Mission to Drone" <|-- MissionUploadProtocol::start
 
+MAVLinkNode::send  "Sends to Drone" --|> MAVLinkMessage
 
 @enduml

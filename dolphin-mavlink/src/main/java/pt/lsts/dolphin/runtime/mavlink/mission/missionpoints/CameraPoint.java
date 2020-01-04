@@ -13,10 +13,13 @@ public class CameraPoint extends MissionPoint {
 
     private int arg;
 
-    private CameraPoint(CameraType type, int arg) {
+    private int timeBetween;
+
+    private CameraPoint(CameraType type, int arg, int timeBetween) {
         super(null);
         this.type = type;
         this.arg = arg;
+        this.timeBetween = timeBetween;
     }
 
     @Override
@@ -31,6 +34,7 @@ public class CameraPoint extends MissionPoint {
         item.autocontinue = 1;
         item.frame = MAV_FRAME.MAV_FRAME_GLOBAL;
 
+        item.param1 = this.timeBetween;
         item.param2 = type == CameraType.IMAGE_COUNT ? 10 : 0;
         item.param3 = type == CameraType.IMAGE_COUNT ? arg : type.getParam();
 
@@ -53,8 +57,8 @@ public class CameraPoint extends MissionPoint {
         }
     }
 
-    public static MissionPoint initCameraPoint(CameraType type, int arg) {
-        return new CameraPoint(type, arg);
+    public static MissionPoint initCameraPoint(CameraType type, int arg, int timeBetween) {
+        return new CameraPoint(type, arg, timeBetween);
     }
 
 }

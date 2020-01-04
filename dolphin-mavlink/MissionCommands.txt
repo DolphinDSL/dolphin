@@ -1,0 +1,70 @@
+
+Creating a new mission:
+
+    task1 = mission {
+        //Insert the all the mission items inside here
+    }
+
+All the possible mission items:
+
+    name (Name) -> Set the name of the mission
+
+    home (latitude, longitude, height) -> Set the Mission's home position (If this is not set, it will default to the first position of any item in the mission)
+
+    home (Position) -> Does the same as home (lat, long, hei), but with a Position object
+
+    goPos (latitude, longitude, height) -> Send the drone to an exact position
+
+    move (north, east, up) -> Send the drone to a position, relative to the previous position of the drone
+
+    moveFromHome (north, east, up) -> Send the drone to a position, relative to the home position of the drone
+
+    moveAndLoiterPos (north, east, up, radius (Optional, default = 15)) -> Send a drone to a position, relative to the last position of the drone and instruct it to loiter the position (Go in circles around it) with the optional radius
+
+    moveAndLoiterTurns (north, east, up, turns (Optional, default = 10), radius (Optional, default = 15)) -> Send a drone to a position, relative to the last position of the drone and instruct it to loiter the position (Go in circles around it) with the optional radius for the instructed amount of times
+
+    moveAndLoiterTime (north, east, up, time, radius (Optional, default = 15)) -> Send a drone to a position, relative to the last position of the drone and instruct it to loiter for the given amount of time (in seconds)
+
+    moveAndLoiterFromHome (north, east, up, radius (Optional, default = 15)) -> Send a drone to a position, relative to the home position of this mission and instruct it to loiter the position with the optional radius
+
+    moveAndLoiterTurnsFromHome (north, east, up, turns (Optional, default = 10), radius (Optional, default = 15)) -> The same as moveAndLoiterTurns, except instead of the location being relative to the last position of the drone, it's relative to the home position of the drone
+
+    moveAndLoiterTimeFromHome (north, east, up, time, radius (Optional, default = 15)) -> Send a drone to a position, relative to the home position of this mission and instruct it to loiter the position for the given time (in seconds)
+
+    returnHome () -> Instruct the drone to go to the home position
+
+    returnHomeAndLoiter (radius (Optional, default = 15)) -> Instruct the drone to go to the home position and loiter it with the specified radius for an unlimited amount of time
+
+    returnHomeAndLand () -> Instruct the drone to return to the home position and attempt to land
+
+    speed (newSpeed, isGroundSpeed (Optional, default = false)) -> Instruct the drone to travel at the speed provided, if you want to use ground speed metrics, set the isGroundSpeed to true
+
+    altitude (newAltitude) -> Instruct the drone to go to the given altitude (In meters)
+
+    delay (time) -> Delay the mission for a given amount of seconds
+
+    loiterPos (Position, Radius (Optional, default = 15)) -> Instruct the drone to go to an exact position and loiter it with the given radius
+
+    loiterPos (latitude, longitude, height, Radius (Optional, default = 15)) -> Instruct the drone to go to an exact position and loiter it with the given radius
+
+    loiterTurns (latitude, longitude, height, turns (Optional, default = 10), Radius (Optional, default = 15)) -> Instruct the drone to go to an exact position and loiter the given amount of turns
+
+    loiterTime (latitude, longitude, height, time, Radius (Optional, default = 15)) -> Instruct the drone to go to an exact position and loiter it for the given amount of time (in seconds)
+
+    landingPoint (latitude, longitude, height) -> Instruct the drone to land in the given position
+
+    landingPoint (Position) -> Instruct the drone to land in the given position object
+
+    takeOff (Position, Pitch (Optional, default = 15)) -> Instruct the drone to take off from a position with the given pitch
+
+    takeOffWithYaw (Position, Pitch, Yaw (Optional, default = NaN)) -> Instruct the drone to take off from a position with the given pitch and yaw (If NaN, yaw is ignored)
+
+    capturePhoto () -> Instruct the drone to snap a photo (Not available on SITL simulation)
+
+    captureSeveralPhotos (PhotoCount, Interval (Optional, default = 2)) -> Instruct the drone to snap several photos (Not available on SITL simulation)
+
+    captureUntilStop (Interval (Optional, default = 2)) -> Instruct the drone to snap photos with the given interval until it received an instruction to stop
+
+    stopCapturing () -> Instruct the drone to stop capturing photos
+
+    jumpToItem (Item, Repetitions (Optional, default = 1)) -> Send the drone to the given mission item for the given amount of times (Allows for the creation of loops in the mission)

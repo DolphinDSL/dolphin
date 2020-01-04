@@ -19,6 +19,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.LoiterPoint.LoiterT
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetCurrentCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetHomeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.StopCameraCapture
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.TakeOffPoint
 import pt.lsts.dolphin.util.wgs84.NED
 import pt.lsts.dolphin.util.wgs84.WGS84
@@ -45,6 +46,10 @@ class MissionBuilder extends Builder<Mission> {
 
     private void addPosition(Position p) {
         this.positions.add(p)
+
+        if (this.home == null) {
+            this.home = p;
+        }
     }
 
     private Position getLastKnownPosition() {
@@ -62,7 +67,7 @@ class MissionBuilder extends Builder<Mission> {
         this.name = name;
     }
 
-    void point(DroneCommand point) {
+    private void point(DroneCommand point) {
         this.points.add(point);
     }
 
@@ -114,6 +119,16 @@ class MissionBuilder extends Builder<Mission> {
         point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, turns))
     }
 
+    void moveAndLoiterTime(double north, double east, double up, int time, float radius = 15) {
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(getLastKnownPosition(), move);
+
+        addPosition(moved);
+
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.TIME, radius, time));
+    }
+
     void moveAndLoiterFromHome(double north, double east, double up, float radius = 15) {
         def move = new NED(north, east, -up);
 
@@ -133,6 +148,16 @@ class MissionBuilder extends Builder<Mission> {
         addPosition(moved);
 
         point(LoiterPoint.initLoiterPoint(moved, LoiterType.TURNS, radius, turns));
+    }
+
+    void moveAndLoiterTimeFromHome(double north, double east, double up, int time, float radius = 15) {
+        def move = new NED(north, east, -up);
+
+        def moved = WGS84.displace(this.home, move);
+
+        addPosition(moved);
+
+        point(LoiterPoint.initLoiterPoint(moved, LoiterType.TIME, radius, time));
     }
 
     void returnHome() {
@@ -194,12 +219,12 @@ class MissionBuilder extends Builder<Mission> {
         point(LoiterPoint.initLoiterPoint(lat, lon, hae, radius))
     }
 
-    void loiterTurns(double lat, double lon, double hae, float radius = 15, int arg = 0) {
-        point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TURNS, radius, arg));
+    void loiterTurns(double lat, double lon, double hae, int turns = 10, float radius = 15) {
+        point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TURNS, radius, turns));
     }
 
-    void loiterTime(double lat, double lon, double hae, float radius = 15, int arg = 0) {
-        point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TIME, radius, arg))
+    void loiterTime(double lat, double lon, double hae, int time, float radius = 15) {
+        point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TIME, radius, time))
     }
 
     void landingPoint(double lat, double lon, double hae = 0) {
@@ -219,15 +244,19 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void capturePhoto() {
-        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.ONE_PHOTO, 1));
+        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.ONE_PHOTO, 1, 0));
     }
 
-    void captureSeveralPhotos(int photos) {
-        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.IMAGE_COUNT, photos));
+    void captureSeveralPhotos(int photos, int timeBetween = 2) {
+        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.IMAGE_COUNT, photos, timeBetween));
     }
 
-    void captureUntilStop() {
-        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.UNTIL_STOP, 0));
+    void captureUntilStop(int timeBetween = 2) {
+        point(CameraPoint.initCameraPoint(CameraPoint.CameraType.UNTIL_STOP, 0, timeBetween));
+    }
+
+    void stopCapturing() {
+        point (StopCameraCapture.initStopCapture());
     }
 
     void jumpToItem(int item, int repetitions = 1) {
