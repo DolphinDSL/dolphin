@@ -68,3 +68,15 @@ All the possible mission items:
     stopCapturing () -> Instruct the drone to stop capturing photos
 
     jumpToItem (Item, Repetitions (Optional, default = 1)) -> Send the drone to the given mission item for the given amount of times (Allows for the creation of loops in the mission)
+
+Executing a mission:
+
+    execute task1 [Vehicle] <- Passing a vehicle is optional
+
+Executing mission in parallel:
+
+   execute task1 [v1] | task2 [v2]
+
+Executing mission after another mission:
+
+   execute task1 [v1] >> task2 [v2]
