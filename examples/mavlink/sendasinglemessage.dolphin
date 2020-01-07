@@ -1,7 +1,7 @@
 v = pick {
 
     type 'UAV'
-    timeout 10.seconds
+    timeout 30.seconds
 
 }
 

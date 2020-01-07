@@ -24,7 +24,7 @@ public final class Main {
 
         MAVLinkCommunications.getInstance().start();
 
-//        Debug.enable(System.out, false);
+        Debug.enable(System.out, false);
 
         try {
             Engine engine = Engine.create(new MAVLinkPlatform());
