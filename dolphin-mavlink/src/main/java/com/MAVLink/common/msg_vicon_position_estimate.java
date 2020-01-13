@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_vicon_position_estimate extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE = 104;
-    public static final int MAVLINK_MSG_LENGTH = 32;
+    public static final int MAVLINK_MSG_LENGTH = 116;
     private static final long serialVersionUID = MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE;
 
 
@@ -55,6 +55,11 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
     * Yaw angle
     */
     public float yaw;
+      
+    /**
+    * Row-major representation of 6x6 pose cross-covariance matrix upper right triangle (states: x, y, z, roll, pitch, yaw; first six entries are the first ROW, next five entries are the second ROW, etc.). If unknown, assign NaN value to first element in the array.
+    */
+    public float covariance[] = new float[21];
     
 
     /**
@@ -80,6 +85,12 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         packet.payload.putFloat(pitch);
               
         packet.payload.putFloat(yaw);
+              
+        
+        for (int i = 0; i < covariance.length; i++) {
+            packet.payload.putFloat(covariance[i]);
+        }
+                    
         
         return packet;
     }
@@ -105,6 +116,12 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         this.pitch = payload.getFloat();
               
         this.yaw = payload.getFloat();
+              
+         
+        for (int i = 0; i < this.covariance.length; i++) {
+            this.covariance[i] = payload.getFloat();
+        }
+                
         
     }
 
@@ -127,12 +144,12 @@ public class msg_vicon_position_estimate extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                  
+                    
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE - sysid:"+sysid+" compid:"+compid+" usec:"+usec+" x:"+x+" y:"+y+" z:"+z+" roll:"+roll+" pitch:"+pitch+" yaw:"+yaw+"";
+        return "MAVLINK_MSG_ID_VICON_POSITION_ESTIMATE - sysid:"+sysid+" compid:"+compid+" usec:"+usec+" x:"+x+" y:"+y+" z:"+z+" roll:"+roll+" pitch:"+pitch+" yaw:"+yaw+" covariance:"+covariance+"";
     }
 }
         

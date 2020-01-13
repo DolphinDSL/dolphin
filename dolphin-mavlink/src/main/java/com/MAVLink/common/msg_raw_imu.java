@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_raw_imu extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_RAW_IMU = 27;
-    public static final int MAVLINK_MSG_LENGTH = 26;
+    public static final int MAVLINK_MSG_LENGTH = 29;
     private static final long serialVersionUID = MAVLINK_MSG_ID_RAW_IMU;
 
 
@@ -70,6 +70,16 @@ public class msg_raw_imu extends MAVLinkMessage{
     * Z Magnetic field (raw)
     */
     public short zmag;
+      
+    /**
+    * Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)
+    */
+    public short id;
+      
+    /**
+    * Temperature, 0: IMU does not provide temperature values. If the IMU is at 0C it must send 1 (0.01C).
+    */
+    public short temperature;
     
 
     /**
@@ -101,6 +111,10 @@ public class msg_raw_imu extends MAVLinkMessage{
         packet.payload.putShort(ymag);
               
         packet.payload.putShort(zmag);
+              
+        packet.payload.putUnsignedByte(id);
+              
+        packet.payload.putShort(temperature);
         
         return packet;
     }
@@ -132,6 +146,10 @@ public class msg_raw_imu extends MAVLinkMessage{
         this.ymag = payload.getShort();
               
         this.zmag = payload.getShort();
+              
+        this.id = payload.getUnsignedByte();
+              
+        this.temperature = payload.getShort();
         
     }
 
@@ -154,12 +172,12 @@ public class msg_raw_imu extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                        
+                            
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_RAW_IMU - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+"";
+        return "MAVLINK_MSG_ID_RAW_IMU - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+" id:"+id+" temperature:"+temperature+"";
     }
 }
         

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketTimeoutException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -251,13 +252,22 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
         }
 
         Parser parser = new Parser();
-        for (byte b : udpPacket.getData()) {
+
+//        System.out.println(udpPacket.getLength());
+//        System.out.println(Arrays.toString(udpPacket.getData()));
+
+        for (int i = 0; i < udpPacket.getLength(); i++) {
+
+            byte b = udpPacket.getData()[i];
+
             MAVLinkPacket packet = parser.mavlink_parse_char(b < 0 ? 256 + b : b);
+
 
             if (packet == null) {
                 continue;
             }
-            //d("PKT: %d, %d, %d, %d", packet.len, packet.sysid, packet.compid, packet.msgid);
+
+            d("PKT: %d, %d, %d, %d", packet.len, packet.sysid, packet.compid, packet.msgid);
             MAVLinkMessage message = packet.unpack();
 
             d(message.toString());

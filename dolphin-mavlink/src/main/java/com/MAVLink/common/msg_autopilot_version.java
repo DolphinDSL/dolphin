@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_autopilot_version extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_AUTOPILOT_VERSION = 148;
-    public static final int MAVLINK_MSG_LENGTH = 60;
+    public static final int MAVLINK_MSG_LENGTH = 78;
     private static final long serialVersionUID = MAVLINK_MSG_ID_AUTOPILOT_VERSION;
 
 
@@ -75,6 +75,11 @@ public class msg_autopilot_version extends MAVLinkMessage{
     * Custom version field, commonly the first 8 bytes of the git hash. This is not an unique identifier, but should allow to identify the commit using the main version number even for very large code bases.
     */
     public short os_custom_version[] = new short[8];
+      
+    /**
+    * UID if provided by hardware (supersedes the uid field. If this is non-zero, use this field, otherwise use uid)
+    */
+    public short uid2[] = new short[18];
     
 
     /**
@@ -118,6 +123,12 @@ public class msg_autopilot_version extends MAVLinkMessage{
         
         for (int i = 0; i < os_custom_version.length; i++) {
             packet.payload.putUnsignedByte(os_custom_version[i]);
+        }
+                    
+              
+        
+        for (int i = 0; i < uid2.length; i++) {
+            packet.payload.putUnsignedByte(uid2[i]);
         }
                     
         
@@ -165,6 +176,12 @@ public class msg_autopilot_version extends MAVLinkMessage{
             this.os_custom_version[i] = payload.getUnsignedByte();
         }
                 
+              
+         
+        for (int i = 0; i < this.uid2.length; i++) {
+            this.uid2[i] = payload.getUnsignedByte();
+        }
+                
         
     }
 
@@ -187,12 +204,12 @@ public class msg_autopilot_version extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                          
+                            
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_AUTOPILOT_VERSION - sysid:"+sysid+" compid:"+compid+" capabilities:"+capabilities+" uid:"+uid+" flight_sw_version:"+flight_sw_version+" middleware_sw_version:"+middleware_sw_version+" os_sw_version:"+os_sw_version+" board_version:"+board_version+" vendor_id:"+vendor_id+" product_id:"+product_id+" flight_custom_version:"+flight_custom_version+" middleware_custom_version:"+middleware_custom_version+" os_custom_version:"+os_custom_version+"";
+        return "MAVLINK_MSG_ID_AUTOPILOT_VERSION - sysid:"+sysid+" compid:"+compid+" capabilities:"+capabilities+" uid:"+uid+" flight_sw_version:"+flight_sw_version+" middleware_sw_version:"+middleware_sw_version+" os_sw_version:"+os_sw_version+" board_version:"+board_version+" vendor_id:"+vendor_id+" product_id:"+product_id+" flight_custom_version:"+flight_custom_version+" middleware_custom_version:"+middleware_custom_version+" os_custom_version:"+os_custom_version+" uid2:"+uid2+"";
     }
 }
         

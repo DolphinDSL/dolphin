@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_gps_global_origin extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GPS_GLOBAL_ORIGIN = 49;
-    public static final int MAVLINK_MSG_LENGTH = 12;
+    public static final int MAVLINK_MSG_LENGTH = 20;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GPS_GLOBAL_ORIGIN;
 
 
@@ -35,6 +35,11 @@ public class msg_gps_global_origin extends MAVLinkMessage{
     * Altitude (MSL). Positive for up.
     */
     public int altitude;
+      
+    /**
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+    */
+    public long time_usec;
     
 
     /**
@@ -52,6 +57,8 @@ public class msg_gps_global_origin extends MAVLinkMessage{
         packet.payload.putInt(longitude);
               
         packet.payload.putInt(altitude);
+              
+        packet.payload.putUnsignedLong(time_usec);
         
         return packet;
     }
@@ -69,6 +76,8 @@ public class msg_gps_global_origin extends MAVLinkMessage{
         this.longitude = payload.getInt();
               
         this.altitude = payload.getInt();
+              
+        this.time_usec = payload.getUnsignedLong();
         
     }
 
@@ -91,12 +100,12 @@ public class msg_gps_global_origin extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-          
+            
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_GPS_GLOBAL_ORIGIN - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+"";
+        return "MAVLINK_MSG_ID_GPS_GLOBAL_ORIGIN - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" time_usec:"+time_usec+"";
     }
 }
         

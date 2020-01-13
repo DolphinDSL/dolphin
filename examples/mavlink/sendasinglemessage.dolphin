@@ -18,15 +18,16 @@ task = mission {
     name "Test Task"
 
     home p
+
     takeOff p
 
-    move 50, 0 ,0
+    move 400, 400, 0
 
-    move 100, 0, 50
+    move 400, 200, 0
 
-    jumpToItem 3, 5
+    jumpToItem 2, 5
 
-    moveAndLoiterPos 100, 0, 50
+    moveAndLoiterTurns 200, 250, 0, 2
 
     returnHome()
 }

@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_mag_cal_report extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MAG_CAL_REPORT = 192;
-    public static final int MAVLINK_MSG_LENGTH = 44;
+    public static final int MAVLINK_MSG_LENGTH = 50;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MAG_CAL_REPORT;
 
 
@@ -90,6 +90,21 @@ public class msg_mag_cal_report extends MAVLinkMessage{
     * 0=requires a MAV_CMD_DO_ACCEPT_MAG_CAL, 1=saved to parameters.
     */
     public short autosaved;
+      
+    /**
+    * Confidence in orientation (higher is better).
+    */
+    public float orientation_confidence;
+      
+    /**
+    * orientation before calibration.
+    */
+    public short old_orientation;
+      
+    /**
+    * orientation after calibration.
+    */
+    public short new_orientation;
     
 
     /**
@@ -129,6 +144,12 @@ public class msg_mag_cal_report extends MAVLinkMessage{
         packet.payload.putUnsignedByte(cal_status);
               
         packet.payload.putUnsignedByte(autosaved);
+              
+        packet.payload.putFloat(orientation_confidence);
+              
+        packet.payload.putUnsignedByte(old_orientation);
+              
+        packet.payload.putUnsignedByte(new_orientation);
         
         return packet;
     }
@@ -168,6 +189,12 @@ public class msg_mag_cal_report extends MAVLinkMessage{
         this.cal_status = payload.getUnsignedByte();
               
         this.autosaved = payload.getUnsignedByte();
+              
+        this.orientation_confidence = payload.getFloat();
+              
+        this.old_orientation = payload.getUnsignedByte();
+              
+        this.new_orientation = payload.getUnsignedByte();
         
     }
 
@@ -190,12 +217,12 @@ public class msg_mag_cal_report extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                                
+                                      
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MAG_CAL_REPORT - sysid:"+sysid+" compid:"+compid+" fitness:"+fitness+" ofs_x:"+ofs_x+" ofs_y:"+ofs_y+" ofs_z:"+ofs_z+" diag_x:"+diag_x+" diag_y:"+diag_y+" diag_z:"+diag_z+" offdiag_x:"+offdiag_x+" offdiag_y:"+offdiag_y+" offdiag_z:"+offdiag_z+" compass_id:"+compass_id+" cal_mask:"+cal_mask+" cal_status:"+cal_status+" autosaved:"+autosaved+"";
+        return "MAVLINK_MSG_ID_MAG_CAL_REPORT - sysid:"+sysid+" compid:"+compid+" fitness:"+fitness+" ofs_x:"+ofs_x+" ofs_y:"+ofs_y+" ofs_z:"+ofs_z+" diag_x:"+diag_x+" diag_y:"+diag_y+" diag_z:"+diag_z+" offdiag_x:"+offdiag_x+" offdiag_y:"+offdiag_y+" offdiag_z:"+offdiag_z+" compass_id:"+compass_id+" cal_mask:"+cal_mask+" cal_status:"+cal_status+" autosaved:"+autosaved+" orientation_confidence:"+orientation_confidence+" old_orientation:"+old_orientation+" new_orientation:"+new_orientation+"";
     }
 }
         

@@ -140,7 +140,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         int realIndex = getRealIndex(item_reached.seq);
 
-        DroneCommand command = getMission().getCommandList().get(realIndex);
+        DroneCommand command = getMission().getCommandList().get(realIndex + 1);
 
         if (command instanceof SetCurrentCommand) {
 
@@ -169,6 +169,9 @@ public class MissionExecutor extends PlatformTaskExecutor {
      * @param currentItem
      */
     public void consume(msg_mission_current currentItem) {
+
+//        Engine.platform().displayMessage("The drone has the current mission %d", currentItem.seq);
+
     }
 
     public void consume(msg_mission_ack mission_received) {

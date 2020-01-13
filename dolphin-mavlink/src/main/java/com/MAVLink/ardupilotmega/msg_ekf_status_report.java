@@ -16,7 +16,7 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_ekf_status_report extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_EKF_STATUS_REPORT = 193;
-    public static final int MAVLINK_MSG_LENGTH = 22;
+    public static final int MAVLINK_MSG_LENGTH = 26;
     private static final long serialVersionUID = MAVLINK_MSG_ID_EKF_STATUS_REPORT;
 
 
@@ -50,6 +50,11 @@ public class msg_ekf_status_report extends MAVLinkMessage{
     * Flags.
     */
     public int flags;
+      
+    /**
+    * Airspeed variance.
+    */
+    public float airspeed_variance;
     
 
     /**
@@ -73,6 +78,8 @@ public class msg_ekf_status_report extends MAVLinkMessage{
         packet.payload.putFloat(terrain_alt_variance);
               
         packet.payload.putUnsignedShort(flags);
+              
+        packet.payload.putFloat(airspeed_variance);
         
         return packet;
     }
@@ -96,6 +103,8 @@ public class msg_ekf_status_report extends MAVLinkMessage{
         this.terrain_alt_variance = payload.getFloat();
               
         this.flags = payload.getUnsignedShort();
+              
+        this.airspeed_variance = payload.getFloat();
         
     }
 
@@ -118,12 +127,12 @@ public class msg_ekf_status_report extends MAVLinkMessage{
         unpack(mavLinkPacket.payload);        
     }
 
-                
+                  
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_EKF_STATUS_REPORT - sysid:"+sysid+" compid:"+compid+" velocity_variance:"+velocity_variance+" pos_horiz_variance:"+pos_horiz_variance+" pos_vert_variance:"+pos_vert_variance+" compass_variance:"+compass_variance+" terrain_alt_variance:"+terrain_alt_variance+" flags:"+flags+"";
+        return "MAVLINK_MSG_ID_EKF_STATUS_REPORT - sysid:"+sysid+" compid:"+compid+" velocity_variance:"+velocity_variance+" pos_horiz_variance:"+pos_horiz_variance+" pos_vert_variance:"+pos_vert_variance+" compass_variance:"+compass_variance+" terrain_alt_variance:"+terrain_alt_variance+" flags:"+flags+" airspeed_variance:"+airspeed_variance+"";
     }
 }
         

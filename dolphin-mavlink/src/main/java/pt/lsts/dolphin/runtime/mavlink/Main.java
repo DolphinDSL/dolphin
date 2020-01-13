@@ -24,7 +24,7 @@ public final class Main {
 
         MAVLinkCommunications.getInstance().start();
 
-        Debug.enable(System.out, false);
+//        Debug.enable(System.out, false);
 
         try {
             Engine engine = Engine.create(new MAVLinkPlatform());
@@ -33,7 +33,7 @@ public final class Main {
                 engine.run(new File(fileName));
             }
 
-            Thread.sleep(100000);
+            Thread.sleep(1000000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
