@@ -22,7 +22,7 @@ public class ClearMissionCommand extends DroneCommand {
 
         msg.target_component = 0;
         msg.target_system = (short) dest.getMAVLinkId();
-        msg.mission_type = MAV_MISSION_TYPE.MAV_MISSION_TYPE_ALL;
+//        msg.mission_type = MAV_MISSION_TYPE.MAV_MISSION_TYPE_ALL;
 
         return msg;
     }

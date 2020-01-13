@@ -107,6 +107,15 @@ public class Mission extends PlatformTask implements Cloneable {
         return new Mission(id);
     }
 
+    public Mission cloneMission(String newName) {
+
+        Mission mission = new Mission(newName);
+
+        mission.setDroneCommands(this.droneCommands);
+
+        return mission;
+    }
+
     @Override
     public List<NodeFilter> getRequirements() {
         List<NodeFilter> filters = new LinkedList<>();

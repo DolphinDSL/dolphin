@@ -14,6 +14,11 @@ public class MissionCountCommand extends DroneCommand {
     }
 
     @Override
+    public boolean executeOnStartup() {
+        return true;
+    }
+
+    @Override
     public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
 
         msg_mission_count msg = new msg_mission_count();

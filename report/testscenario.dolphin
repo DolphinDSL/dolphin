@@ -1,0 +1,15 @@
+p = pos {
+    //A given position
+}
+
+task1 = mission {
+
+    name "Test Task 1"
+
+    home p
+
+    takeoff p
+
+
+
+}

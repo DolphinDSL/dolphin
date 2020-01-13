@@ -10,6 +10,8 @@ import com.MAVLink.enums.MAV_MISSION_TYPE;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.mission.Mission;
+import pt.lsts.dolphin.runtime.mavlink.mission.MissionExecutor;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ClearMissionCommand;
 import pt.lsts.dolphin.util.Debuggable;
 
 import java.util.List;
@@ -60,6 +62,8 @@ public final class MissionUploadProtocol implements Debuggable {
      * Current item being processe.
      */
     private int currentMissionItem;
+
+    private int requestedWrongItem = 0;
 
     /**
      * Waypoints to send (temporary support).
@@ -115,21 +119,19 @@ public final class MissionUploadProtocol implements Debuggable {
         state = State.IN_PROGRESS;
     }
 
-    public void start(Mission mission) {
+    public void start(MissionExecutor executors) {
         d("starting upload protocol");
         Engine.platform().displayMessage("Starting upload protocol");
 
         this.state = State.CLEARING;
         Engine.platform().displayMessage("Clearing mission.");
-        msg_mission_clear_all clear_mission = new msg_mission_clear_all();
 
-        clear_mission.target_component = 0;
-        clear_mission.target_system = (short) node.getMAVLinkId();
+        ClearMissionCommand command = ClearMissionCommand.initClearMissionCommand();
 
-        node.send(clear_mission);
+        node.send(command.toMavLinkMessage(node));
 
-        this.messageList = mission.toMissionMessages(this.node);
-        this.droneCommands = mission.droneCommandsToMissionItem(this.node);
+        this.messageList = executors.getBaseMessages();
+        this.droneCommands = executors.getBaseDroneCommands();
     }
 
     void startMissionUpload() {
@@ -137,39 +139,66 @@ public final class MissionUploadProtocol implements Debuggable {
 
         Engine.platform().displayMessage("Starting dispatch of mission to drone %d", node.getMAVLinkId());
 
-        MAVLinkMessage mavLinkMessage = messageList.get(currentMissionItem++);
+        //Get the commands to send before the first iteration
+        List<MAVLinkMessage> mavLinkMessages = this.droneCommands.get(0);
 
-        node.send(mavLinkMessage);
+        if (mavLinkMessages != null)
+            mavLinkMessages.forEach(this.node::send);
 
         state = State.IN_PROGRESS;
     }
 
-    public void addPointsToMission(int startIndex, List<MAVLinkMessage> toAdd) {
+    public void reshapeMission(List<MAVLinkMessage> newMessages, Map<Integer, List<MAVLinkMessage>> droneCommands) {
 
-        int d_startIndex = startIndex;
+        int startIndex = 0;
 
-        for (MAVLinkMessage mavLinkMessage : toAdd) {
-            this.messageList.add(d_startIndex++, mavLinkMessage);
+        this.droneCommands = droneCommands;
+
+        for (int i = 0; i < newMessages.size(); i++) {
+
+            MAVLinkMessage newMessage = newMessages.get(i);
+
+            MAVLinkMessage currentMessage = this.messageList.get(i);
+
+            if (currentMessage.msgid == newMessage.msgid &&
+                    currentMessage.compid == newMessage.compid &&
+                    currentMessage.sysid == newMessage.sysid) {
+
+                continue;
+            }
+
+            startIndex = i;
+
+            break;
         }
+
+        this.messageList = newMessages;
+
+        rewritePartialList(startIndex, newMessages.size());
+    }
+
+    void rewritePartialList(int startIndex, int endIndex) {
+
+        Engine.platform().displayMessage("Rewriting drone mission from %d to %d", startIndex, endIndex);
 
         msg_mission_write_partial_list write_partial_list = new msg_mission_write_partial_list();
 
-        write_partial_list.target_component = 0;
         write_partial_list.target_system = (short) node.getMAVLinkId();
+        write_partial_list.target_component = 0;
 
         write_partial_list.mission_type = MAV_MISSION_TYPE.MAV_MISSION_TYPE_MISSION;
 
         write_partial_list.start_index = (short) startIndex;
 
-        write_partial_list.end_index = (short) this.messageList.size();
+        write_partial_list.end_index = (short) endIndex;
 
         currentMissionItem = startIndex;
 
+        node.send(write_partial_list);
     }
 
     void consume(msg_mission_request msg) {
-        d("got consume request");
-        Engine.platform().displayMessage("Got consume request");
+        Engine.platform().displayMessage("Got consume request, current mission item %d, current state %s", this.currentMissionItem, state.name());
 
         Engine.platform().displayMessage(msg.toString());
 
@@ -177,20 +206,30 @@ public final class MissionUploadProtocol implements Debuggable {
         if (state == State.IN_PROGRESS &&
                 msg.seq == currentMissionItem &&
                 msg.target_component == 0) {
+            requestedWrongItem = 0;
 
-            MAVLinkMessage mavLinkMessage = messageList.get(currentMissionItem++);
+            MAVLinkMessage mavLinkMessage = messageList.get(currentMissionItem);
 
             List<MAVLinkMessage> mavLinkMessages = this.droneCommands.get(currentMissionItem);
 
-            if (mavLinkMessage != null) {
+            if (mavLinkMessages != null) {
                 mavLinkMessages.forEach(node::send);
             }
 
             node.send(mavLinkMessage);
 
             Engine.platform().displayMessage("Sent mission item %d", currentMissionItem);
+
+            currentMissionItem++;
         } else {
-            state = State.ERROR;
+            requestedWrongItem++;
+//            state = State.ERROR;
+            Engine.platform().displayMessage("Requested wrong item for the %d time", requestedWrongItem);
+
+            if (requestedWrongItem > 5) {
+                Engine.platform().displayMessage("Requested wrong item for too many items. ERROR.");
+                state = State.ERROR;
+            }
         }
     }
 

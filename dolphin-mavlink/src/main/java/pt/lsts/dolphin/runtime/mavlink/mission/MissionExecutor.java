@@ -1,10 +1,7 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.msg_heartbeat;
-import com.MAVLink.common.msg_mission_ack;
-import com.MAVLink.common.msg_mission_current;
-import com.MAVLink.common.msg_mission_item_reached;
+import com.MAVLink.common.*;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
 import com.MAVLink.enums.PLANE_MODE;
 import pt.lsts.dolphin.dsl.Engine;
@@ -17,6 +14,10 @@ import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 import java.util.*;
 
 public class MissionExecutor extends PlatformTaskExecutor {
+
+    private List<MAVLinkMessage> messages;
+
+    private Map<Integer, List<MAVLinkMessage>> droneCommands;
 
     private Map<SetCurrentCommand, Integer> repetitionsLeft = null;
 
@@ -36,7 +37,14 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
             }
         }
+    }
 
+    public List<MAVLinkMessage> getBaseMessages() {
+        return messages;
+    }
+
+    public Map<Integer, List<MAVLinkMessage>> getBaseDroneCommands() {
+        return droneCommands;
     }
 
     private Mission getMission() {
@@ -71,6 +79,10 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         Mission mission = (Mission) getTask();
 
+        this.messages = mission.toMissionMessages(getVehicleMAV());
+
+        this.droneCommands = mission.droneCommandsToMissionItem(getVehicleMAV());
+
         Engine.platform().displayMessage("Arming drone...");
 
         ArmCommand armCommand = ArmCommand.initArmCommand(1);
@@ -92,7 +104,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
         Engine.platform().displayMessage("Starting the drone %d on to the mission %s", getVehicleMAV().getMAVLinkId(), getTask().getId());
 
         MissionUploadProtocol uploadP = vehicle.getUploadProtocol();
-        uploadP.start(mission);
+        uploadP.start(this);
 
     }
 
@@ -160,24 +172,64 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         int currentMissionIndex = this.currentMissionIndex;
 
+        int newItems = 0;
+
         int currentIndex = currentMissionIndex;
 
-        List<MAVLinkMessage> message = new LinkedList<>();
+        List<MAVLinkMessage> message = getMission().toMissionMessages(getVehicleMAV());
+
+        Map<Integer, List<MAVLinkMessage>> droneCommandMessages = getMission().droneCommandsToMissionItem(getVehicleMAV());
+
+        Map<Integer, List<MAVLinkMessage>> newDroneCommands = new HashMap<>();
 
         for (DroneCommand finalCommand : finalCommands) {
 
             if (finalCommand instanceof MissionPoint) {
 
-                MAVLinkMessage mavLinkMessage = ((MissionPoint) finalCommand).toMavLinkMessage(getVehicleMAV(), currentIndex++);
+                MAVLinkMessage mavLinkMessage = ((MissionPoint) finalCommand).toMavLinkMessage(vehicleMAV, currentIndex);
 
-                message.add(mavLinkMessage);
+                message.add(currentIndex, mavLinkMessage);
+
+                currentIndex++;
+
+                newItems++;
 
             } else {
+                List<MAVLinkMessage> orDefault = newDroneCommands.getOrDefault(currentIndex, new LinkedList<>());
 
+                orDefault.add(finalCommand.toMavLinkMessage(vehicleMAV));
+
+                newDroneCommands.put(currentIndex, orDefault);
             }
         }
 
+        int currentMissionItem = 0;
 
+        for (MAVLinkMessage mavLinkMessage : message) {
+            msg_mission_item item = (msg_mission_item) mavLinkMessage;
+
+            if (item.seq != currentMissionItem) {
+                //Adjust all the mission seq numbers to match the new numbers
+                item.seq = currentMissionItem;
+            }
+        }
+
+        for (Map.Entry<Integer, List<MAVLinkMessage>> commands : droneCommandMessages.entrySet()) {
+
+            int currentCmdIndex = commands.getKey();
+
+            if (currentCmdIndex >= currentMissionIndex) {
+                currentCmdIndex += newItems;
+            }
+
+            List<MAVLinkMessage> newCommandList = newDroneCommands.getOrDefault(currentCmdIndex, new LinkedList<>());
+
+            newCommandList.addAll(commands.getValue());
+
+            newDroneCommands.put(currentCmdIndex, newCommandList);
+        }
+
+        getVehicleMAV().getUploadProtocol().reshapeMission(message, newDroneCommands);
     }
 
     private void handleJumpCommand(SetCurrentCommand command) {
