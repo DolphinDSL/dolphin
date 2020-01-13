@@ -36,27 +36,49 @@ public class Mission extends PlatformTask implements Cloneable {
         //Add all the needed drone commands for the drone to auto start the mission
         this.droneCommands.addFirst(MissionCountCommand.initMissionCountCommand(messageCount));
 
-        this.droneCommands.addLast(SetModeCommand.initSetMode(PLANE_MODE.PLANE_MODE_AUTO));
+        this.droneCommands.addLast(SetCurrentCommand.initSetCurrentItem(0, 0, true));
 
-        this.droneCommands.addLast(SetCurrentCommand.initSetCurrentItem(0));
+        this.droneCommands.addLast(SetModeCommand.initSetMode(PLANE_MODE.PLANE_MODE_AUTO));
     }
 
     public int missionPoints() {
         return this.droneCommands.size();
     }
 
-    public List<MAVLinkMessage> toMavLinkMessages(MAVLinkNode dest) {
+    public List<MAVLinkMessage> toMissionMessages(MAVLinkNode dest) {
 
         List<MAVLinkMessage> messages = new ArrayList<>();
 
         int current = 0;
 
-        for (DroneCommand missionPoint : this.droneCommands) {
+        for (DroneCommand droneCommand : this.droneCommands) {
+            if (!(droneCommand instanceof MissionPoint)) continue;
 
-            if (missionPoint instanceof MissionPoint) {
-                messages.add(((MissionPoint) missionPoint).toMavLinkMessage(dest, current++));
+            messages.add(((MissionPoint) droneCommand).toMavLinkMessage(dest, current++));
+
+        }
+
+        return messages;
+    }
+
+    public Map<Integer, List<MAVLinkMessage>> droneCommandsToMissionItem(MAVLinkNode dest) {
+
+        int currentMissionPoint = 0;
+
+        Map<Integer, List<MAVLinkMessage>> messages = new HashMap<>();
+
+        for (DroneCommand droneCommand : this.droneCommands) {
+
+            if (droneCommand instanceof MissionPoint) {
+                currentMissionPoint++;
             } else {
-                messages.add(missionPoint.toMavLinkMessage(dest));
+                if (droneCommand.executeOnStartup()) {
+                    List<MAVLinkMessage> commands = messages.getOrDefault(currentMissionPoint, new LinkedList<>());
+
+                    commands.add(droneCommand.toMavLinkMessage(dest));
+
+                    messages.put(currentMissionPoint, commands);
+                }
             }
 
         }
@@ -78,7 +100,7 @@ public class Mission extends PlatformTask implements Cloneable {
     private static final Random random = new Random();
 
     public static Mission initializeMission() {
-        return initializeMission(String.valueOf(random.nextLong()));
+        return initializeMission("Task_ " + random.nextLong());
     }
 
     public static Mission initializeMission(String id) {

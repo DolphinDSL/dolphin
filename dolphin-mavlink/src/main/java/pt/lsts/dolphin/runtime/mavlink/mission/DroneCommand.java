@@ -10,6 +10,8 @@ import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
  */
 public abstract class DroneCommand {
 
+    public abstract boolean executeOnStartup();
+
     public abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode dest);
 
 }

@@ -43,6 +43,8 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      */
     private msg_heartbeat lastHBReceived;
 
+    private msg_sys_status lastSystemStatus;
+
     /**
      * Handle for mission upload protocol.
      */
@@ -133,6 +135,10 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
         return lastHBReceived;
     }
 
+    public msg_sys_status getLastSystemStatus() {
+        return lastSystemStatus;
+    }
+
 
     /**
      * Get handle for mission download protocol.
@@ -154,6 +160,7 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
 
     /**
      * Sets the current mission executor of this drone
+     *
      * @param executor
      */
     public void setExecutor(MissionExecutor executor) {
@@ -177,6 +184,10 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
      */
     void consume(msg_heartbeat msg) {
         lastHBReceived = msg;
+    }
+
+    void consume(msg_sys_status status) {
+        lastSystemStatus = status;
     }
 
     /**
@@ -233,7 +244,7 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
 
     void consume(msg_statustext msg) {
         Engine.platform().displayMessage(msg.toString());
-        Engine.platform().displayMessage("Teste %s", new String(msg.text));
+        Engine.platform().displayMessage("%s", msg.getText());
     }
 
 //    void consume(msg_camera_image_captured msg_camera_image_captured) {

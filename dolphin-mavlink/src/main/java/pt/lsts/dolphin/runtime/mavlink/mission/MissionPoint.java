@@ -22,6 +22,11 @@ public abstract class MissionPoint extends DroneCommand {
     }
 
     @Override
+    public boolean executeOnStartup() {
+        return true;
+    }
+
+    @Override
     public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
         return toMavLinkMessage(dest, 0);
     }

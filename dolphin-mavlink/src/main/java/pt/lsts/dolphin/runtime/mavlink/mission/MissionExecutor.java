@@ -1,35 +1,34 @@
 package pt.lsts.dolphin.runtime.mavlink.mission;
 
 import com.MAVLink.Messages.MAVLinkMessage;
-import com.MAVLink.common.*;
-import com.MAVLink.enums.MAV_CMD;
+import com.MAVLink.common.msg_heartbeat;
+import com.MAVLink.common.msg_mission_ack;
+import com.MAVLink.common.msg_mission_current;
+import com.MAVLink.common.msg_mission_item_reached;
 import com.MAVLink.enums.MAV_MISSION_RESULT;
-import com.MAVLink.enums.MAV_MODE_FLAG;
 import com.MAVLink.enums.PLANE_MODE;
 import pt.lsts.dolphin.dsl.Engine;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.MissionUploadProtocol;
-import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ArmCommand;
-import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetCurrentCommand;
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.*;
 import pt.lsts.dolphin.runtime.tasks.CompletionState;
 import pt.lsts.dolphin.runtime.tasks.PlatformTaskExecutor;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MissionExecutor extends PlatformTaskExecutor {
 
     private Map<SetCurrentCommand, Integer> repetitionsLeft = null;
 
+    private int currentMissionIndex = 0;
+
     public MissionExecutor(Mission mission) {
         super(mission);
 
+        repetitionsLeft = new HashMap<>();
+
         for (DroneCommand droneCommand : mission.getCommandList()) {
             if (droneCommand instanceof SetCurrentCommand) {
-
-                if (repetitionsLeft == null) {
-                    repetitionsLeft = new HashMap<>();
-                }
 
                 SetCurrentCommand set_mission_current = (SetCurrentCommand) droneCommand;
 
@@ -87,6 +86,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
             Engine.platform().displayMessage("The drone %d is in auto mode, changing to RTL to receive the new mission.", getVehicleMAV().getMAVLinkId());
 
             setIntoRTL();
+            clearCurrentMission();
         }
 
         Engine.platform().displayMessage("Starting the drone %d on to the mission %s", getVehicleMAV().getMAVLinkId(), getTask().getId());
@@ -97,18 +97,15 @@ public class MissionExecutor extends PlatformTaskExecutor {
     }
 
     private void setIntoRTL() {
-        msg_command_long set_mode = new msg_command_long();
+        DroneCommand droneCommand = SetModeCommand.initSetMode(PLANE_MODE.PLANE_MODE_RTL);
 
-        set_mode.command = MAV_CMD.MAV_CMD_DO_SET_MODE;
+        getVehicleMAV().send(droneCommand.toMavLinkMessage(getVehicleMAV()));
+    }
 
-        set_mode.target_component = 0;
-        set_mode.target_system = (short) getVehicleMAV().getMAVLinkId();
-        set_mode.param1 = MAV_MODE_FLAG.MAV_MODE_FLAG_CUSTOM_MODE_ENABLED;
+    private void clearCurrentMission() {
+        DroneCommand droneCommand = ClearMissionCommand.initClearMissionCommand();
 
-        //Set the drone as RTL mode
-        set_mode.param2 = PLANE_MODE.PLANE_MODE_RTL;
-
-        getVehicleMAV().send(set_mode);
+        getVehicleMAV().send(droneCommand.toMavLinkMessage(getVehicleMAV()));
     }
 
     @Override
@@ -119,8 +116,6 @@ public class MissionExecutor extends PlatformTaskExecutor {
         msg_heartbeat lastHBReceived = vehicle.getLastHBReceived();
 
         long custom_mode = lastHBReceived.custom_mode;
-
-//        Engine.platform().displayMessage("On step %d", custom_mode);
 
         if (custom_mode == PLANE_MODE.PLANE_MODE_RTL && timeElapsed() >= 5) {
 
@@ -138,29 +133,69 @@ public class MissionExecutor extends PlatformTaskExecutor {
      */
     public void consume(msg_mission_item_reached item_reached) {
 
+        this.currentMissionIndex = item_reached.seq;
+
         int realIndex = getRealIndex(item_reached.seq);
 
         DroneCommand command = getMission().getCommandList().get(realIndex + 1);
 
         if (command instanceof SetCurrentCommand) {
 
-            int repetitionsLeft = this.repetitionsLeft.get(command);
+            handleJumpCommand((SetCurrentCommand) command);
 
-            if (repetitionsLeft > 0) {
-                repetitionsLeft--;
+        } else if (command instanceof ConditionalCommand) {
 
-                this.repetitionsLeft.put((SetCurrentCommand) command, repetitionsLeft);
-
-                MAVLinkMessage mavLinkMessage = command.toMavLinkMessage(getVehicleMAV());
-
-                getVehicleMAV().send(mavLinkMessage);
-
-                Engine.platform().displayMessage("Drone has been sent to item %d, there are %d repetitions left on this jump command", ((SetCurrentCommand) command).getTargetMissionPoint(), repetitionsLeft);
-            }
+            handleConditionalCommand((ConditionalCommand) command);
 
         }
 
         Engine.platform().displayMessage("Reached the item %d", item_reached.seq);
+    }
+
+    private void handleConditionalCommand(ConditionalCommand command) {
+
+        MAVLinkNode vehicleMAV = getVehicleMAV();
+
+        List<DroneCommand> finalCommands = command.testCondition(getVehicleMAV()) ? command.getIfTrue() : command.getIfFalse();
+
+        int currentMissionIndex = this.currentMissionIndex;
+
+        int currentIndex = currentMissionIndex;
+
+        List<MAVLinkMessage> message = new LinkedList<>();
+
+        for (DroneCommand finalCommand : finalCommands) {
+
+            if (finalCommand instanceof MissionPoint) {
+
+                MAVLinkMessage mavLinkMessage = ((MissionPoint) finalCommand).toMavLinkMessage(getVehicleMAV(), currentIndex++);
+
+                message.add(mavLinkMessage);
+
+            } else {
+
+            }
+        }
+
+
+    }
+
+    private void handleJumpCommand(SetCurrentCommand command) {
+        int repetitionsLeft = this.repetitionsLeft.get(command);
+
+        if (repetitionsLeft > 0) {
+            repetitionsLeft--;
+
+            this.repetitionsLeft.put(command, repetitionsLeft);
+
+            MAVLinkMessage mavLinkMessage = command.toMavLinkMessage(getVehicleMAV());
+
+            getVehicleMAV().send(mavLinkMessage);
+
+            Engine.platform().displayMessage("Drone has been sent to item %d, there are %d repetitions left on this jump command",
+                    command.getTargetMissionPoint(), repetitionsLeft);
+        }
+
     }
 
     /**

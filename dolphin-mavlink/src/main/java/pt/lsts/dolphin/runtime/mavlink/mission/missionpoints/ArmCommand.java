@@ -16,6 +16,11 @@ public class ArmCommand extends DroneCommand {
         this.arm_disarm = arm_disarm;
     }
 
+    @Override
+    public boolean executeOnStartup() {
+        return true;
+    }
+
     public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
 
         msg_command_long arm_cmd = new msg_command_long();

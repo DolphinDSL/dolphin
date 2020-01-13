@@ -11,9 +11,17 @@ public class SetCurrentCommand extends DroneCommand {
 
     private int repetitions;
 
-    private SetCurrentCommand(int currentMissionPoint, int repetitions) {
+    private boolean forceExecute = false;
+
+    private SetCurrentCommand(int currentMissionPoint, int repetitions, boolean forceExecute) {
         this.currentMissionPoint = currentMissionPoint;
         this.repetitions = repetitions;
+        this.forceExecute = forceExecute;
+    }
+
+    @Override
+    public boolean executeOnStartup() {
+        return forceExecute;
     }
 
     public int getTargetMissionPoint() {
@@ -39,7 +47,11 @@ public class SetCurrentCommand extends DroneCommand {
     }
 
     public static DroneCommand initSetCurrentItem(int currentItem, int repetitions) {
-        return new SetCurrentCommand(currentItem, repetitions);
+        return initSetCurrentItem(currentItem, repetitions, false);
+    }
+
+    public static DroneCommand initSetCurrentItem(int currentItem, int repetitions, boolean forceExecute) {
+        return new SetCurrentCommand(currentItem, repetitions, forceExecute);
     }
 
 }

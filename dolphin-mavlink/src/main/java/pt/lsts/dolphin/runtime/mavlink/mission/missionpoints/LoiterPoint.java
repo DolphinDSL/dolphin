@@ -7,7 +7,6 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
-import pt.lsts.dolphin.runtime.mavlink.mission.PointPayload;
 
 public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint {
 

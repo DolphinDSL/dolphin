@@ -22,6 +22,11 @@ public class SetModeCommand extends DroneCommand {
     }
 
     @Override
+    public boolean executeOnStartup() {
+        return true;
+    }
+
+    @Override
     public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
 
         msg_command_long item = new msg_command_long();
