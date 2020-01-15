@@ -21,15 +21,19 @@ task = mission {
 
     takeOff p
 
+    for (int i = 0; i < 5; i ++) {
     move 400, 400, 0
 
     move 400, 200, 0
+    }
 
-    jumpToItem 2, 5
+    //jumpToItem 2, 5
 
     moveAndLoiterTurns 200, 250, 0, 2
 
     returnHome()
 }
 
-execute task[v]
+task2 = until { battery(v) < 0.9} run task
+
+execute task2[v]

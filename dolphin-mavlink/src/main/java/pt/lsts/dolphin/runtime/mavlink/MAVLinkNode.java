@@ -139,6 +139,10 @@ public final class MAVLinkNode extends AbstractNode implements Debuggable {
         return lastSystemStatus;
     }
 
+    @Override
+    public double batteryRemaining() {
+        return this.getLastSystemStatus().battery_remaining * 0.01;
+    }
 
     /**
      * Get handle for mission download protocol.

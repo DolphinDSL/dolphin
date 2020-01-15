@@ -145,7 +145,7 @@ public final class MissionUploadProtocol implements Debuggable {
         if (mavLinkMessages != null)
             mavLinkMessages.forEach(this.node::send);
 
-        state = State.IN_PROGRESS;
+        state = State.INIT;
     }
 
     public void reshapeMission(List<MAVLinkMessage> newMessages, Map<Integer, List<MAVLinkMessage>> droneCommands) {
@@ -202,6 +202,10 @@ public final class MissionUploadProtocol implements Debuggable {
 
         Engine.platform().displayMessage(msg.toString());
 
+        if (state == State.INIT) {
+            state = State.IN_PROGRESS;
+        }
+
         //Have to check msg.seq == currentItem - 1 because the item count msg is also stored in the list
         if (state == State.IN_PROGRESS &&
                 msg.seq == currentMissionItem &&
@@ -234,6 +238,9 @@ public final class MissionUploadProtocol implements Debuggable {
     }
 
     void consume(msg_mission_ack ack) {
+
+        Engine.platform().displayMessage(ack.toString());
+
         if (state == State.CLEARING
                 && ack.type == MAV_MISSION_RESULT.MAV_MISSION_ACCEPTED) {
 

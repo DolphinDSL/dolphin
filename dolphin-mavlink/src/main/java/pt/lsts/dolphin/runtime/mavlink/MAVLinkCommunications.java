@@ -126,6 +126,7 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
         msgHandler.bind(msg_mission_current.class, MAVLinkNode::consume);
         msgHandler.bind(msg_mission_item_reached.class, MAVLinkNode::consume);
         msgHandler.bind(msg_statustext.class, MAVLinkNode::consume);
+        msgHandler.bind(msg_sys_status.class, MAVLinkNode::consume);
 //        msgHandler.bind(msg_camera_image_captured.class, MAVLinkNode::consume);
     }
 
@@ -253,15 +254,11 @@ public class MAVLinkCommunications extends Thread implements Debuggable {
 
         Parser parser = new Parser();
 
-//        System.out.println(udpPacket.getLength());
-//        System.out.println(Arrays.toString(udpPacket.getData()));
-
         for (int i = 0; i < udpPacket.getLength(); i++) {
 
             byte b = udpPacket.getData()[i];
 
             MAVLinkPacket packet = parser.mavlink_parse_char(b < 0 ? 256 + b : b);
-
 
             if (packet == null) {
                 continue;

@@ -279,6 +279,8 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     @Override
     protected void onCompletion() {
+        setIntoRTL();
+
         d("The mission " + getTask().getId() + " has been completed by the vehicle " + getVehicleMAV().getMAVLinkId() + ".");
     }
 }
