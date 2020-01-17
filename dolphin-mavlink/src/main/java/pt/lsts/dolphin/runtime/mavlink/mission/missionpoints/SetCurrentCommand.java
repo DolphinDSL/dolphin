@@ -5,6 +5,9 @@ import com.MAVLink.common.msg_mission_set_current;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class SetCurrentCommand extends DroneCommand {
 
     private int currentMissionPoint;
@@ -32,14 +35,14 @@ public class SetCurrentCommand extends DroneCommand {
         return repetitions;
     }
 
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest) {
         msg_mission_set_current set_current = new msg_mission_set_current();
 
         set_current.target_system = (short) dest.getMAVLinkId();
         set_current.target_component = 0;
         set_current.seq = currentMissionPoint;
 
-        return set_current;
+        return Collections.singleton(set_current);
     }
 
     public static DroneCommand initSetCurrentItem(int currentItem) {

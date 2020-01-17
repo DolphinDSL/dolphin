@@ -21,11 +21,13 @@ task = mission {
 
     takeOff p
 
-    for (int i = 0; i < 5; i ++) {
+    /*for (int i = 0; i < 5; i ++) {
     move 400, 400, 0
 
     move 400, 200, 0
-    }
+    }*/
+
+    surveyArea p, 1000, 1000
 
     //jumpToItem 2, 5
 

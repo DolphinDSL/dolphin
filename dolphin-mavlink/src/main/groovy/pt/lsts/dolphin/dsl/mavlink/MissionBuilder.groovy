@@ -20,6 +20,8 @@ import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetCurrentCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetHomeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SetModeCommand
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.StopCameraCapture
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SurveyArea
+import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.SurveyArea.Direction
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.TakeOffPoint
 import pt.lsts.dolphin.util.wgs84.NED
 import pt.lsts.dolphin.util.wgs84.WGS84
@@ -262,6 +264,14 @@ class MissionBuilder extends Builder<Mission> {
     void jumpToItem(int item, int repetitions = 1) {
 
         point(SetCurrentCommand.initSetCurrentItem(item, repetitions));
+
+    }
+
+    void surveyArea(Position pos, double length, double width, Direction dir = Direction.NORTH) {
+
+        addPosition(pos);
+
+        point(SurveyArea.initAreaSurvey(pos, length, width, dir));
 
     }
 

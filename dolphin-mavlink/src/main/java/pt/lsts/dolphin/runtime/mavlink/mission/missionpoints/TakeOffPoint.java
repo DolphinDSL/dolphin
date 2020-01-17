@@ -8,6 +8,9 @@ import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class TakeOffPoint extends MissionPoint {
 
     private float pitch;
@@ -23,7 +26,7 @@ public class TakeOffPoint extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item takeOff = new msg_mission_item();
 
@@ -42,7 +45,7 @@ public class TakeOffPoint extends MissionPoint {
         takeOff.y = (float) (getPositionLocation().lon * Position.R2D);
         takeOff.z = (float) getPositionLocation().hae;
 
-        return takeOff;
+        return Collections.singleton(takeOff);
     }
 
     public static MissionPoint initTakeOffPoint(Position pos, float pitch, float yaw) {

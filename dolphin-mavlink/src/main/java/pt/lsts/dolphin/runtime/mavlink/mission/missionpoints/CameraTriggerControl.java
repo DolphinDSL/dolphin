@@ -7,6 +7,9 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class CameraTriggerControl extends MissionPoint {
 
     private int enable;
@@ -25,7 +28,7 @@ public class CameraTriggerControl extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item trigger = new msg_mission_item();
 
@@ -41,7 +44,7 @@ public class CameraTriggerControl extends MissionPoint {
         trigger.param2 = reset;
         trigger.param3 = pause;
 
-        return trigger;
+        return Collections.singleton(trigger);
     }
 
     public static MissionPoint initTriggerControl(int enable, int reset, int pause) {

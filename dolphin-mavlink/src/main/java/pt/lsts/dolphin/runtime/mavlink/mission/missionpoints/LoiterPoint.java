@@ -8,6 +8,9 @@ import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint {
 
     private static final float DEFAULT_RADIUS = 20f;
@@ -27,7 +30,7 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item m_item = new msg_mission_item();
 
@@ -48,7 +51,7 @@ public class LoiterPoint extends pt.lsts.dolphin.runtime.mavlink.mission.Mission
         m_item.y = (float) (getPositionLocation().lon * Position.R2D);
         m_item.z = (float) getPositionLocation().hae;
 
-        return m_item;
+        return Collections.singleton(m_item);
     }
 
     public enum LoiterType {

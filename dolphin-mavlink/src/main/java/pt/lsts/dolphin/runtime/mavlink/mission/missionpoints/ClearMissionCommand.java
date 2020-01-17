@@ -2,9 +2,11 @@ package pt.lsts.dolphin.runtime.mavlink.mission.missionpoints;
 
 import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.common.msg_mission_clear_all;
-import com.MAVLink.enums.MAV_MISSION_TYPE;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
+
+import java.util.Collection;
+import java.util.Collections;
 
 public class ClearMissionCommand extends DroneCommand {
 
@@ -16,7 +18,7 @@ public class ClearMissionCommand extends DroneCommand {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest) {
 
         msg_mission_clear_all msg = new msg_mission_clear_all();
 
@@ -24,7 +26,7 @@ public class ClearMissionCommand extends DroneCommand {
         msg.target_system = (short) dest.getMAVLinkId();
 //        msg.mission_type = MAV_MISSION_TYPE.MAV_MISSION_TYPE_ALL;
 
-        return msg;
+        return Collections.singleton(msg);
     }
 
     public static ClearMissionCommand initClearMissionCommand() {

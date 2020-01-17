@@ -7,6 +7,9 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class ChangeSpeed extends MissionPoint {
 
     private double speed;
@@ -22,7 +25,7 @@ public class ChangeSpeed extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
         msg_mission_item item = new msg_mission_item();
 
         item.target_system = (short) dest.getMAVLinkId();
@@ -37,7 +40,7 @@ public class ChangeSpeed extends MissionPoint {
         item.param2 = (float) speed;
         item.param3 = 10;
 
-        return item;
+        return Collections.singleton(item);
     }
 
     public static MissionPoint initChangeSpeed(double speed, boolean groundSpeed) {

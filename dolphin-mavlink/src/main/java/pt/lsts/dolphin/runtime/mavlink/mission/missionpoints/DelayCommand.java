@@ -7,6 +7,8 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class DelayCommand extends MissionPoint {
@@ -20,7 +22,7 @@ public class DelayCommand extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item msg = new msg_mission_item();
 
@@ -46,7 +48,7 @@ public class DelayCommand extends MissionPoint {
         msg.param3 = minutes == 0 ? -1 : hours;
         msg.param4 = seconds;
 
-        return msg;
+        return Collections.singleton(msg);
     }
 
     public static MissionPoint initDelayPoint(long time) {

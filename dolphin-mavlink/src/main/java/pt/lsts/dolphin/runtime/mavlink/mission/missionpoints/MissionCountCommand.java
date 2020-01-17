@@ -5,6 +5,9 @@ import com.MAVLink.common.msg_mission_count;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class MissionCountCommand extends DroneCommand {
 
     private int messageCount = 0;
@@ -19,7 +22,7 @@ public class MissionCountCommand extends DroneCommand {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest) {
 
         msg_mission_count msg = new msg_mission_count();
 
@@ -28,7 +31,7 @@ public class MissionCountCommand extends DroneCommand {
 
         msg.count = messageCount;
 
-        return msg;
+        return Collections.singleton(msg);
     }
 
     public static DroneCommand initMissionCountCommand(int messageCount) {

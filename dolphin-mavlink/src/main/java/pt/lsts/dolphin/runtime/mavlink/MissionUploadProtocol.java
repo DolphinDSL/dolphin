@@ -14,6 +14,7 @@ import pt.lsts.dolphin.runtime.mavlink.mission.MissionExecutor;
 import pt.lsts.dolphin.runtime.mavlink.mission.missionpoints.ClearMissionCommand;
 import pt.lsts.dolphin.util.Debuggable;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -128,7 +129,9 @@ public final class MissionUploadProtocol implements Debuggable {
 
         ClearMissionCommand command = ClearMissionCommand.initClearMissionCommand();
 
-        node.send(command.toMavLinkMessage(node));
+        Collection<MAVLinkMessage> mavLinkMessages = command.toMavLinkMessage(node);
+
+        mavLinkMessages.forEach(node::send);
 
         this.messageList = executors.getBaseMessages();
         this.droneCommands = executors.getBaseDroneCommands();

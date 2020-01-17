@@ -7,6 +7,9 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class CameraPoint extends MissionPoint {
 
     private CameraType type;
@@ -23,7 +26,7 @@ public class CameraPoint extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item item = new msg_mission_item();
 
@@ -38,7 +41,7 @@ public class CameraPoint extends MissionPoint {
         item.param2 = type == CameraType.IMAGE_COUNT ? 10 : 0;
         item.param3 = type == CameraType.IMAGE_COUNT ? arg : type.getParam();
 
-        return item;
+        return Collections.singleton(item);
     }
 
     public enum CameraType {

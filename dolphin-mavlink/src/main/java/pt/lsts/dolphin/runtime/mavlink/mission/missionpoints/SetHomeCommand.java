@@ -8,6 +8,9 @@ import pt.lsts.dolphin.runtime.Position;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class SetHomeCommand extends MissionPoint {
 
     private SetHomeCommand(Position home) {
@@ -15,7 +18,7 @@ public class SetHomeCommand extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item msg = new msg_mission_item();
 
@@ -32,7 +35,7 @@ public class SetHomeCommand extends MissionPoint {
         msg.y = (float) (getPositionLocation().lon * Position.R2D);
         msg.z = (float) getPositionLocation().hae;
 
-        return msg;
+        return Collections.singleton(msg);
     }
 
     public static MissionPoint initSetHome(Position pos) {

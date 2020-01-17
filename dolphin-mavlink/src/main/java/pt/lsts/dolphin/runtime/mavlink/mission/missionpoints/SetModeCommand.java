@@ -8,6 +8,9 @@ import com.MAVLink.enums.PLANE_MODE;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class SetModeCommand extends DroneCommand {
 
     /**
@@ -27,7 +30,7 @@ public class SetModeCommand extends DroneCommand {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest) {
 
         msg_command_long item = new msg_command_long();
 
@@ -39,7 +42,7 @@ public class SetModeCommand extends DroneCommand {
         //Set the drone as auto mode
         item.param2 = mode;
 
-        return item;
+        return Collections.singleton(item);
     }
 
     public static DroneCommand initSetMode(int mode) {

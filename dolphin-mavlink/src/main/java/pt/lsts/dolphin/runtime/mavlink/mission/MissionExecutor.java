@@ -87,9 +87,9 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
         ArmCommand armCommand = ArmCommand.initArmCommand(1);
 
-        MAVLinkMessage mavLinkMessage = armCommand.toMavLinkMessage(getVehicleMAV());
+        Collection<MAVLinkMessage> mavLinkMessage = armCommand.toMavLinkMessage(getVehicleMAV());
 
-        getVehicleMAV().send(mavLinkMessage);
+        mavLinkMessage.forEach(getVehicleMAV()::send);
 
         vehicle.setExecutor(this);
 
@@ -111,13 +111,17 @@ public class MissionExecutor extends PlatformTaskExecutor {
     private void setIntoRTL() {
         DroneCommand droneCommand = SetModeCommand.initSetMode(PLANE_MODE.PLANE_MODE_RTL);
 
-        getVehicleMAV().send(droneCommand.toMavLinkMessage(getVehicleMAV()));
+        Collection<MAVLinkMessage> mavLinkMessages = droneCommand.toMavLinkMessage(getVehicleMAV());
+
+        mavLinkMessages.forEach(getVehicleMAV()::send);
     }
 
     private void clearCurrentMission() {
         DroneCommand droneCommand = ClearMissionCommand.initClearMissionCommand();
 
-        getVehicleMAV().send(droneCommand.toMavLinkMessage(getVehicleMAV()));
+        Collection<MAVLinkMessage> mavLinkMessages = droneCommand.toMavLinkMessage(getVehicleMAV());
+
+        mavLinkMessages.forEach(getVehicleMAV()::send);
     }
 
     @Override
@@ -186,9 +190,9 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
             if (finalCommand instanceof MissionPoint) {
 
-                MAVLinkMessage mavLinkMessage = ((MissionPoint) finalCommand).toMavLinkMessage(vehicleMAV, currentIndex);
+                Collection<MAVLinkMessage> mavLinkMessage = ((MissionPoint) finalCommand).toMavLinkMessage(vehicleMAV, currentIndex);
 
-                message.add(currentIndex, mavLinkMessage);
+                message.addAll(currentIndex, mavLinkMessage);
 
                 currentIndex++;
 
@@ -197,7 +201,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
             } else {
                 List<MAVLinkMessage> orDefault = newDroneCommands.getOrDefault(currentIndex, new LinkedList<>());
 
-                orDefault.add(finalCommand.toMavLinkMessage(vehicleMAV));
+                orDefault.addAll(finalCommand.toMavLinkMessage(vehicleMAV));
 
                 newDroneCommands.put(currentIndex, orDefault);
             }
@@ -240,9 +244,9 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
             this.repetitionsLeft.put(command, repetitionsLeft);
 
-            MAVLinkMessage mavLinkMessage = command.toMavLinkMessage(getVehicleMAV());
+            Collection<MAVLinkMessage> mavLinkMessage = command.toMavLinkMessage(getVehicleMAV());
 
-            getVehicleMAV().send(mavLinkMessage);
+            mavLinkMessage.forEach(getVehicleMAV()::send);
 
             Engine.platform().displayMessage("Drone has been sent to item %d, there are %d repetitions left on this jump command",
                     command.getTargetMissionPoint(), repetitionsLeft);

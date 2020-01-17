@@ -7,6 +7,9 @@ import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class ArmCommand extends DroneCommand {
 
     private int arm_disarm;
@@ -21,7 +24,7 @@ public class ArmCommand extends DroneCommand {
         return true;
     }
 
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest) {
 
         msg_command_long arm_cmd = new msg_command_long();
 
@@ -32,7 +35,7 @@ public class ArmCommand extends DroneCommand {
         arm_cmd.param1 = arm_disarm;
         arm_cmd.param2 = 0;
 
-        return arm_cmd;
+        return Collections.singleton(arm_cmd);
     }
 
     public static ArmCommand initArmCommand(int arm_disarm) {

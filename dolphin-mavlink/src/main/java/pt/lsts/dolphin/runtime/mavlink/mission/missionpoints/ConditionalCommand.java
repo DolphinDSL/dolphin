@@ -4,6 +4,8 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.DroneCommand;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class ConditionalCommand extends DroneCommand {
@@ -36,8 +38,8 @@ public class ConditionalCommand extends DroneCommand {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest) {
-        return null;
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest) {
+        return Collections.emptySet();
     }
 
     private static abstract class Condition {

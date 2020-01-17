@@ -7,6 +7,9 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class ChangeAltitude extends MissionPoint {
 
     private double altitude;
@@ -18,7 +21,7 @@ public class ChangeAltitude extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item item = new msg_mission_item();
 
@@ -32,7 +35,7 @@ public class ChangeAltitude extends MissionPoint {
         item.param1 = (float) altitude;
         item.param2 = MAV_FRAME.MAV_FRAME_GLOBAL;
 
-        return item;
+        return Collections.singleton(item);
     }
 
     public static MissionPoint initChangeAltitude(double newAltitude) {

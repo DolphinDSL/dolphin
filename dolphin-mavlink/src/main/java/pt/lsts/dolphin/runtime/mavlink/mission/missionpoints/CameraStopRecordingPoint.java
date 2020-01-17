@@ -7,6 +7,9 @@ import com.MAVLink.enums.MAV_FRAME;
 import pt.lsts.dolphin.runtime.mavlink.MAVLinkNode;
 import pt.lsts.dolphin.runtime.mavlink.mission.MissionPoint;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class CameraStopRecordingPoint extends MissionPoint {
 
     private int streamID;
@@ -18,7 +21,7 @@ public class CameraStopRecordingPoint extends MissionPoint {
     }
 
     @Override
-    public MAVLinkMessage toMavLinkMessage(MAVLinkNode dest, int current) {
+    public Collection<MAVLinkMessage> toMavLinkMessage(MAVLinkNode dest, int current) {
 
         msg_mission_item stop_recording = new msg_mission_item();
 
@@ -32,7 +35,7 @@ public class CameraStopRecordingPoint extends MissionPoint {
 
         stop_recording.param1 = this.streamID;
 
-        return stop_recording;
+        return Collections.singleton(stop_recording);
     }
 
     public static MissionPoint initCameraStopRecording(int stream) {

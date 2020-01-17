@@ -1,0 +1,50 @@
+
+homePos = pos {
+   lat 41.15242
+   lon (-8.64096)
+   height 200
+}
+
+v = pick {
+
+    type 'UAV'
+
+    timeout 30.seconds
+
+}
+
+areaSurvey = mission {
+
+    name "Survey Land"
+
+    home homePos
+
+    takeOff homePos
+
+    //Move 400 meters north
+    move 400, 0, 0
+
+    move 0, 20, 0
+
+    move -400, 0, 0
+
+    move 0, 20, 0
+
+    move 400, 0, 0
+
+    move 0, 20, 0
+
+    move -400, 0, 0
+
+    move 0, 20, 0
+
+    move 400, 0, 0
+
+    move 0, 20, 0
+
+    goto homePos
+
+
+}
+
+execute areaSurvey[v]

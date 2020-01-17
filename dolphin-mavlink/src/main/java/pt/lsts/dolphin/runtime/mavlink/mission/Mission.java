@@ -29,7 +29,8 @@ public class Mission extends PlatformTask implements Cloneable {
     public void setDroneCommands(LinkedList<DroneCommand> commands) {
         this.droneCommands = commands;
 
-        int messageCount = (int) this.droneCommands.stream().filter(MissionPoint.class::isInstance).count();
+        int messageCount = this.droneCommands.stream().filter(MissionPoint.class::isInstance)
+                .mapToInt(mission -> ((MissionPoint) mission).messageCount()).sum();
 
         Engine.platform().displayMessage("Item count: %d", messageCount);
 
@@ -54,7 +55,11 @@ public class Mission extends PlatformTask implements Cloneable {
         for (DroneCommand droneCommand : this.droneCommands) {
             if (!(droneCommand instanceof MissionPoint)) continue;
 
-            messages.add(((MissionPoint) droneCommand).toMavLinkMessage(dest, current++));
+            Collection<MAVLinkMessage> collection = ((MissionPoint) droneCommand).toMavLinkMessage(dest, current);
+
+            messages.addAll(collection);
+
+            current += collection.size();
 
         }
 
@@ -75,7 +80,7 @@ public class Mission extends PlatformTask implements Cloneable {
                 if (droneCommand.executeOnStartup()) {
                     List<MAVLinkMessage> commands = messages.getOrDefault(currentMissionPoint, new LinkedList<>());
 
-                    commands.add(droneCommand.toMavLinkMessage(dest));
+                    commands.addAll(droneCommand.toMavLinkMessage(dest));
 
                     messages.put(currentMissionPoint, commands);
                 }
