@@ -27,7 +27,7 @@ task = mission {
     move 400, 200, 0
     }*/
 
-    surveyArea p, 1000, 1000
+    surveyArea p, 1000, 1000, "SOUTH"
 
     //jumpToItem 2, 5
 

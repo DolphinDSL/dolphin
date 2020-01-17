@@ -18,7 +18,7 @@ public class SurveyArea extends MissionPoint {
 
     //20 meters for the drone to turn around when he reaches the end of the zone
     //5 meters for the drone to travel after leaving the area
-    private static final double DIRECTION_CHANGE = 20D, OVERTHROW = 5D;
+    private static final double DIRECTION_CHANGE = 50D, OVERTHROW = 25D;
 
     private double length, width;
 
@@ -96,7 +96,7 @@ public class SurveyArea extends MissionPoint {
         msg_item.current = 0;
         msg_item.autocontinue = 1;
         msg_item.param1 = 0;
-        msg_item.param2 = 50;
+        msg_item.param2 = (float) OVERTHROW;
         msg_item.param3 = 0;
         msg_item.param4 = Float.NaN;
 

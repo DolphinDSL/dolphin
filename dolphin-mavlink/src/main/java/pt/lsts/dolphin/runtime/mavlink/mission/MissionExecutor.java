@@ -58,10 +58,10 @@ public class MissionExecutor extends PlatformTaskExecutor {
             realIndex++;
 
             if (droneCommand instanceof MissionPoint) {
-                index++;
+                index += ((MissionPoint) droneCommand).messageCount();
             }
 
-            if (index == current) {
+            if (index >= current) {
                 break;
             }
         }
@@ -145,6 +145,7 @@ public class MissionExecutor extends PlatformTaskExecutor {
 
     /**
      * Consume the packet that notifies that the drone has reached a given position
+     *
      * @param item_reached The position reached
      */
     public void consume(msg_mission_item_reached item_reached) {

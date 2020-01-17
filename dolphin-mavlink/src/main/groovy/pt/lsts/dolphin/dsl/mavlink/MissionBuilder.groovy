@@ -267,11 +267,11 @@ class MissionBuilder extends Builder<Mission> {
 
     }
 
-    void surveyArea(Position pos, double length, double width, Direction dir = Direction.NORTH) {
+    void surveyArea(Position pos, double length, double width, String dir = "NORTH") {
 
         addPosition(pos);
 
-        point(SurveyArea.initAreaSurvey(pos, length, width, dir));
+        point(SurveyArea.initAreaSurvey(pos, length, width, Direction.valueOf(dir)));
 
     }
 
