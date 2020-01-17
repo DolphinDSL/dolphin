@@ -1,0 +1,67 @@
+//A two drone survey mission
+
+homePos = pos {
+   lat 41.15242
+   lon (-8.64096)
+   height 200
+}
+
+v1 = pick {
+    type 'UAV'
+
+    timeout 30.seconds
+}
+
+v2 = pick {
+    type 'UAV'
+
+    timeout 30.seconds
+}
+
+surveyAreaEast = mission {
+    name "Survey East"
+
+    home homePos
+
+    takeoff homePos
+
+    surveyArea 10000, 5000, "EAST"
+
+    returnHomeAndLand()
+
+}
+
+surveyAreaWest = mission {
+
+    name "Survey West"
+
+    home homePos
+
+    takeoff homePos
+
+    surveyArea 5000, 10000, "WEST"
+
+    returnHomeAndLand()
+
+}
+
+returnHome = mission {
+
+    name "Return home"
+
+    home homePos
+
+    returnHomeAndLand()
+
+}
+
+surveyEast = until { battery(v1) <= .3 } run surveyAreaEast
+
+surveyWest = until { battery(v2) <= .3 } run surveyAreaWest
+
+returnHomeV1 = when { battery(v1) < .29 } run returnHome
+
+returnHomeV2 = when { battery(v2) < .29 } run returnHome
+
+//Execute the mission on the 2 drones concurrently
+execute surveyEast[v1] | surveyWest[v2] | returnHomeV1[v1] | returnHomeV2[v2]

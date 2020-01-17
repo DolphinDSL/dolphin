@@ -1,3 +1,4 @@
+//A one drone test mission
 
 homePos = pos {
    lat 41.15242
@@ -21,29 +22,10 @@ areaSurvey = mission {
 
     takeOff homePos
 
-    //Move 400 meters north
-    move 400, 0, 0
+    //Survey an area 10000 meters long and 5000 meters wide
+    surveyArea 10000, 5000, "EAST"
 
-    move 0, 20, 0
-
-    move -400, 0, 0
-
-    move 0, 20, 0
-
-    move 400, 0, 0
-
-    move 0, 20, 0
-
-    move -400, 0, 0
-
-    move 0, 20, 0
-
-    move 400, 0, 0
-
-    move 0, 20, 0
-
-    goto homePos
-
+    returnHomeAndLand()
 
 }
 
