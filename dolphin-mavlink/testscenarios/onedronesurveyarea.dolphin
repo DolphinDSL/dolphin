@@ -1,4 +1,4 @@
-//A one drone test mission
+//A one drone survey mission
 
 homePos = pos {
    lat 41.15242
@@ -6,27 +6,38 @@ homePos = pos {
    height 200
 }
 
-v = pick {
-
+v1 = pick {
     type 'UAV'
 
     timeout 30.seconds
-
 }
 
-areaSurvey = mission {
-
-    name "Survey Land"
+surveyArea = mission {
+    name "Survey Area"
 
     home homePos
 
-    takeOff homePos
+    takeoff homePos
 
-    //Survey an area 10000 meters long and 5000 meters wide
-    surveyArea 10000, 5000, "EAST"
+    surveyArea 20000, 10000
 
     returnHomeAndLand()
 
 }
 
-execute areaSurvey[v]
+returnHome = mission {
+
+    name "Return home"
+
+    home homePos
+
+    returnHomeAndLand()
+
+}
+
+
+//Run until the battery runs out and then return
+survey = (until { battery(v1) <= .3 } run surveyArea) >> returnHome
+
+//Execute the mission on the drone
+execute survey[v1]

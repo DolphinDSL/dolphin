@@ -1,4 +1,3 @@
-//A two drone survey mission
 
 homePos = pos {
    lat 41.15242
@@ -65,11 +64,12 @@ returnHomeV2 = mission {
 
  }
 
+t1 = (until { battery(v1) <= .3 } run surveyWest) >> returnHome
 
-//Run until the battery runs out and then return
-surveyEast = (until { battery(v1) <= .3 } run surveyAreaEast) >> returnHomeV1
+t2 = (until { battery(v2) <= .3 } run surveyWest) >> returnHome
 
-surveyWest = (until { battery(v2) <= .3 } run surveyAreaWest) >> returnHomeV2
+t3 = when { t1.isDone() } run t2
 
-//Execute the mission on the 2 drones concurrently
-execute surveyEast[v1] | surveyWest[v2]
+t4 = when { t2.isDone() } run t1
+//This is a very rough sketch, the idea is to have an infinite cycle where the drones will land (to a charging station in theory) and when the drone arrives, another drone will go out and resume his mission
+//Providing a drone that is charging and a drone that is completing the mission.
