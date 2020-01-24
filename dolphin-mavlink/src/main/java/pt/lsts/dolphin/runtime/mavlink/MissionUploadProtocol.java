@@ -124,6 +124,10 @@ public final class MissionUploadProtocol implements Debuggable {
         d("starting upload protocol");
         Engine.platform().displayMessage("Starting upload protocol");
 
+        this.currentMissionItem = 0;
+
+        this.requestedWrongItem = 0;
+
         this.state = State.CLEARING;
         Engine.platform().displayMessage("Clearing mission.");
 

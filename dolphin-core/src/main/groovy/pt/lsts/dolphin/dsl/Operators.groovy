@@ -27,6 +27,21 @@ Task.metaClass.or << {
   Task t -> new ConcurrentTask(delegate, t)
 }
 
+Task.metaClass.div << {
+  Closure<Boolean> test ->
+    new ConstrainedTask(delegate) {
+      @Override
+      public ConstrainedTaskExecutor getExecutor() {
+        return new ConstrainedTaskExecutor(theTask) {
+          @Override
+          public boolean terminationCondition() {
+            test.call()
+          }
+        }
+      }
+    }
+}
+
 Task.metaClass.rightShift << {
   Task t -> new SequentialTask(delegate, t)
 }
