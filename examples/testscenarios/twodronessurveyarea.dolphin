@@ -54,40 +54,28 @@ returnHomeV2 = mission {
  }
 
 
+//Execute the task
 while (true) {
-
+    //Select 2 UAVs from the UAVs
+    //that are connected to the MAVLink network
     v1 = pick {
         type 'UAV'
-
         timeout 30.seconds
     }
 
     v2 = pick {
         type 'UAV'
-
         timeout 30.seconds
     }
 
-    /*//Run until the battery runs out and then return
-
-    aux = until { battery(v1) < 0.3 } run surveyAreaEast
-
-    surveyEast = (surveyAreaEast / { battery(v1) < 0.3 }) >> returnHomeV1
-
-    aux2 = until { battery(v2) < 0.3 } run surveyAreaWest
-
-    test = (surveyAreaWest / {battery(v2) < 0.3}) >> returnHomeV2
-
-    surveyWest =  aux2 >> returnHomeV2
-
-    //Execute the mission on the 2 drones concurrently
-    execute surveyEast[v1] | test[v2]
-
-    */
-
-    execute v1: (surveyAreaEast / { battery(v1) < 0.3 }) >> returnHomeV1,
-            v2:  (surveyAreaWest / { battery(v2) < 0.3 }) >> returnHomeV2
+    execute v1:
+        waitFor {battery(v1) >= 0.9}
+          run ((surveyAreaNorth / {battery(v1) < 0.3})
+             >> returnHome),
+            v2:
+        waitFor {battery(v2) >= 0.9}
+          run ((surveyAreaSouth / {battery(v2) < 0.3})
+             >> returnHome)
 
     release v1 + v2
 }
-

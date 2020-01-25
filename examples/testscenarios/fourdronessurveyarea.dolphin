@@ -5,18 +5,6 @@ homePos = pos {
    height 200
 }
 
-v1 = pick {
-    type 'UAV'
-
-    timeout 30.seconds
-}
-
-v2 = pick {
-    type 'UAV'
-
-    timeout 30.seconds
-}
-
 surveyAreaEast = mission {
     name "Survey East"
 
@@ -63,13 +51,50 @@ returnHomeV2 = mission {
      returnHomeAndLand()
 
  }
+//Select 2 UAVs from the UAVs
+//that are connected to the MAVLink network
+v1 = pick {
+    type 'UAV'
+    timeout 30.seconds
+}
+v2 = pick {
+    type 'UAV'
+    timeout 30.seconds
+}
 
-t1 = (until { battery(v1) <= .3 } run surveyWest) >> returnHome
+//Execute the task
+while (true) {
 
-t2 = (until { battery(v2) <= .3 } run surveyWest) >> returnHome
+    execute
+    v1:
+     waitFor {battery(v1) >= 0.9}
+      run ((surveyAreaNorth /
+             {battery(v1) < 0.3})
+       >> returnHome),
+    v2:
+     waitFor {battery(v2) >= 0.9}
+      run ((surveyAreaSouth /
+             {battery(v2) < 0.3})
+       >> returnHome)
 
-t3 = when { t1.isDone() } run t2
+    //We pick 2 vehicles that are not associated
+    //with any mission, we do this before we
+    //release these drones as the drones that
+    //have just arrived are supposed to remain
+    //charging, and the drones that were
+    //charging while these were out on mission.
 
-t4 = when { t2.isDone() } run t1
-//This is a very rough sketch, the idea is to have an infinite cycle where the drones will land (to a charging station in theory) and when the drone arrives, another drone will go out and resume his mission
-//Providing a drone that is charging and a drone that is completing the mission.
+    v1Temp = pick {
+        type 'UAV'
+        timeout 30.seconds
+    }
+    v2Temp = pick {
+        type 'UAV'
+        timeout 30.seconds
+    }
+
+    release v1 + v2
+
+    v1 = v1Temp
+    v2 = v2Temp
+}

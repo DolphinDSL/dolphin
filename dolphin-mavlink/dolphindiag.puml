@@ -1,0 +1,121 @@
+@startuml
+
+interface Task {
+
+    +{abstract} String getId()
+    +{abstract} TaskExecutor getExecutor()
+    +{abstract} boolean allocate(NodeSet, Map<Task, <List<Node>>)
+
+}
+
+abstract class PlatformTask implements Task {
+
+    - String id
+
+    + String getId()
+
+    +{abstract} List<NodeFilter> getRequirements()
+
+}
+
+abstract class TaskExecutor {
+
+    - Task task
+    - State state
+    - double startTime
+    - double timeElapsed
+    - CompletionState state
+
+    + void start()
+    + void step()
+    + void stop()
+    ~ {abstract} void onInitialize(Map<Task, List<Node>>)
+    ~ {abstract} void onStart()
+    ~ {abstract} CompletionState onStep()
+    ~ {abstract} void onCompletion()
+
+}
+
+enum State {
+    INITIALIZING
+    READY
+    EXECUTING
+    COMPLETED
+}
+
+TaskExecutor::state --> State
+TaskExecutor::state --> CompletionState
+
+abstract class PlatformTaskExecutor extends TaskExecutor {
+
+    - List<Node> nodes
+
+    ~ List<Node> getVehicles()
+    ~ Node getVehicle()
+    ~ void onInitialize(Map<Task, List<Node>>)
+
+}
+
+class CompletionState {
+
+    + Type type
+    ~ String errorMessage
+
+    + boolean getErrorMessage()
+    + boolean inProgress()
+    + boolean undefined()
+    + boolean done()
+    + boolean error()
+    + boolean finished()
+}
+
+enum Type {
+    UNDEFINED
+    IN_PROGRESS
+    DONE
+    ERROR
+}
+
+CompletionState::type --> Type
+
+interface Node {
+
+    #{abstract}String getId()
+    #{abstract}String getType()
+    #{abstract}Position getPosition()
+    #{abstract}Payload getPayload()
+    #{abstract}void release()
+    #{abstract}Task getRunningTask()
+    #{abstract}void setRunningTask(Task)
+    #{abstract}double getConnectionTimeout()
+    #{abstract}void setConnectionTimeout(double)
+
+}
+
+abstract class AbstractNode implements Node {
+
+    - String nodeId
+    - Task runningTask
+    - double connectionTimeout
+
+    +String getId()
+    +Task getRunningTask()
+    +void setRunningTask(Task)
+    +double getConnectionTimeOut()
+    +void setConnectionTimeout(double)
+
+    +double batteryRemaining()
+    +{abstract} String getType()
+    +{abstract} Position getPosition()
+    +{abstract} Payload getPayload()
+    +{abstract} void release()
+
+
+
+}
+
+Node::getRunningTask --> Task
+
+Task::getExecutor "Creates" --> TaskExecutor
+
+@enduml

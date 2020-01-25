@@ -6,12 +6,6 @@ homePos = pos {
    height 200
 }
 
-v1 = pick {
-    type 'UAV'
-
-    timeout 30.seconds
-}
-
 surveyArea = mission {
     name "Survey Area"
 
@@ -36,8 +30,25 @@ returnHome = mission {
 }
 
 
-//Run until the battery runs out and then return
-survey = (until { battery(v1) <= .3 } run surveyArea) >> returnHome
+//Execute the task
+while (true) {
+    //Select a UAV from the UAVs
+    //that are connected to the MAVLink network
+    v1 = pick {
+        type 'UAV'
 
-//Execute the mission on the drone
-execute survey[v1]
+        timeout 30.seconds
+    }
+
+    //Wait for the battery of the drone to be 90%
+    //then execute surveyArea until the condition
+    //battery(v1) < 0.3 is met, then execute
+    //returnHome
+    execute v1:
+        waitFor {battery(v1) >= 0.9}
+          run ((surveyArea / {battery(v1) < 0.3})
+             >> returnHome)
+
+    //Release the drone for other possible tasks
+    release v1
+}
