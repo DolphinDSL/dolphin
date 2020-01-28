@@ -104,13 +104,11 @@ abstract class AbstractNode implements Node {
     +double getConnectionTimeOut()
     +void setConnectionTimeout(double)
 
-    +double batteryRemaining()
+    +{abstract} double batteryRemaining()
     +{abstract} String getType()
     +{abstract} Position getPosition()
     +{abstract} Payload getPayload()
     +{abstract} void release()
-
-
 
 }
 

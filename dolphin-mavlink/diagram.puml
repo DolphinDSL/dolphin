@@ -1,91 +1,148 @@
 @startuml
 
-class Mission {
-
-    - commands: LinkedList<DroneCommand>
-
-    + List<MAVLinkMessage> toMavLinkMessages(MAVLinkNode)
-
-    + TaskExecutor getExecutor()
-
-}
-
-abstract class PlatformTask {
-    + abstract TaskExecutor getExecutor()
-}
-
 interface Task {
-    + TaskExecutor getExecutor()
+
+    +{abstract} String getId()
+    +{abstract} TaskExecutor getExecutor()
+    +{abstract} boolean allocate(NodeSet, Map<Task, <List<Node>>)
+
+}
+
+abstract class PlatformTask implements Task {
+
+    - String id
+
+    + String getId()
+
+    +{abstract} List<NodeFilter> getRequirements()
+
 }
 
 abstract class TaskExecutor {
 
+    - Task task
+    - State state
+    - double startTime
+    - double timeElapsed
+    - CompletionState state
+
     + void start()
     + void step()
     + void stop()
+    ~ {abstract} void onInitialize(Map<Task, List<Node>>)
+    ~ {abstract} void onStart()
+    ~ {abstract} CompletionState onStep()
+    ~ {abstract} void onCompletion()
 
 }
 
-class MissionExecutor {
+abstract class PlatformTaskExecutor extends TaskExecutor {
 
-    MAVLinkNode executing
+    - List<Node> nodes
 
-}
-
-abstract class DroneCommand {
-
- + abstract MAVLinkMessage toMavLinkMessage(MAVLinkNode)
+    ~ List<Node> getVehicles()
+    ~ Node getVehicle()
+    ~ void onInitialize(Map<Task, List<Node>>)
 
 }
 
-abstract class MissionPoint {
+interface Node {
 
- + MAVLinkMessage toMavLinkMessage(MAVLinkNode)
-
- + MAVLinkMessage toMavLinkMessage(MAVLinkNode, int)
-
-}
-
-class MAVLinkNode {
-    #MissionExecutor currentMission
-
-    #MissionUploadProtocol uploadProtocol
-
-    #void send(MAVLinkMessage)
-}
-
-class MissionUploadProtocol {
-
-    + void start(Mission)
+    #{abstract}String getId()
+    #{abstract}String getType()
+    #{abstract}Position getPosition()
+    #{abstract}Payload getPayload()
+    #{abstract}void release()
+    #{abstract}Task getRunningTask()
+    #{abstract}void setRunningTask(Task)
+    #{abstract}double getConnectionTimeout()
+    #{abstract}void setConnectionTimeout(double)
 
 }
 
-Mission "Extends" --|> PlatformTask
+abstract class AbstractNode implements Node {
 
-PlatformTask "Implements" --|> Task
+    - String nodeId
+    - Task runningTask
+    - double connectionTimeout
 
-Mission::commands --|> DroneCommand
+    +String getId()
+    +Task getRunningTask()
+    +void setRunningTask(Task)
+    +double getConnectionTimeOut()
+    +void setConnectionTimeout(double)
 
-Mission::toMavLinkMessages --|> "Generates" MAVLinkMessage
+    +{abstract} double batteryRemaining()
+    +{abstract} String getType()
+    +{abstract} Position getPosition()
+    +{abstract} Payload getPayload()
+    +{abstract} void release()
 
-PlatformTask::getExecutor "Returns" --|> TaskExecutor
+}
 
-Mission::getExecutor "Returns" --|> MissionExecutor
+Node::getRunningTask "Runs" --> Task
 
-MissionPoint::toMavLinkMessage "calls" --* MissionPoint::toMavLinkMessage
+Task::getExecutor "Creates" --> TaskExecutor
 
-DroneCommand <|-- "Extends" MissionPoint
+class MAVLinkNode extends AbstractNode {
 
-MissionExecutor "Extends" --|> TaskExecutor
+    - SocketAddress sockAddr
+    - MissionUploadProtocol uploadProtocol
+    - MissionDownloadProtocol downloadProtocol
+    - MissionExecutor currentExecutor
 
-MAVLinkNode::currentMission "Contains" --|> MissionExecutor
+    + int getMAVLinkId()
+    + String getType()
+    + Position getPosition()
+    + Payload getPayload()
+    + SocketAddress getAddress()
+    + MissionUploadProtocol getUploadProtocol()
+    + MissionDownloadProtocol getDownloadProtocol()
 
-MAVLinkNode::uploadProtocol --|> MissionUploadProtocol
+    + void release()
+    + void send(MAVLinkMessage)
+    + boolean available()
+    + msg_heartbeat getLastHBReceived()
+    + msg_sys_status getLastSystemStatus()
+    + double batteryRemaining()
 
-Mission "Takes" <|-- MissionUploadProtocol::start
+    + void setExecutor(MissionExecutor)
 
-MissionExecutor "Sends a Mission to Drone" <|-- MissionUploadProtocol::start
+    # void consume(msg_global_position)
+    # void consume(msg_heartbeat)
+    # void consume(msg_sys_status)
 
-MAVLinkNode::send  "Sends to Drone" --|> MAVLinkMessage
+}
+
+class Mission extends PlatformTask {
+
+   - LinkedList<DroneCommand> missionCommand
+
+   + List<DroneCommand> getCommandList()
+   + void setDroneCommands(List<DroneCommand>)
+   + int missionPoints()
+   + List<MAVLinkMessage> toMissionMessages(MAVLinkNode)
+   + Map<Integer, List<MAVLinkMessage>> droneCommandsToMissionItem(MAVLinkNode)
+   + List<NodeFilter> getRequirements()
+   + TaskExecutor getExecutor()
+
+}
+
+class MissionExecutor extends PlatformTaskExecutor {
+    - List<MAVLinkMessage> messages
+    - Map<Integer, List<MAVLinkMessage>> droneCommands
+    - int currentMissionIndex
+
+    + List<MAVLinkMessage> getBaseMessages()
+    + Map<Integer, List<MAVLinkMessage>> getBaseDroneCommands()
+
+    # void onStart()
+    # void onStep()
+    # void onCompletion()
+
+    # void consume(msg_mission_item_reached)
+    # void consume(msg_mission_current)
+    # void consume(msg_mission_ack)
+}
 
 @enduml

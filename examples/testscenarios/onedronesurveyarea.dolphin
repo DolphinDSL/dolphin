@@ -11,9 +11,9 @@ surveyArea = mission {
 
     home homePos
 
-    takeoff homePos
+    takeOff homePos
 
-    surveyArea 20000, 10000
+    surveyArea 1000, 1000, "NORTH"
 
     returnHomeAndLand()
 
@@ -40,14 +40,15 @@ while (true) {
         timeout 30.seconds
     }
 
+    task = ((surveyArea / {battery(v1) < 0.3})
+                        >> returnHome)
+
     //Wait for the battery of the drone to be 90%
     //then execute surveyArea until the condition
     //battery(v1) < 0.3 is met, then execute
     //returnHome
     execute v1:
-        waitFor {battery(v1) >= 0.9}
-          run ((surveyArea / {battery(v1) < 0.3})
-             >> returnHome)
+        waitFor {battery(v1) >= 0.9} then task
 
     //Release the drone for other possible tasks
     release v1

@@ -69,6 +69,8 @@ All the possible mission items:
 
     surveyArea (length, width, direction ("NORTH", "EAST", "SOUTH", "WEST")) -> Tells the drone to survey the
 
+    surveyArea (Position, length, width, direction) -> Tells the drone to survey the area based on his latest position
+
     jumpToItem (Item, Repetitions (Optional, default = 1)) -> Send the drone to the given mission item for the given amount of times (Allows for the creation of loops in the mission)
 
 Executing a mission:

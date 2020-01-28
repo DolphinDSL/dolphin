@@ -14,14 +14,14 @@ public class ChangeSpeed extends MissionPoint {
 
     private double speed;
 
-    private boolean groundSpeed;
+    private int speedType;
 
-    private ChangeSpeed(double speed, boolean groundSpeed) {
+    private ChangeSpeed(double speed, int speedType) {
         super(null);
 
         this.speed = speed;
 
-        this.groundSpeed = groundSpeed;
+        this.speedType = speedType;
     }
 
     @Override
@@ -36,14 +36,14 @@ public class ChangeSpeed extends MissionPoint {
         item.seq = current;
 
         item.command = MAV_CMD.MAV_CMD_DO_CHANGE_SPEED;
-        item.param1 = groundSpeed ? 1 : 0;
+        item.param1 = speedType;
         item.param2 = (float) speed;
         item.param3 = 10;
 
         return Collections.singleton(item);
     }
 
-    public static MissionPoint initChangeSpeed(double speed, boolean groundSpeed) {
-        return new ChangeSpeed(speed, groundSpeed);
+    public static MissionPoint initChangeSpeed(double speed, int speedType) {
+        return new ChangeSpeed(speed, speedType);
     }
 }

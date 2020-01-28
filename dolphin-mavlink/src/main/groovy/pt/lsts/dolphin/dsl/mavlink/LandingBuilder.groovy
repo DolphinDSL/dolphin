@@ -1,5 +1,6 @@
 package pt.lsts.dolphin.dsl.mavlink
 
+import com.MAVLink.enums.PRECISION_LAND_MODE
 import pt.lsts.dolphin.dsl.Builder
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.runtime.Position
@@ -21,6 +22,6 @@ class LandingBuilder extends Builder<MissionPoint> {
 
     @Override
     MissionPoint build() {
-        return LandingPoint.initLandingPoint(pos);
+        return LandingPoint.initLandingPoint(pos, Float.NaN, PRECISION_LAND_MODE.PRECISION_LAND_MODE_DISABLED);
     }
 }

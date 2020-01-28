@@ -1,39 +1,39 @@
 //A two drone survey mission
 
 homePos = pos {
-   lat 41.15242
-   lon (-8.64096)
-   height 200
+   lat 40.441377
+   lon (-7.370962)
+   height 1300
 }
 
-surveyAreaEast = mission {
-    name "Survey East"
+surveyAreaNorth = mission {
+    name "Survey North"
 
     home homePos
 
     takeOff homePos
 
-    surveyArea homePos, 10000, 5000, "EAST"
+    surveyArea homePos, 3000, 400, "NORTH"
 
     returnHomeAndLand()
 
 }
 
-surveyAreaWest = mission {
+surveyAreaSouth = mission {
 
-    name "Survey West"
+    name "Survey South"
 
     home homePos
 
     takeOff homePos
 
-    surveyArea homePos, 5000, 10000, "WEST"
+    surveyArea homePos, 3000, 400, "SOUTH"
 
     returnHomeAndLand()
 
 }
 
-returnHomeV1 = mission {
+returnHome = mission {
 
     name "Return home"
 
@@ -42,16 +42,6 @@ returnHomeV1 = mission {
     returnHomeAndLand()
 
 }
-
-returnHomeV2 = mission {
-
-     name "Return home"
-
-     home homePos
-
-     returnHomeAndLand()
-
- }
 
 
 //Execute the task
@@ -68,13 +58,9 @@ while (true) {
         timeout 30.seconds
     }
 
-    execute v1:
-        waitFor {battery(v1) >= 0.9}
-          run ((surveyAreaNorth / {battery(v1) < 0.3})
+    execute v1: ((surveyAreaNorth / {battery(v1) < 0.3})
              >> returnHome),
-            v2:
-        waitFor {battery(v2) >= 0.9}
-          run ((surveyAreaSouth / {battery(v2) < 0.3})
+            v2: ((surveyAreaSouth / {battery(v2) < 0.3})
              >> returnHome)
 
     release v1 + v2

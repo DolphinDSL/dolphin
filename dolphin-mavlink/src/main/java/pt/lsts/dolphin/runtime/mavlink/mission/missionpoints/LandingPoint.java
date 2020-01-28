@@ -13,8 +13,15 @@ import java.util.Collections;
 
 public class LandingPoint extends MissionPoint {
 
-    private LandingPoint(Position position) {
+    private int landMode;
+
+    private float yaw;
+
+    private LandingPoint(Position position, float yaw, int landMode) {
         super(position);
+
+        this.yaw = yaw;
+        this.landMode = landMode;
     }
 
     @Override
@@ -31,8 +38,9 @@ public class LandingPoint extends MissionPoint {
         msg_item.current = 0;
         msg_item.autocontinue = 1;
         msg_item.param1 = 0;
-        msg_item.param2 = 0;
+        msg_item.param2 = landMode;
         msg_item.param3 = 0;
+        msg_item.param4 = yaw;
 
         msg_item.x = (float) (getPositionLocation().lat * Position.R2D);
         msg_item.y = (float) (getPositionLocation().lon * Position.R2D);
@@ -49,11 +57,11 @@ public class LandingPoint extends MissionPoint {
      * @param hae The height
      * @return
      */
-    public static MissionPoint initLandingPoint(double lat, double lon, double hae) {
-        return initLandingPoint(Position.fromDegrees(lat, lon, hae));
+    public static MissionPoint initLandingPoint(double lat, double lon, double hae, float yaw, int landMode) {
+        return initLandingPoint(Position.fromDegrees(lat, lon, hae), yaw, landMode);
     }
 
-    public static MissionPoint initLandingPoint(Position position) {
-        return new LandingPoint(position);
+    public static MissionPoint initLandingPoint(Position position, float yaw, int landMode) {
+        return new LandingPoint(position, yaw, landMode);
     }
 }

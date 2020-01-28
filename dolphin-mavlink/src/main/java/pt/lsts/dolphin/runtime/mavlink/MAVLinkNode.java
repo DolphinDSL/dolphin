@@ -21,7 +21,7 @@ import pt.lsts.dolphin.util.Debuggable;
  * <p>
  * It represents a vehicle in the network.
  */
-public final class MAVLinkNode extends AbstractNode implements Debuggable {
+public final class MAVLinkNode extends  AbstractNode implements Debuggable {
 
     /**
      * System id for the node.

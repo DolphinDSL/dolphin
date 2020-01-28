@@ -1,5 +1,6 @@
 package pt.lsts.dolphin.dsl.mavlink
 
+import com.MAVLink.enums.PRECISION_LAND_MODE
 import pt.lsts.dolphin.dsl.Builder
 import pt.lsts.dolphin.dsl.DSLClass
 import pt.lsts.dolphin.dsl.Engine
@@ -179,18 +180,18 @@ class MissionBuilder extends Builder<Mission> {
         point(LoiterPoint.initLoiterPoint(next, radius));
     }
 
-    void returnHomeAndLand() {
+    void returnHomeAndLand(float yaw = Float.NaN, int landMode = PRECISION_LAND_MODE.PRECISION_LAND_MODE_DISABLED) {
         def next = this.home;
 
         addPosition(next);
 
-        point(LandingPoint.initLandingPoint(next));
+        point(LandingPoint.initLandingPoint(next, yaw, landMode));
     }
 
-    void speed(double newSpeed, boolean groundSpeed = false) {
+    void speed(double newSpeed, int speedType = 1) {
         this.speed = newSpeed;
 
-        point(ChangeSpeed.initChangeSpeed(newSpeed, groundSpeed));
+        point(ChangeSpeed.initChangeSpeed(newSpeed, speedType));
     }
 
     void altitude(double newAlt) {
@@ -229,12 +230,12 @@ class MissionBuilder extends Builder<Mission> {
         point(LoiterPoint.initLoiterPoint(Position.fromDegrees(lat, lon, hae), LoiterType.TIME, radius, time))
     }
 
-    void landingPoint(double lat, double lon, double hae = 0) {
-        point(LandingPoint.initLandingPoint(lat, lon, hae));
+    void landingPoint(double lat, double lon, double hae = 0, float yaw = Float.NaN, int landMode = PRECISION_LAND_MODE.PRECISION_LAND_MODE_DISABLED) {
+        point(LandingPoint.initLandingPoint(lat, lon, hae, yaw, landMode));
     }
 
-    void landingPoint(Position pos) {
-        point(LandingPoint.initLandingPoint(pos))
+    void landingPoint(Position pos, float yaw = Float.NaN, int landMode = PRECISION_LAND_MODE.PRECISION_LAND_MODE_DISABLED) {
+        point(LandingPoint.initLandingPoint(pos, yaw, landMode))
     }
 
     void takeOff(Position pos, float pitch = 15) {
@@ -258,7 +259,7 @@ class MissionBuilder extends Builder<Mission> {
     }
 
     void stopCapturing() {
-        point (StopCameraCapture.initStopCapture());
+        point(StopCameraCapture.initStopCapture());
     }
 
     void jumpToItem(int item, int repetitions = 1) {
@@ -273,6 +274,10 @@ class MissionBuilder extends Builder<Mission> {
 
         point(SurveyArea.initAreaSurvey(pos, length, width, Direction.valueOf(dir)));
 
+    }
+
+    void surveyArea(double length, double width, String dir = "NORTH") {
+        surveyArea(getLastKnownPosition(), length, width, dir);
     }
 
     @Override
