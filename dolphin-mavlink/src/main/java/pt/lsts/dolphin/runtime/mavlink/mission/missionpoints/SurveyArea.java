@@ -18,19 +18,20 @@ public class SurveyArea extends MissionPoint {
 
     //20 meters for the drone to turn around when he reaches the end of the zone
     //5 meters for the drone to travel after leaving the area
-    private static final double DIRECTION_CHANGE = 50D, OVERTHROW = 25D;
+    private static final double OVERTHROW = 25D;
 
-    private double length, width;
+    private double length, width, direction_change;
 
     private Direction direction;
 
-    private SurveyArea(Position pointLocation, double length, double width, Direction direction) {
+    private SurveyArea(Position pointLocation, double length, double width, double direction_change, Direction direction) {
         super(pointLocation);
 
         this.length = Math.max(length, width);
         this.width = Math.min(length, width);
 
         this.direction = direction;
+        this.direction_change = direction_change;
 
     }
 
@@ -39,7 +40,7 @@ public class SurveyArea extends MissionPoint {
 
         LinkedList<MAVLinkMessage> messages = new LinkedList<>();
 
-        int numberOfPoints = (int) Math.round(width / DIRECTION_CHANGE);
+        int numberOfPoints = (int) Math.round(width / direction_change);
 
         Engine.platform().displayMessage("GENERATING %d POINTS FOR AREA", numberOfPoints);
 
@@ -61,7 +62,7 @@ public class SurveyArea extends MissionPoint {
 
             messages.addLast(goToLength);
 
-            NED changeDirection = new NED(direction.getMultEast() * DIRECTION_CHANGE, direction.getMultNorth() * DIRECTION_CHANGE, 0);
+            NED changeDirection = new NED(direction.getMultEast() * direction_change, direction.getMultNorth() * direction_change, 0);
 
             Position displaceLateral = WGS84.displace(currentPos, changeDirection);
 
@@ -110,7 +111,7 @@ public class SurveyArea extends MissionPoint {
 
     @Override
     public int messageCount() {
-        return (int) Math.round(this.width / DIRECTION_CHANGE);
+        return (int) Math.round(this.width / direction_change);
     }
 
     public enum Direction {
@@ -136,7 +137,7 @@ public class SurveyArea extends MissionPoint {
         }
     }
 
-    public static MissionPoint initAreaSurvey(Position base, double length, double width, Direction dir) {
-        return new SurveyArea(base, length, width, dir);
+    public static MissionPoint initAreaSurvey(Position base, double length, double width, double direction_change, Direction dir) {
+        return new SurveyArea(base, length, width, direction_change, dir);
     }
 }

@@ -101,7 +101,7 @@ public final class MAVLinkNode extends  AbstractNode implements Debuggable {
 
     @Override
     public void release() {
-
+        this.currentExecutor = null;
     }
 
     /**

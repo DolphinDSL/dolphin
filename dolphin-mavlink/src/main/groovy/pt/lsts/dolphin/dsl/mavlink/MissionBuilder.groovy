@@ -268,16 +268,16 @@ class MissionBuilder extends Builder<Mission> {
 
     }
 
-    void surveyArea(Position pos, double length, double width, String dir = "NORTH") {
+    void surveyArea(Position pos, double length, double width, double direction_change = 50, String dir = "NORTH") {
 
         addPosition(pos);
 
-        point(SurveyArea.initAreaSurvey(pos, length, width, Direction.valueOf(dir)));
+        point(SurveyArea.initAreaSurvey(pos, length, width, direction_change, Direction.valueOf(dir)));
 
     }
 
-    void surveyArea(double length, double width, String dir = "NORTH") {
-        surveyArea(getLastKnownPosition(), length, width, dir);
+    void surveyArea(double length, double width, double direction_change = 50, String dir = "NORTH") {
+        surveyArea(getLastKnownPosition(), length, width, direction_change, dir);
     }
 
     @Override
