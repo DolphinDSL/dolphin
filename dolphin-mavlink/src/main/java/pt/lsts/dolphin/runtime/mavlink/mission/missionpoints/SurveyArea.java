@@ -27,8 +27,8 @@ public class SurveyArea extends MissionPoint {
     private SurveyArea(Position pointLocation, double length, double width, double direction_change, Direction direction) {
         super(pointLocation);
 
-        this.length = Math.max(length, width);
-        this.width = Math.min(length, width);
+        this.length = length;
+        this.width = width;
 
         this.direction = direction;
         this.direction_change = direction_change;
@@ -40,9 +40,10 @@ public class SurveyArea extends MissionPoint {
 
         LinkedList<MAVLinkMessage> messages = new LinkedList<>();
 
-        int numberOfPoints = (int) Math.round(width / direction_change);
+        int numberOfPoints = (int) Math.round(width / direction_change) + 1;
 
         Engine.platform().displayMessage("GENERATING %d POINTS FOR AREA", numberOfPoints);
+        Engine.platform().displayMessage("Width %.2f, Length %.2f, Direction %s", width, length, direction.name());
 
         int currentDirection = 1;
 
@@ -52,7 +53,7 @@ public class SurveyArea extends MissionPoint {
 
             //Make the length of the area
             NED next = new NED(direction.getMultNorth() * (length + OVERTHROW) * currentDirection,
-                    direction.getMultEast() * (length + OVERTHROW) * currentDirection, 0);
+                    0, 0);
 
             Position displace = WGS84.displace(currentPos, next);
 
@@ -62,7 +63,7 @@ public class SurveyArea extends MissionPoint {
 
             messages.addLast(goToLength);
 
-            NED changeDirection = new NED(direction.getMultEast() * direction_change, direction.getMultNorth() * direction_change, 0);
+            NED changeDirection = new NED(0, direction.getMultEast() * direction_change, 0);
 
             Position displaceLateral = WGS84.displace(currentPos, changeDirection);
 
@@ -111,15 +112,15 @@ public class SurveyArea extends MissionPoint {
 
     @Override
     public int messageCount() {
-        return (int) Math.round(this.width / direction_change);
+        return (int) Math.round(this.width / direction_change) + 1;
     }
 
     public enum Direction {
 
-        NORTH(1, 0),
-        SOUTH(-1, 0),
-        EAST(0, 1),
-        WEST(0, -1);
+        NORTH_EAST(1, 1),
+        NORTH_WEST(1, -1),
+        SOUTH_EAST(-1, 1),
+        SOUTH_WEST(-1, -1);
 
         private double multNorth, multEast;
 

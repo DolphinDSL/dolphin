@@ -13,7 +13,7 @@ surveyAreaNorth = mission {
 
     takeOff homePos
 
-    surveyArea homePos, 3000, 1000, "NORTH"
+    surveyArea homePos, 3000, 10000, 500, "NORTH_EAST"
 
     returnHomeAndLand()
 
@@ -27,7 +27,7 @@ surveyAreaSouth = mission {
 
     takeOff homePos
 
-    surveyArea homePos, 3000, 800, "SOUTH"
+    surveyArea homePos, 3000, 10000, 500, "SOUTH_EAST"
 
     returnHomeAndLand()
 
@@ -67,9 +67,9 @@ while (true) {
         timeout 30.seconds
     }
 
-    execute v1: ((surveyAreaNorth / {battery(v1) < 0.3})
+    execute v1: ((surveyAreaNorth / {battery(v1) < 0.7})
              >> returnHome),
-            v2: ((surveyAreaSouth / {battery(v2) < 0.3})
+            v2: ((surveyAreaSouth / {battery(v2) < 0.7})
              >> returnHome2)
 
     release v1 + v2

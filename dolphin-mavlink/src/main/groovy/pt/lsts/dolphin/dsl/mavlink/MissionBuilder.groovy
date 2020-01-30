@@ -268,7 +268,7 @@ class MissionBuilder extends Builder<Mission> {
 
     }
 
-    void surveyArea(Position pos, double length, double width, double direction_change = 50, String dir = "NORTH") {
+    void surveyArea(Position pos, double length, double width, double direction_change = 50, String dir = "NORTH_WEST") {
 
         addPosition(pos);
 
@@ -276,7 +276,7 @@ class MissionBuilder extends Builder<Mission> {
 
     }
 
-    void surveyArea(double length, double width, double direction_change = 50, String dir = "NORTH") {
+    void surveyArea(double length, double width, double direction_change = 50, String dir = "NORTH_WEST") {
         surveyArea(getLastKnownPosition(), length, width, direction_change, dir);
     }
 
