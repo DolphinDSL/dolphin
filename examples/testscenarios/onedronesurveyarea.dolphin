@@ -1,9 +1,15 @@
 //A one drone survey mission
 
+//homePos = pos {
+//   lat 41.15242
+//   lon (-8.64096)
+//   height 200
+//}
+
 homePos = pos {
-   lat 41.15242
-   lon (-8.64096)
-   height 200
+   lat 40.441377
+   lon (-7.370962)
+   height 1300
 }
 
 surveyArea = mission {
@@ -43,12 +49,13 @@ while (true) {
     task = ((surveyArea / {battery(v1) < 0.3})
                         >> returnHome)
 
+    condTask = waitFor {battery(v1) >= 0.9} then task
+
     //Wait for the battery of the drone to be 90%
     //then execute surveyArea until the condition
     //battery(v1) < 0.3 is met, then execute
     //returnHome
-    execute v1:
-        waitFor {battery(v1) >= 0.9} then task
+    execute v1: condTask
 
     //Release the drone for other possible tasks
     release v1
