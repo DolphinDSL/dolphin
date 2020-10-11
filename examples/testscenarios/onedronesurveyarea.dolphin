@@ -19,7 +19,7 @@ surveyArea = mission {
 
     takeOff homePos
 
-    surveyArea 1000, 1000, "NORTH"
+    surveyArea 1000, 1000, 100, "NORTH_EAST"
 
     returnHomeAndLand()
 
