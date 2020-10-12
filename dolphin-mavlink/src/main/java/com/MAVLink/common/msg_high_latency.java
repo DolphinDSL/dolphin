@@ -16,7 +16,6 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_high_latency extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIGH_LATENCY = 234;
-    public static final int MAVLINK_MSG_ID_HIGH_LATENCY_CRC = 150;
     public static final int MAVLINK_MSG_LENGTH = 40;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIGH_LATENCY;
 
@@ -28,52 +27,52 @@ public class msg_high_latency extends MAVLinkMessage{
     public long custom_mode;
       
     /**
-    * Latitude, expressed as degrees * 1E7
+    * Latitude
     */
     public int latitude;
       
     /**
-    * Longitude, expressed as degrees * 1E7
+    * Longitude
     */
     public int longitude;
       
     /**
-    * roll (centidegrees)
+    * roll
     */
     public short roll;
       
     /**
-    * pitch (centidegrees)
+    * pitch
     */
     public short pitch;
       
     /**
-    * heading (centidegrees)
+    * heading
     */
     public int heading;
       
     /**
-    * heading setpoint (centidegrees)
+    * heading setpoint
     */
     public short heading_sp;
       
     /**
-    * Altitude above mean sea level (meters)
+    * Altitude above mean sea level
     */
     public short altitude_amsl;
       
     /**
-    * Altitude setpoint relative to the home position (meters)
+    * Altitude setpoint relative to the home position
     */
     public short altitude_sp;
       
     /**
-    * distance to target (meters)
+    * distance to target
     */
     public int wp_distance;
       
     /**
-    * System mode bitfield, as defined by MAV_MODE_FLAG enum.
+    * Bitmap of enabled system modes.
     */
     public short base_mode;
       
@@ -88,22 +87,22 @@ public class msg_high_latency extends MAVLinkMessage{
     public byte throttle;
       
     /**
-    * airspeed (m/s)
+    * airspeed
     */
     public short airspeed;
       
     /**
-    * airspeed setpoint (m/s)
+    * airspeed setpoint
     */
     public short airspeed_sp;
       
     /**
-    * groundspeed (m/s)
+    * groundspeed
     */
     public short groundspeed;
       
     /**
-    * climb rate (m/s)
+    * climb rate
     */
     public byte climb_rate;
       
@@ -113,7 +112,7 @@ public class msg_high_latency extends MAVLinkMessage{
     public short gps_nsat;
       
     /**
-    * See the GPS_FIX_TYPE enum.
+    * GPS Fix type.
     */
     public short gps_fix_type;
       
@@ -152,7 +151,6 @@ public class msg_high_latency extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIGH_LATENCY;
-        packet.crc_extra = MAVLINK_MSG_ID_HIGH_LATENCY_CRC;
               
         packet.payload.putUnsignedInt(custom_mode);
               
@@ -279,7 +277,7 @@ public class msg_high_latency extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIGH_LATENCY;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                                                     

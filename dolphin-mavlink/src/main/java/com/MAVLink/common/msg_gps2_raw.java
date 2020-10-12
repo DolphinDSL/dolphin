@@ -16,29 +16,28 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_gps2_raw extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GPS2_RAW = 124;
-    public static final int MAVLINK_MSG_ID_GPS2_RAW_CRC = 87;
     public static final int MAVLINK_MSG_LENGTH = 35;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GPS2_RAW;
 
 
       
     /**
-    * Timestamp (microseconds since UNIX epoch or microseconds since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
     /**
-    * Latitude (WGS84), in degrees * 1E7
+    * Latitude (WGS84)
     */
     public int lat;
       
     /**
-    * Longitude (WGS84), in degrees * 1E7
+    * Longitude (WGS84)
     */
     public int lon;
       
     /**
-    * Altitude (AMSL, not WGS84), in meters * 1000 (positive for up)
+    * Altitude (MSL). Positive for up.
     */
     public int alt;
       
@@ -48,27 +47,27 @@ public class msg_gps2_raw extends MAVLinkMessage{
     public long dgps_age;
       
     /**
-    * GPS HDOP horizontal dilution of position in cm (m*100). If unknown, set to: UINT16_MAX
+    * GPS HDOP horizontal dilution of position. If unknown, set to: UINT16_MAX
     */
     public int eph;
       
     /**
-    * GPS VDOP vertical dilution of position in cm (m*100). If unknown, set to: UINT16_MAX
+    * GPS VDOP vertical dilution of position. If unknown, set to: UINT16_MAX
     */
     public int epv;
       
     /**
-    * GPS ground speed (m/s * 100). If unknown, set to: UINT16_MAX
+    * GPS ground speed. If unknown, set to: UINT16_MAX
     */
     public int vel;
       
     /**
-    * Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
+    * Course over ground (NOT heading, but direction of movement): 0.0..359.99 degrees. If unknown, set to: UINT16_MAX
     */
     public int cog;
       
     /**
-    * See the GPS_FIX_TYPE enum.
+    * GPS fix type.
     */
     public short fix_type;
       
@@ -92,7 +91,6 @@ public class msg_gps2_raw extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_GPS2_RAW;
-        packet.crc_extra = MAVLINK_MSG_ID_GPS2_RAW_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -171,7 +169,7 @@ public class msg_gps2_raw extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_GPS2_RAW;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                             

@@ -11,29 +11,28 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* As local waypoints exist, the global waypoint reference allows to transform between the local coordinate frame and the global (GPS) coordinate frame. This can be necessary when e.g. in- and outdoor settings are connected and the MAV should move from in- to outdoor.
+* Sets the GPS co-ordinates of the vehicle local origin (0,0,0) position. Vehicle should emit GPS_GLOBAL_ORIGIN irrespective of whether the origin is changed. This enables transform between the local coordinate frame and the global (GPS) coordinate frame, which may be necessary when (for example) indoor and outdoor settings are connected and the MAV should move from in- to outdoor.
 */
 public class msg_set_gps_global_origin extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN = 48;
-    public static final int MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN_CRC = 41;
-    public static final int MAVLINK_MSG_LENGTH = 13;
+    public static final int MAVLINK_MSG_LENGTH = 21;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN;
 
 
       
     /**
-    * Latitude (WGS84), in degrees * 1E7
+    * Latitude (WGS84)
     */
     public int latitude;
       
     /**
-    * Longitude (WGS84), in degrees * 1E7
+    * Longitude (WGS84)
     */
     public int longitude;
       
     /**
-    * Altitude (AMSL), in meters * 1000 (positive for up)
+    * Altitude (MSL). Positive for up.
     */
     public int altitude;
       
@@ -41,6 +40,11 @@ public class msg_set_gps_global_origin extends MAVLinkMessage{
     * System ID
     */
     public short target_system;
+      
+    /**
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
+    */
+    public long time_usec;
     
 
     /**
@@ -52,7 +56,6 @@ public class msg_set_gps_global_origin extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN;
-        packet.crc_extra = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN_CRC;
               
         packet.payload.putInt(latitude);
               
@@ -61,6 +64,8 @@ public class msg_set_gps_global_origin extends MAVLinkMessage{
         packet.payload.putInt(altitude);
               
         packet.payload.putUnsignedByte(target_system);
+              
+        packet.payload.putUnsignedLong(time_usec);
         
         return packet;
     }
@@ -80,6 +85,8 @@ public class msg_set_gps_global_origin extends MAVLinkMessage{
         this.altitude = payload.getInt();
               
         this.target_system = payload.getUnsignedByte();
+              
+        this.time_usec = payload.getUnsignedLong();
         
     }
 
@@ -99,15 +106,15 @@ public class msg_set_gps_global_origin extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-            
+              
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" target_system:"+target_system+"";
+        return "MAVLINK_MSG_ID_SET_GPS_GLOBAL_ORIGIN - sysid:"+sysid+" compid:"+compid+" latitude:"+latitude+" longitude:"+longitude+" altitude:"+altitude+" target_system:"+target_system+" time_usec:"+time_usec+"";
     }
 }
         

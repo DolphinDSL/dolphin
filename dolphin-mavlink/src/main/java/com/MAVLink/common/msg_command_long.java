@@ -11,54 +11,53 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Send a command with up to seven parameters to the MAV
+* Send a command with up to seven parameters to the MAV. The command microservice is documented at https://mavlink.io/en/services/command.html
 */
 public class msg_command_long extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_COMMAND_LONG = 76;
-    public static final int MAVLINK_MSG_ID_COMMAND_LONG_CRC = 152;
     public static final int MAVLINK_MSG_LENGTH = 33;
     private static final long serialVersionUID = MAVLINK_MSG_ID_COMMAND_LONG;
 
 
       
     /**
-    * Parameter 1, as defined by MAV_CMD enum.
+    * Parameter 1 (for the specific command).
     */
     public float param1;
       
     /**
-    * Parameter 2, as defined by MAV_CMD enum.
+    * Parameter 2 (for the specific command).
     */
     public float param2;
       
     /**
-    * Parameter 3, as defined by MAV_CMD enum.
+    * Parameter 3 (for the specific command).
     */
     public float param3;
       
     /**
-    * Parameter 4, as defined by MAV_CMD enum.
+    * Parameter 4 (for the specific command).
     */
     public float param4;
       
     /**
-    * Parameter 5, as defined by MAV_CMD enum.
+    * Parameter 5 (for the specific command).
     */
     public float param5;
       
     /**
-    * Parameter 6, as defined by MAV_CMD enum.
+    * Parameter 6 (for the specific command).
     */
     public float param6;
       
     /**
-    * Parameter 7, as defined by MAV_CMD enum.
+    * Parameter 7 (for the specific command).
     */
     public float param7;
       
     /**
-    * Command ID, as defined by MAV_CMD enum.
+    * Command ID (of command to send).
     */
     public int command;
       
@@ -87,7 +86,6 @@ public class msg_command_long extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_COMMAND_LONG;
-        packet.crc_extra = MAVLINK_MSG_ID_COMMAND_LONG_CRC;
               
         packet.payload.putFloat(param1);
               
@@ -162,7 +160,7 @@ public class msg_command_long extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_COMMAND_LONG;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                           

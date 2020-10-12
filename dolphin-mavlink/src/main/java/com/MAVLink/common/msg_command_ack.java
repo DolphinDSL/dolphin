@@ -11,26 +11,45 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Report status of a command. Includes feedback whether the command was executed.
+* Report status of a command. Includes feedback whether the command was executed. The command microservice is documented at https://mavlink.io/en/services/command.html
 */
 public class msg_command_ack extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_COMMAND_ACK = 77;
-    public static final int MAVLINK_MSG_ID_COMMAND_ACK_CRC = 143;
-    public static final int MAVLINK_MSG_LENGTH = 3;
+    public static final int MAVLINK_MSG_LENGTH = 10;
     private static final long serialVersionUID = MAVLINK_MSG_ID_COMMAND_ACK;
 
 
       
     /**
-    * Command ID, as defined by MAV_CMD enum.
+    * Command ID (of acknowledged command).
     */
     public int command;
       
     /**
-    * See MAV_RESULT enum
+    * Result of command.
     */
     public short result;
+      
+    /**
+    * WIP: Also used as result_param1, it can be set with a enum containing the errors reasons of why the command was denied or the progress percentage or 255 if unknown the progress when result is MAV_RESULT_IN_PROGRESS.
+    */
+    public short progress;
+      
+    /**
+    * WIP: Additional parameter of the result, example: which parameter of MAV_CMD_NAV_WAYPOINT caused it to be denied.
+    */
+    public int result_param2;
+      
+    /**
+    * WIP: System which requested the command to be executed
+    */
+    public short target_system;
+      
+    /**
+    * WIP: Component which requested the command to be executed
+    */
+    public short target_component;
     
 
     /**
@@ -42,11 +61,18 @@ public class msg_command_ack extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_COMMAND_ACK;
-        packet.crc_extra = MAVLINK_MSG_ID_COMMAND_ACK_CRC;
               
         packet.payload.putUnsignedShort(command);
               
         packet.payload.putUnsignedByte(result);
+              
+        packet.payload.putUnsignedByte(progress);
+              
+        packet.payload.putInt(result_param2);
+              
+        packet.payload.putUnsignedByte(target_system);
+              
+        packet.payload.putUnsignedByte(target_component);
         
         return packet;
     }
@@ -62,6 +88,14 @@ public class msg_command_ack extends MAVLinkMessage{
         this.command = payload.getUnsignedShort();
               
         this.result = payload.getUnsignedByte();
+              
+        this.progress = payload.getUnsignedByte();
+              
+        this.result_param2 = payload.getInt();
+              
+        this.target_system = payload.getUnsignedByte();
+              
+        this.target_component = payload.getUnsignedByte();
         
     }
 
@@ -81,15 +115,15 @@ public class msg_command_ack extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_COMMAND_ACK;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-        
+                
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_COMMAND_ACK - sysid:"+sysid+" compid:"+compid+" command:"+command+" result:"+result+"";
+        return "MAVLINK_MSG_ID_COMMAND_ACK - sysid:"+sysid+" compid:"+compid+" command:"+command+" result:"+result+" progress:"+progress+" result_param2:"+result_param2+" target_system:"+target_system+" target_component:"+target_component+"";
     }
 }
         

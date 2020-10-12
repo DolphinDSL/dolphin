@@ -16,7 +16,6 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_safety_allowed_area extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_SAFETY_ALLOWED_AREA = 55;
-    public static final int MAVLINK_MSG_ID_SAFETY_ALLOWED_AREA_CRC = 3;
     public static final int MAVLINK_MSG_LENGTH = 25;
     private static final long serialVersionUID = MAVLINK_MSG_ID_SAFETY_ALLOWED_AREA;
 
@@ -53,7 +52,7 @@ public class msg_safety_allowed_area extends MAVLinkMessage{
     public float p2z;
       
     /**
-    * Coordinate frame, as defined by MAV_FRAME enum. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.
+    * Coordinate frame. Can be either global, GPS, right-handed with Z axis up or local, right handed, Z axis down.
     */
     public short frame;
     
@@ -67,7 +66,6 @@ public class msg_safety_allowed_area extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_SAFETY_ALLOWED_AREA;
-        packet.crc_extra = MAVLINK_MSG_ID_SAFETY_ALLOWED_AREA_CRC;
               
         packet.payload.putFloat(p1x);
               
@@ -126,7 +124,7 @@ public class msg_safety_allowed_area extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_SAFETY_ALLOWED_AREA;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                   

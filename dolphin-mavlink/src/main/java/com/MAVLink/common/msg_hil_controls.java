@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_hil_controls extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIL_CONTROLS = 91;
-    public static final int MAVLINK_MSG_ID_HIL_CONTROLS_CRC = 63;
     public static final int MAVLINK_MSG_LENGTH = 42;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIL_CONTROLS;
 
 
       
     /**
-    * Timestamp (microseconds since UNIX epoch or microseconds since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
@@ -68,7 +67,7 @@ public class msg_hil_controls extends MAVLinkMessage{
     public float aux4;
       
     /**
-    * System mode (MAV_MODE)
+    * System mode.
     */
     public short mode;
       
@@ -87,7 +86,6 @@ public class msg_hil_controls extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIL_CONTROLS;
-        packet.crc_extra = MAVLINK_MSG_ID_HIL_CONTROLS_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -162,7 +160,7 @@ public class msg_hil_controls extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIL_CONTROLS;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                           

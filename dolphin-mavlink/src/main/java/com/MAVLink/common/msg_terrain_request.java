@@ -16,7 +16,6 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_terrain_request extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_TERRAIN_REQUEST = 133;
-    public static final int MAVLINK_MSG_ID_TERRAIN_REQUEST_CRC = 6;
     public static final int MAVLINK_MSG_LENGTH = 18;
     private static final long serialVersionUID = MAVLINK_MSG_ID_TERRAIN_REQUEST;
 
@@ -28,17 +27,17 @@ public class msg_terrain_request extends MAVLinkMessage{
     public long mask;
       
     /**
-    * Latitude of SW corner of first grid (degrees *10^7)
+    * Latitude of SW corner of first grid
     */
     public int lat;
       
     /**
-    * Longitude of SW corner of first grid (in degrees *10^7)
+    * Longitude of SW corner of first grid
     */
     public int lon;
       
     /**
-    * Grid spacing in meters
+    * Grid spacing
     */
     public int grid_spacing;
     
@@ -52,7 +51,6 @@ public class msg_terrain_request extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_TERRAIN_REQUEST;
-        packet.crc_extra = MAVLINK_MSG_ID_TERRAIN_REQUEST_CRC;
               
         packet.payload.putUnsignedLong(mask);
               
@@ -99,7 +97,7 @@ public class msg_terrain_request extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_TERRAIN_REQUEST;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
             

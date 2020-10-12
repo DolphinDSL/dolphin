@@ -11,12 +11,11 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Bind a RC channel to a parameter. The parameter should change accoding to the RC channel value.
+* Bind a RC channel to a parameter. The parameter should change according to the RC channel value.
 */
 public class msg_param_map_rc extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_PARAM_MAP_RC = 50;
-    public static final int MAVLINK_MSG_ID_PARAM_MAP_RC_CRC = 78;
     public static final int MAVLINK_MSG_LENGTH = 37;
     private static final long serialVersionUID = MAVLINK_MSG_ID_PARAM_MAP_RC;
 
@@ -63,7 +62,7 @@ public class msg_param_map_rc extends MAVLinkMessage{
     public byte param_id[] = new byte[16];
       
     /**
-    * Index of parameter RC channel. Not equal to the RC channel id. Typically correpsonds to a potentiometer-knob on the RC.
+    * Index of parameter RC channel. Not equal to the RC channel id. Typically corresponds to a potentiometer-knob on the RC.
     */
     public short parameter_rc_channel_index;
     
@@ -77,7 +76,6 @@ public class msg_param_map_rc extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_PARAM_MAP_RC;
-        packet.crc_extra = MAVLINK_MSG_ID_PARAM_MAP_RC_CRC;
               
         packet.payload.putFloat(param_value0);
               
@@ -152,7 +150,7 @@ public class msg_param_map_rc extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_PARAM_MAP_RC;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                    

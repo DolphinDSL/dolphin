@@ -1,0 +1,62 @@
+//A one drone survey mission
+
+//homePos = pos {
+//   lat 41.15242
+//   lon (-8.64096)
+//   height 200
+//}
+
+homePos = pos {
+   lat 40.441377
+   lon (-7.370962)
+   height 1300
+}
+
+surveyArea = mission {
+    name "Survey Area"
+
+    home homePos
+
+    takeOff homePos
+
+    surveyArea 1000, 1000, 100, "NORTH_EAST"
+
+    returnHomeAndLand()
+
+}
+
+returnHome = mission {
+
+    name "Return home"
+
+    home homePos
+
+    returnHomeAndLand()
+
+}
+
+
+//Execute the task
+while (true) {
+    //Select a UAV from the UAVs
+    //that are connected to the MAVLink network
+    v1 = pick {
+        type 'UAV'
+
+        timeout 30.seconds
+    }
+
+    task = ((surveyArea / {battery(v1) < 0.3})
+                        >> returnHome)
+
+    condTask = waitFor {battery(v1) >= 0.9} then task
+
+    //Wait for the battery of the drone to be 90%
+    //then execute surveyArea until the condition
+    //battery(v1) < 0.3 is met, then execute
+    //returnHome
+    execute v1: condTask
+
+    //Release the drone for other possible tasks
+    release v1
+}

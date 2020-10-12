@@ -16,69 +16,68 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_highres_imu extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIGHRES_IMU = 105;
-    public static final int MAVLINK_MSG_ID_HIGHRES_IMU_CRC = 93;
-    public static final int MAVLINK_MSG_LENGTH = 62;
+    public static final int MAVLINK_MSG_LENGTH = 63;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIGHRES_IMU;
 
 
       
     /**
-    * Timestamp (microseconds, synced to UNIX time or since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
     /**
-    * X acceleration (m/s^2)
+    * X acceleration
     */
     public float xacc;
       
     /**
-    * Y acceleration (m/s^2)
+    * Y acceleration
     */
     public float yacc;
       
     /**
-    * Z acceleration (m/s^2)
+    * Z acceleration
     */
     public float zacc;
       
     /**
-    * Angular speed around X axis (rad / sec)
+    * Angular speed around X axis
     */
     public float xgyro;
       
     /**
-    * Angular speed around Y axis (rad / sec)
+    * Angular speed around Y axis
     */
     public float ygyro;
       
     /**
-    * Angular speed around Z axis (rad / sec)
+    * Angular speed around Z axis
     */
     public float zgyro;
       
     /**
-    * X Magnetic field (Gauss)
+    * X Magnetic field
     */
     public float xmag;
       
     /**
-    * Y Magnetic field (Gauss)
+    * Y Magnetic field
     */
     public float ymag;
       
     /**
-    * Z Magnetic field (Gauss)
+    * Z Magnetic field
     */
     public float zmag;
       
     /**
-    * Absolute pressure in millibar
+    * Absolute pressure
     */
     public float abs_pressure;
       
     /**
-    * Differential pressure in millibar
+    * Differential pressure
     */
     public float diff_pressure;
       
@@ -88,14 +87,19 @@ public class msg_highres_imu extends MAVLinkMessage{
     public float pressure_alt;
       
     /**
-    * Temperature in degrees celsius
+    * Temperature
     */
     public float temperature;
       
     /**
-    * Bitmask for fields that have updated since last message, bit 0 = xacc, bit 12: temperature
+    * Bitmap for fields that have updated since last message, bit 0 = xacc, bit 12: temperature
     */
     public int fields_updated;
+      
+    /**
+    * Id. Ids are numbered from 0 and map to IMUs numbered from 1 (e.g. IMU1 will have a message with id=0)
+    */
+    public short id;
     
 
     /**
@@ -107,7 +111,6 @@ public class msg_highres_imu extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIGHRES_IMU;
-        packet.crc_extra = MAVLINK_MSG_ID_HIGHRES_IMU_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -138,6 +141,8 @@ public class msg_highres_imu extends MAVLinkMessage{
         packet.payload.putFloat(temperature);
               
         packet.payload.putUnsignedShort(fields_updated);
+              
+        packet.payload.putUnsignedByte(id);
         
         return packet;
     }
@@ -179,6 +184,8 @@ public class msg_highres_imu extends MAVLinkMessage{
         this.temperature = payload.getFloat();
               
         this.fields_updated = payload.getUnsignedShort();
+              
+        this.id = payload.getUnsignedByte();
         
     }
 
@@ -198,15 +205,15 @@ public class msg_highres_imu extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIGHRES_IMU;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                                  
+                                    
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_HIGHRES_IMU - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+" abs_pressure:"+abs_pressure+" diff_pressure:"+diff_pressure+" pressure_alt:"+pressure_alt+" temperature:"+temperature+" fields_updated:"+fields_updated+"";
+        return "MAVLINK_MSG_ID_HIGHRES_IMU - sysid:"+sysid+" compid:"+compid+" time_usec:"+time_usec+" xacc:"+xacc+" yacc:"+yacc+" zacc:"+zacc+" xgyro:"+xgyro+" ygyro:"+ygyro+" zgyro:"+zgyro+" xmag:"+xmag+" ymag:"+ymag+" zmag:"+zmag+" abs_pressure:"+abs_pressure+" diff_pressure:"+diff_pressure+" pressure_alt:"+pressure_alt+" temperature:"+temperature+" fields_updated:"+fields_updated+" id:"+id+"";
     }
 }
         

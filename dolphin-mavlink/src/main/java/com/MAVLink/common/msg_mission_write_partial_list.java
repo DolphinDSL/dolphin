@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_mission_write_partial_list extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST = 38;
-    public static final int MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST_CRC = 9;
-    public static final int MAVLINK_MSG_LENGTH = 6;
+    public static final int MAVLINK_MSG_LENGTH = 7;
     private static final long serialVersionUID = MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST;
 
 
       
     /**
-    * Start index, 0 by default and smaller / equal to the largest index of the current onboard list.
+    * Start index. Must be smaller / equal to the largest index of the current onboard list.
     */
     public short start_index;
       
@@ -41,6 +40,11 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
     * Component ID
     */
     public short target_component;
+      
+    /**
+    * Mission type.
+    */
+    public short mission_type;
     
 
     /**
@@ -52,7 +56,6 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST;
-        packet.crc_extra = MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST_CRC;
               
         packet.payload.putShort(start_index);
               
@@ -61,6 +64,8 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         packet.payload.putUnsignedByte(target_system);
               
         packet.payload.putUnsignedByte(target_component);
+              
+        packet.payload.putUnsignedByte(mission_type);
         
         return packet;
     }
@@ -80,6 +85,8 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         this.target_system = payload.getUnsignedByte();
               
         this.target_component = payload.getUnsignedByte();
+              
+        this.mission_type = payload.getUnsignedByte();
         
     }
 
@@ -99,15 +106,15 @@ public class msg_mission_write_partial_list extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-            
+              
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST - sysid:"+sysid+" compid:"+compid+" start_index:"+start_index+" end_index:"+end_index+" target_system:"+target_system+" target_component:"+target_component+"";
+        return "MAVLINK_MSG_ID_MISSION_WRITE_PARTIAL_LIST - sysid:"+sysid+" compid:"+compid+" start_index:"+start_index+" end_index:"+end_index+" target_system:"+target_system+" target_component:"+target_component+" mission_type:"+mission_type+"";
     }
 }
         

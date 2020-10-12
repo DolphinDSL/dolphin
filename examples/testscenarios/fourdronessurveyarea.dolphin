@@ -1,0 +1,100 @@
+
+homePos = pos {
+   lat 41.15242
+   lon (-8.64096)
+   height 200
+}
+
+surveyAreaEast = mission {
+    name "Survey East"
+
+    home homePos
+
+    takeoff homePos
+
+    surveyArea 10000, 5000, "EAST"
+
+    returnHomeAndLand()
+
+}
+
+surveyAreaWest = mission {
+
+    name "Survey West"
+
+    home homePos
+
+    takeoff homePos
+
+    surveyArea 5000, 10000, "WEST"
+
+    returnHomeAndLand()
+
+}
+
+returnHomeV1 = mission {
+
+    name "Return home"
+
+    home homePos
+
+    returnHomeAndLand()
+
+}
+
+returnHomeV2 = mission {
+
+     name "Return home"
+
+     home homePos
+
+     returnHomeAndLand()
+
+ }
+//Select 2 UAVs from the UAVs
+//that are connected to the MAVLink network
+v1 = pick {
+    type 'UAV'
+    timeout 30.seconds
+}
+v2 = pick {
+    type 'UAV'
+    timeout 30.seconds
+}
+
+//Execute the task
+while (true) {
+
+    execute
+    v1:
+     waitFor {battery(v1) >= 0.9}
+      run ((surveyAreaNorth /
+             {battery(v1) < 0.3})
+       >> returnHome),
+    v2:
+     waitFor {battery(v2) >= 0.9}
+      run ((surveyAreaSouth /
+             {battery(v2) < 0.3})
+       >> returnHome)
+
+    //We pick 2 vehicles that are not associated
+    //with any mission, we do this before we
+    //release these drones as the drones that
+    //have just arrived are supposed to remain
+    //charging, and the drones that were
+    //charging while these were out on mission.
+
+    v1Temp = pick {
+        type 'UAV'
+        timeout 30.seconds
+    }
+    v2Temp = pick {
+        type 'UAV'
+        timeout 30.seconds
+    }
+
+    release v1 + v2
+
+    v1 = v1Temp
+    v2 = v2Temp
+}

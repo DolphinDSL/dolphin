@@ -1,18 +1,93 @@
 
 v = pick {
   type 'UAV'
+  id '1'
   timeout 10.seconds
-} 
+}
+
+w = pick {
+  type 'UAV'
+  timeout 10.seconds
+}
 
 message 'Obtained vehicle ' + v
 
-arm_command = new msg_command_int()
+message 'Obtained second vehicle ' + w
 
-arm_command.command = MAV_CMD.MAV_CMD_COMPONENT_ARM_DISARM
-arm_command.param1 = 1
-arm_command.param2 = 0
+p = pos {
+   lat 41.15242
+   lon (-8.64096)
+   height 200
+}
 
-sendMessage v, arm_command 
+p1 = move p, {
 
-message 'Sent arm command ...' 
+    north 5
+    east 0
+    down 0
 
+}
+
+takeOffPoint = p
+
+task = mission {
+
+    name "Test Task 1"
+
+    home p
+
+    takeOff takeOffPoint
+
+    move 50, 0, 0
+
+    move ((-50), (-50), 0)
+
+    capturePhoto()
+
+}
+
+task2 = mission {
+
+    name "Test Task 2"
+
+    home p
+
+    takeOff p
+
+    move 100, 0, 0
+
+    move (100, 100, 0)
+
+}
+
+task3 = mission {
+
+    name "Test Task 3"
+
+    home p
+
+    takeOff p
+
+    move 200, 0, 0
+
+    move (300, 300, 0)
+
+}
+
+task4 = mission {
+
+    name "Test Task 4"
+
+    home p
+
+    takeOff p
+
+    move 200, 0, 0
+
+    move (300, 300, 0)
+
+    move (1000, 0, 0)
+
+}
+
+execute task[v] >> task2[v] | task3[w] >> task4[w]

@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_attitude_target extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_ATTITUDE_TARGET = 83;
-    public static final int MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC = 22;
     public static final int MAVLINK_MSG_LENGTH = 37;
     private static final long serialVersionUID = MAVLINK_MSG_ID_ATTITUDE_TARGET;
 
 
       
     /**
-    * Timestamp in milliseconds since system boot
+    * Timestamp (time since system boot).
     */
     public long time_boot_ms;
       
@@ -33,17 +32,17 @@ public class msg_attitude_target extends MAVLinkMessage{
     public float q[] = new float[4];
       
     /**
-    * Body roll rate in radians per second
+    * Body roll rate
     */
     public float body_roll_rate;
       
     /**
-    * Body pitch rate in radians per second
+    * Body pitch rate
     */
     public float body_pitch_rate;
       
     /**
-    * Body yaw rate in radians per second
+    * Body yaw rate
     */
     public float body_yaw_rate;
       
@@ -67,7 +66,6 @@ public class msg_attitude_target extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_ATTITUDE_TARGET;
-        packet.crc_extra = MAVLINK_MSG_ID_ATTITUDE_TARGET_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -134,7 +132,7 @@ public class msg_attitude_target extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_ATTITUDE_TARGET;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                   

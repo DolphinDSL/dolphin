@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_local_position_ned_cov extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV = 64;
-    public static final int MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV_CRC = 191;
     public static final int MAVLINK_MSG_LENGTH = 225;
     private static final long serialVersionUID = MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV;
 
 
       
     /**
-    * Timestamp (microseconds since system boot or since UNIX epoch)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
@@ -43,37 +42,37 @@ public class msg_local_position_ned_cov extends MAVLinkMessage{
     public float z;
       
     /**
-    * X Speed (m/s)
+    * X Speed
     */
     public float vx;
       
     /**
-    * Y Speed (m/s)
+    * Y Speed
     */
     public float vy;
       
     /**
-    * Z Speed (m/s)
+    * Z Speed
     */
     public float vz;
       
     /**
-    * X Acceleration (m/s^2)
+    * X Acceleration
     */
     public float ax;
       
     /**
-    * Y Acceleration (m/s^2)
+    * Y Acceleration
     */
     public float ay;
       
     /**
-    * Z Acceleration (m/s^2)
+    * Z Acceleration
     */
     public float az;
       
     /**
-    * Covariance matrix upper right triangular (first nine entries are the first ROW, next eight entries are the second row, etc.)
+    * Row-major representation of position, velocity and acceleration 9x9 cross-covariance matrix upper right triangle (states: x, y, z, vx, vy, vz, ax, ay, az; first nine entries are the first ROW, next eight entries are the second row, etc.). If unknown, assign NaN value to first element in the array.
     */
     public float covariance[] = new float[45];
       
@@ -92,7 +91,6 @@ public class msg_local_position_ned_cov extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV;
-        packet.crc_extra = MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -179,7 +177,7 @@ public class msg_local_position_ned_cov extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_LOCAL_POSITION_NED_COV;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                             

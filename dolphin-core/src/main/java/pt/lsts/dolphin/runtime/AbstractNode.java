@@ -36,4 +36,8 @@ public abstract class AbstractNode implements Node {
    public abstract Payload getPayload();
    public abstract void release();
 
+   public double batteryRemaining() {
+       return 1.0D;
+   }
+
 }

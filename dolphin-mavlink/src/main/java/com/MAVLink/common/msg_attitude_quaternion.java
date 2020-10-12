@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_attitude_quaternion extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_ATTITUDE_QUATERNION = 31;
-    public static final int MAVLINK_MSG_ID_ATTITUDE_QUATERNION_CRC = 246;
-    public static final int MAVLINK_MSG_LENGTH = 32;
+    public static final int MAVLINK_MSG_LENGTH = 48;
     private static final long serialVersionUID = MAVLINK_MSG_ID_ATTITUDE_QUATERNION;
 
 
       
     /**
-    * Timestamp (milliseconds since system boot)
+    * Timestamp (time since system boot).
     */
     public long time_boot_ms;
       
@@ -48,19 +47,24 @@ public class msg_attitude_quaternion extends MAVLinkMessage{
     public float q4;
       
     /**
-    * Roll angular speed (rad/s)
+    * Roll angular speed
     */
     public float rollspeed;
       
     /**
-    * Pitch angular speed (rad/s)
+    * Pitch angular speed
     */
     public float pitchspeed;
       
     /**
-    * Yaw angular speed (rad/s)
+    * Yaw angular speed
     */
     public float yawspeed;
+      
+    /**
+    * Rotation offset by which the attitude quaternion and angular speed vector should be rotated for user display (quaternion with [w, x, y, z] order, zero-rotation is [1, 0, 0, 0], send [0, 0, 0, 0] if field not supported). This field is intended for systems in which the reference attitude may change during flight. For example, tailsitters VTOLs rotate their reference attitude by 90 degrees between hover mode and fixed wing mode, thus repr_offset_q is equal to [1, 0, 0, 0] in hover mode and equal to [0.7071, 0, 0.7071, 0] in fixed wing mode.
+    */
+    public float repr_offset_q[] = new float[4];
     
 
     /**
@@ -72,7 +76,6 @@ public class msg_attitude_quaternion extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_ATTITUDE_QUATERNION;
-        packet.crc_extra = MAVLINK_MSG_ID_ATTITUDE_QUATERNION_CRC;
               
         packet.payload.putUnsignedInt(time_boot_ms);
               
@@ -89,6 +92,12 @@ public class msg_attitude_quaternion extends MAVLinkMessage{
         packet.payload.putFloat(pitchspeed);
               
         packet.payload.putFloat(yawspeed);
+              
+        
+        for (int i = 0; i < repr_offset_q.length; i++) {
+            packet.payload.putFloat(repr_offset_q[i]);
+        }
+                    
         
         return packet;
     }
@@ -116,6 +125,12 @@ public class msg_attitude_quaternion extends MAVLinkMessage{
         this.pitchspeed = payload.getFloat();
               
         this.yawspeed = payload.getFloat();
+              
+         
+        for (int i = 0; i < this.repr_offset_q.length; i++) {
+            this.repr_offset_q[i] = payload.getFloat();
+        }
+                
         
     }
 
@@ -135,15 +150,15 @@ public class msg_attitude_quaternion extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_ATTITUDE_QUATERNION;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
-                    
+                      
     /**
     * Returns a string with the MSG name and data
     */
     public String toString(){
-        return "MAVLINK_MSG_ID_ATTITUDE_QUATERNION - sysid:"+sysid+" compid:"+compid+" time_boot_ms:"+time_boot_ms+" q1:"+q1+" q2:"+q2+" q3:"+q3+" q4:"+q4+" rollspeed:"+rollspeed+" pitchspeed:"+pitchspeed+" yawspeed:"+yawspeed+"";
+        return "MAVLINK_MSG_ID_ATTITUDE_QUATERNION - sysid:"+sysid+" compid:"+compid+" time_boot_ms:"+time_boot_ms+" q1:"+q1+" q2:"+q2+" q3:"+q3+" q4:"+q4+" rollspeed:"+rollspeed+" pitchspeed:"+pitchspeed+" yawspeed:"+yawspeed+" repr_offset_q:"+repr_offset_q+"";
     }
 }
         

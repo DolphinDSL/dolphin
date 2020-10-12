@@ -16,7 +16,6 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_log_erase extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_LOG_ERASE = 121;
-    public static final int MAVLINK_MSG_ID_LOG_ERASE_CRC = 237;
     public static final int MAVLINK_MSG_LENGTH = 2;
     private static final long serialVersionUID = MAVLINK_MSG_ID_LOG_ERASE;
 
@@ -42,7 +41,6 @@ public class msg_log_erase extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_LOG_ERASE;
-        packet.crc_extra = MAVLINK_MSG_ID_LOG_ERASE_CRC;
               
         packet.payload.putUnsignedByte(target_system);
               
@@ -81,7 +79,7 @@ public class msg_log_erase extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_LOG_ERASE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
         

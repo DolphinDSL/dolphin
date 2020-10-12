@@ -7,12 +7,12 @@ public strictfp final class Position {
   /**
    * Degrees-to-radians conversion constant.
    */
-  private static final double D2R = Math.PI / 180.0;
+  public static final double D2R = Math.PI / 180.0;
   
   /**
    * Radians-to-degrees conversion constant.
    */
-  private static final double R2D = 180.0 / Math.PI;
+  public static final double R2D = 180.0 / Math.PI;
   
   public final double lat, lon, hae;
   

@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_raw_pressure extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_RAW_PRESSURE = 28;
-    public static final int MAVLINK_MSG_ID_RAW_PRESSURE_CRC = 67;
     public static final int MAVLINK_MSG_LENGTH = 16;
     private static final long serialVersionUID = MAVLINK_MSG_ID_RAW_PRESSURE;
 
 
       
     /**
-    * Timestamp (microseconds since UNIX epoch or microseconds since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
@@ -33,12 +32,12 @@ public class msg_raw_pressure extends MAVLinkMessage{
     public short press_abs;
       
     /**
-    * Differential pressure 1 (raw, 0 if nonexistant)
+    * Differential pressure 1 (raw, 0 if nonexistent)
     */
     public short press_diff1;
       
     /**
-    * Differential pressure 2 (raw, 0 if nonexistant)
+    * Differential pressure 2 (raw, 0 if nonexistent)
     */
     public short press_diff2;
       
@@ -57,7 +56,6 @@ public class msg_raw_pressure extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_RAW_PRESSURE;
-        packet.crc_extra = MAVLINK_MSG_ID_RAW_PRESSURE_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -108,7 +106,7 @@ public class msg_raw_pressure extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_RAW_PRESSURE;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
               

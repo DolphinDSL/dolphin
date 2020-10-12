@@ -59,7 +59,7 @@ public abstract class TaskExecutor implements Debuggable {
         requireState(State.INITIALIZING);
         onInitialize(allocation);
         state = State.READY;
-        return true;    
+        return true;
     }
 
     public final void start() {

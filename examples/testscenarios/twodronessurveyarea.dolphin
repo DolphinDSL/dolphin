@@ -1,0 +1,76 @@
+//A two drone survey mission
+
+homePos = pos {
+   lat 40.441377
+   lon (-7.370962)
+   height 1300
+}
+
+surveyAreaNorth = mission {
+    name "Survey North"
+
+    home homePos
+
+    takeOff homePos
+
+    surveyArea homePos, 3000, 10000, 500, "NORTH_EAST"
+
+    returnHomeAndLand()
+
+}
+
+surveyAreaSouth = mission {
+
+    name "Survey South"
+
+    home homePos
+
+    takeOff homePos
+
+    surveyArea homePos, 3000, 10000, 500, "SOUTH_EAST"
+
+    returnHomeAndLand()
+
+}
+
+returnHome = mission {
+
+    name "Return home"
+
+    home homePos
+
+    returnHomeAndLand()
+
+}
+
+returnHome2 = mission {
+
+    name "Return Home"
+
+    home homePos
+
+    returnHomeAndLand()
+
+}
+
+//Execute the task
+while (true) {
+    //Select 2 UAVs from the UAVs
+    //that are connected to the MAVLink network
+    v1 = pick {
+        type 'UAV'
+        timeout 30.seconds
+    }
+
+    v2 = pick {
+        type 'UAV'
+        timeout 30.seconds
+    }
+
+    execute v1: ((surveyAreaNorth / {battery(v1) < 0.7})
+             >> returnHome),
+            v2: ((surveyAreaSouth / {battery(v2) < 0.7})
+             >> returnHome2)
+
+    release v1 + v2
+}

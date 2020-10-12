@@ -20,6 +20,14 @@ class Instructions implements Debuggable {
     ns.iterator().next().getPosition()
   }
 
+  static double battery(NodeSet ns) {
+    if ( ns.size() != 1 ) {
+      halt 'Set must represent a single vehicle!'
+    }
+
+    ((AbstractNode) ns.iterator().next()).batteryRemaining()
+  }
+
   static void setConnectionTimeout(double timeout) {
     Engine.runtime().setDefaultConnectionTimeout timeout
   }
@@ -68,8 +76,6 @@ class Instructions implements Debuggable {
   static Task idle(double duration) {
     new IdleTask(duration)
   }
-
- 
 
   static NodeSet pick (Closure cl) {
     new Picker().build(cl)

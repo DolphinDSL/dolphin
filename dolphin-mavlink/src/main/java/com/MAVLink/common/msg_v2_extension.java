@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_v2_extension extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_V2_EXTENSION = 248;
-    public static final int MAVLINK_MSG_ID_V2_EXTENSION_CRC = 8;
     public static final int MAVLINK_MSG_LENGTH = 254;
     private static final long serialVersionUID = MAVLINK_MSG_ID_V2_EXTENSION;
 
 
       
     /**
-    * A code that identifies the software component that understands this message (analogous to usb device classes or mime type strings).  If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/extension-message-ids.xml.  Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.
+    * A code that identifies the software component that understands this message (analogous to USB device classes or mime type strings). If this code is less than 32768, it is considered a 'registered' protocol extension and the corresponding entry should be added to https://github.com/mavlink/mavlink/definition_files/extension_message_ids.xml. Software creators can register blocks of message IDs as needed (useful for GCS specific metadata, etc...). Message_types greater than 32767 are considered local experiments and should not be checked in to any widely distributed codebase.
     */
     public int message_type;
       
@@ -43,7 +42,7 @@ public class msg_v2_extension extends MAVLinkMessage{
     public short target_component;
       
     /**
-    * Variable length payload. The length is defined by the remaining message length when subtracting the header and other fields.  The entire content of this block is opaque unless you understand any the encoding message_type.  The particular encoding used can be extension specific and might not always be documented as part of the mavlink specification.
+    * Variable length payload. The length must be encoded in the payload as part of the message_type protocol, e.g. by including the length as payload data, or by terminating the payload data with a non-zero marker. This is required in order to reconstruct zero-terminated payloads that are (or otherwise would be) trimmed by MAVLink 2 empty-byte truncation. The entire content of the payload block is opaque unless you understand the encoding message_type. The particular encoding used can be extension specific and might not always be documented as part of the MAVLink specification.
     */
     public short payload[] = new short[249];
     
@@ -57,7 +56,6 @@ public class msg_v2_extension extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_V2_EXTENSION;
-        packet.crc_extra = MAVLINK_MSG_ID_V2_EXTENSION_CRC;
               
         packet.payload.putUnsignedShort(message_type);
               
@@ -116,7 +114,7 @@ public class msg_v2_extension extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_V2_EXTENSION;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
               

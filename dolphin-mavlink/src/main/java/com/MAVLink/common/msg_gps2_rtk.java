@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_gps2_rtk extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_GPS2_RTK = 128;
-    public static final int MAVLINK_MSG_ID_GPS2_RTK_CRC = 226;
     public static final int MAVLINK_MSG_LENGTH = 35;
     private static final long serialVersionUID = MAVLINK_MSG_ID_GPS2_RTK;
 
 
       
     /**
-    * Time since boot of last baseline message received in ms.
+    * Time since boot of last baseline message received.
     */
     public long time_last_baseline_ms;
       
@@ -33,17 +32,17 @@ public class msg_gps2_rtk extends MAVLinkMessage{
     public long tow;
       
     /**
-    * Current baseline in ECEF x or NED north component in mm.
+    * Current baseline in ECEF x or NED north component.
     */
     public int baseline_a_mm;
       
     /**
-    * Current baseline in ECEF y or NED east component in mm.
+    * Current baseline in ECEF y or NED east component.
     */
     public int baseline_b_mm;
       
     /**
-    * Current baseline in ECEF z or NED down component in mm.
+    * Current baseline in ECEF z or NED down component.
     */
     public int baseline_c_mm;
       
@@ -73,7 +72,7 @@ public class msg_gps2_rtk extends MAVLinkMessage{
     public short rtk_health;
       
     /**
-    * Rate of baseline messages being received by GPS, in HZ
+    * Rate of baseline messages being received by GPS
     */
     public short rtk_rate;
       
@@ -97,7 +96,6 @@ public class msg_gps2_rtk extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_GPS2_RTK;
-        packet.crc_extra = MAVLINK_MSG_ID_GPS2_RTK_CRC;
               
         packet.payload.putUnsignedInt(time_last_baseline_ms);
               
@@ -180,7 +178,7 @@ public class msg_gps2_rtk extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_GPS2_RTK;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                               

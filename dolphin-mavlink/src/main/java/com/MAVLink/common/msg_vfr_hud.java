@@ -11,44 +11,43 @@ import com.MAVLink.Messages.MAVLinkMessage;
 import com.MAVLink.Messages.MAVLinkPayload;
         
 /**
-* Metrics typically displayed on a HUD for fixed wing aircraft
+* Metrics typically displayed on a HUD for fixed wing aircraft.
 */
 public class msg_vfr_hud extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_VFR_HUD = 74;
-    public static final int MAVLINK_MSG_ID_VFR_HUD_CRC = 20;
     public static final int MAVLINK_MSG_LENGTH = 20;
     private static final long serialVersionUID = MAVLINK_MSG_ID_VFR_HUD;
 
 
       
     /**
-    * Current airspeed in m/s
+    * Current indicated airspeed (IAS).
     */
     public float airspeed;
       
     /**
-    * Current ground speed in m/s
+    * Current ground speed.
     */
     public float groundspeed;
       
     /**
-    * Current altitude (MSL), in meters
+    * Current altitude (MSL).
     */
     public float alt;
       
     /**
-    * Current climb rate in meters/second
+    * Current climb rate.
     */
     public float climb;
       
     /**
-    * Current heading in degrees, in compass units (0..360, 0=north)
+    * Current heading in compass units (0-360, 0=north).
     */
     public short heading;
       
     /**
-    * Current throttle setting in integer percent, 0 to 100
+    * Current throttle setting (0 to 100).
     */
     public int throttle;
     
@@ -62,7 +61,6 @@ public class msg_vfr_hud extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_VFR_HUD;
-        packet.crc_extra = MAVLINK_MSG_ID_VFR_HUD_CRC;
               
         packet.payload.putFloat(airspeed);
               
@@ -117,7 +115,7 @@ public class msg_vfr_hud extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_VFR_HUD;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                 

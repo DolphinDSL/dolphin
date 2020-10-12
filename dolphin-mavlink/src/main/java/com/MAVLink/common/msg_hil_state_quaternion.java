@@ -16,14 +16,13 @@ import com.MAVLink.Messages.MAVLinkPayload;
 public class msg_hil_state_quaternion extends MAVLinkMessage{
 
     public static final int MAVLINK_MSG_ID_HIL_STATE_QUATERNION = 115;
-    public static final int MAVLINK_MSG_ID_HIL_STATE_QUATERNION_CRC = 4;
     public static final int MAVLINK_MSG_LENGTH = 64;
     private static final long serialVersionUID = MAVLINK_MSG_ID_HIL_STATE_QUATERNION;
 
 
       
     /**
-    * Timestamp (microseconds since UNIX epoch or microseconds since system boot)
+    * Timestamp (UNIX Epoch time or time since system boot). The receiving end can infer timestamp format (since 1.1.1970 or since system boot) by checking for the magnitude the number.
     */
     public long time_usec;
       
@@ -33,72 +32,72 @@ public class msg_hil_state_quaternion extends MAVLinkMessage{
     public float attitude_quaternion[] = new float[4];
       
     /**
-    * Body frame roll / phi angular speed (rad/s)
+    * Body frame roll / phi angular speed
     */
     public float rollspeed;
       
     /**
-    * Body frame pitch / theta angular speed (rad/s)
+    * Body frame pitch / theta angular speed
     */
     public float pitchspeed;
       
     /**
-    * Body frame yaw / psi angular speed (rad/s)
+    * Body frame yaw / psi angular speed
     */
     public float yawspeed;
       
     /**
-    * Latitude, expressed as degrees * 1E7
+    * Latitude
     */
     public int lat;
       
     /**
-    * Longitude, expressed as degrees * 1E7
+    * Longitude
     */
     public int lon;
       
     /**
-    * Altitude in meters, expressed as * 1000 (millimeters)
+    * Altitude
     */
     public int alt;
       
     /**
-    * Ground X Speed (Latitude), expressed as cm/s
+    * Ground X Speed (Latitude)
     */
     public short vx;
       
     /**
-    * Ground Y Speed (Longitude), expressed as cm/s
+    * Ground Y Speed (Longitude)
     */
     public short vy;
       
     /**
-    * Ground Z Speed (Altitude), expressed as cm/s
+    * Ground Z Speed (Altitude)
     */
     public short vz;
       
     /**
-    * Indicated airspeed, expressed as cm/s
+    * Indicated airspeed
     */
     public int ind_airspeed;
       
     /**
-    * True airspeed, expressed as cm/s
+    * True airspeed
     */
     public int true_airspeed;
       
     /**
-    * X acceleration (mg)
+    * X acceleration
     */
     public short xacc;
       
     /**
-    * Y acceleration (mg)
+    * Y acceleration
     */
     public short yacc;
       
     /**
-    * Z acceleration (mg)
+    * Z acceleration
     */
     public short zacc;
     
@@ -112,7 +111,6 @@ public class msg_hil_state_quaternion extends MAVLinkMessage{
         packet.sysid = 255;
         packet.compid = 190;
         packet.msgid = MAVLINK_MSG_ID_HIL_STATE_QUATERNION;
-        packet.crc_extra = MAVLINK_MSG_ID_HIL_STATE_QUATERNION_CRC;
               
         packet.payload.putUnsignedLong(time_usec);
               
@@ -215,7 +213,7 @@ public class msg_hil_state_quaternion extends MAVLinkMessage{
         this.sysid = mavLinkPacket.sysid;
         this.compid = mavLinkPacket.compid;
         this.msgid = MAVLINK_MSG_ID_HIL_STATE_QUATERNION;
-        unpack(mavLinkPacket.payload);
+        unpack(mavLinkPacket.payload);        
     }
 
                                     
